@@ -21,15 +21,15 @@
                 <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                 <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <div class="form-inline my-2 my-lg-0">
                 @Html.Partial("_LoginPartial")
                 <div class="input-group">
                     <input class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="button-addon2"/>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </nav>
 
