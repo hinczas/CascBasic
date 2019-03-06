@@ -1,4 +1,4 @@
-﻿@model CascBasic.Models.LoginModel
+﻿@model RequestMgmt.Models.LoginModel
 
 @{
     ViewBag.Title = "Log in";
@@ -6,8 +6,9 @@
 }
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 <link href="~/Content/login.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
+
 
 <div class="wrapper">
 
@@ -29,15 +30,23 @@
     </div -->
     <!-- Login Form -->
     <div>
-    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "externalForm" }))
     {
         @Html.AntiForgeryToken()
         <fieldset id="socialLoginList">
-            <legend><span><small>Raven Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
+            <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
             <p>
                 If you have a Raven account then please click below to login
-                <input type="submit" name="provider" value="Raven" title="Log in using your Raven account"/>
             </p>
+            <input type="hidden" name="provider" value="Raven" />
+            <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
+                <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
+                    <div class="rb-icon">
+                        <img src="~/Content/media/images/tiny-raven.png" style="height:30px;"/></div>
+                    <div class="rb-main">Login</div>
+                </div>                
+            </div>
+            
         </fieldset>
     }              
     </div>
@@ -48,7 +57,7 @@
         @Html.ValidationMessageFor(m => m.UserName)
         @Html.ValidationMessageFor(m => m.Password)
                 
-        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "login", required="required" })
+        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "email", required="required" })
 
         @Html.PasswordFor(m => m.Password, new { @placeholder = "password", required="required" })
         <input type="submit" value="Login">
