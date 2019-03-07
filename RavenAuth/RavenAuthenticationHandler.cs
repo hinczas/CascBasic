@@ -12,7 +12,6 @@ using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Logging;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Infrastructure;
-using Owin.Security.Providers.Raven.Messages;
 using Owin.Security.Providers.Raven.RavenMore;
 
 namespace Owin.Security.Providers.Raven
@@ -49,40 +48,22 @@ namespace Owin.Security.Providers.Raven
             {
                 var query = Request.Query;
                 var protectedRequestToken = Request.Cookies[StateCookie];
-
-                var requestToken = Options.StateDataFormat.Unprotect(protectedRequestToken);
-
-                if (requestToken == null)
-                {
-                    _logger.WriteWarning("Invalid state");
-                    return null;
-                }
-
-                properties = requestToken.Properties;
-
+                
                 var returnedToken = query.Get("oauth_token");
                 if (string.IsNullOrWhiteSpace(returnedToken))
                 {
                     _logger.WriteWarning("Missing oauth_token");
                     return new AuthenticationTicket(null, properties);
                 }
-
-                if (returnedToken != requestToken.Token)
-                {
-                    _logger.WriteWarning("Unmatched token");
-                    return new AuthenticationTicket(null, properties);
-                }
-
+                
                 var oauthVerifier = query.Get("oauth_verifier");
                 if (string.IsNullOrWhiteSpace(oauthVerifier))
                 {
                     _logger.WriteWarning("Missing or blank oauth_verifier");
                     return new AuthenticationTicket(null, properties);
                 }
-
-                var accessToken = await ObtainAccessTokenAsync(requestToken, oauthVerifier);
-
-                var context = new RavenAuthenticatedContext(Context, accessToken)
+                                
+                var context = new RavenAuthenticatedContext(Context)
                 {
                     Identity = new ClaimsIdentity(
                         Options.AuthenticationType,
@@ -105,8 +86,7 @@ namespace Owin.Security.Providers.Raven
                     context.Identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, context.FullName, 
                         XmlSchemaString, Options.AuthenticationType));
                 }
-                context.Properties = requestToken.Properties;
-
+                
                 Response.Cookies.Delete(StateCookie);
 
                 await Options.Provider.Authenticated(context);
@@ -139,11 +119,7 @@ namespace Owin.Security.Providers.Raven
                     extra.RedirectUri = requestPrefix + Request.PathBase + Request.Path + Request.QueryString;
                 }
                 var redirectUrl = requestPrefix + extra.RedirectUri;
-                //var requestToken = await ObtainRequestTokenAsync(callBackUrl, extra);
 
-                //if (requestToken.CallbackConfirmed)
-                //{
-                //var ravenAuthenticationEndpoint = AuthenticationEndpoint + requestToken.Token + "&perms=" + Options.Scope;
                 RavenRequest ravenRequest = new RavenRequest();
                 ravenRequest.Parameters.Add("url", redirectUrl);
                 
@@ -155,15 +131,10 @@ namespace Owin.Security.Providers.Raven
                         Secure = Request.IsSecure
                     };
 
-                    Response.StatusCode = 302;
-                    Response.Cookies.Append(StateCookie, "", cookieOptions);
-                    //Response.Cookies.Append(StateCookie, Options.StateDataFormat.Protect(requestToken), cookieOptions);
+                Response.StatusCode = 302;
+                Response.Cookies.Append(StateCookie, "", cookieOptions);
+
                 Response.Headers.Set("Location", ravenAuthenticationEndpoint);
-                //}
-                //else
-                //{
-                //    _logger.WriteError("requestToken CallbackConfirmed!=true");
-                //}
             }
         }
 
@@ -206,145 +177,7 @@ namespace Owin.Security.Providers.Raven
             context.RequestCompleted();
 
             return context.IsRequestCompleted;
-        }
-
-        private async Task<RequestToken> ObtainRequestTokenAsync(string callBackUri, AuthenticationProperties properties)
-        {
-            _logger.WriteVerbose("ObtainRequestToken");
-
-            var nonce = Guid.NewGuid().ToString("N");
-
-            //var authorizationParts = new SortedDictionary<string, string>
-            //{
-            //    { "oauth_callback", callBackUri },
-            //    { "oauth_consumer_key", appKey },
-            //    { "oauth_nonce", nonce },
-            //    { "oauth_signature_method", "HMAC-SHA1" },
-            //    { "oauth_timestamp", GenerateTimeStamp() },
-            //    { "oauth_version", "1.0" }
-            //};
-
-            //var parameterBuilder = new StringBuilder();
-            //foreach (var authorizationKey in authorizationParts)
-            //{
-            //    parameterBuilder.AppendFormat("{0}={1}&", Uri.EscapeDataString(authorizationKey.Key), Uri.EscapeDataString(authorizationKey.Value));
-            //}
-            //parameterBuilder.Length--;
-            //var parameterString = parameterBuilder.ToString();
-
-            var canonicalRequestBuilder = new StringBuilder();
-            canonicalRequestBuilder.Append(HttpMethod.Post.Method);
-            //canonicalRequestBuilder.Append("&");
-            //canonicalRequestBuilder.Append(Uri.EscapeDataString(RequestTokenEndpoint));
-            //canonicalRequestBuilder.Append("&");
-            //canonicalRequestBuilder.Append(Uri.EscapeDataString(parameterString));
-
-            //var signature = ComputeSignature(appSecret, null, canonicalRequestBuilder.ToString());
-            //authorizationParts.Add("oauth_signature", signature);
-
-            //--
-            //var authorizationHeaderBuilder = new StringBuilder();
-            //authorizationHeaderBuilder.Append("OAuth ");
-            //foreach (var authorizationPart in authorizationParts)
-            //{
-            //    authorizationHeaderBuilder.AppendFormat(
-            //        "{0}=\"{1}\", ", authorizationPart.Key, Uri.EscapeDataString(authorizationPart.Value));
-            //}
-            //authorizationHeaderBuilder.Length = authorizationHeaderBuilder.Length - 2;
-
-            RavenRequest ravenRequest = new RavenRequest();
-            ravenRequest.Parameters.Add("url", callBackUri);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, string.Format("{0}{1}", AuthenticationEndpoint, ravenRequest.ToString()));
-            //request.Headers.Add("Authorization", authorizationHeaderBuilder.ToString());
-
-
-            var response = await _httpClient.SendAsync(request, Request.CallCancelled);
-            response.EnsureSuccessStatusCode();
-            var responseText = await response.Content.ReadAsStringAsync();
-
-            var responseParameters = WebHelpers.ParseForm(responseText);
-            if (string.Equals(responseParameters["oauth_callback_confirmed"], "true", StringComparison.InvariantCulture))
-            {
-                return new RequestToken { Token = Uri.UnescapeDataString(responseParameters["oauth_token"]), TokenSecret = Uri.UnescapeDataString(responseParameters["oauth_token_secret"]), CallbackConfirmed = true, Properties = properties };
-            }
-
-            return new RequestToken();
-        }
-
-        private async Task<AccessToken> ObtainAccessTokenAsync(RequestToken token, string verifier)
-        {
-            _logger.WriteVerbose("ObtainAccessToken");
-
-            var nonce = Guid.NewGuid().ToString("N");
-
-            var authorizationParts = new SortedDictionary<string, string>
-            {
-                { "oauth_nonce", nonce },
-                { "oauth_signature_method", "HMAC-SHA1" },
-                { "oauth_token", token.Token },
-                { "oauth_timestamp", GenerateTimeStamp() },
-                { "oauth_verifier", verifier },
-                { "oauth_version", "1.0" },
-            };
-
-            var parameterBuilder = new StringBuilder();
-            foreach (var authorizationKey in authorizationParts)
-            {
-                parameterBuilder.AppendFormat("{0}={1}&", Uri.EscapeDataString(authorizationKey.Key), Uri.EscapeDataString(authorizationKey.Value));
-            }
-            parameterBuilder.Length--;
-            var parameterString = parameterBuilder.ToString();
-
-            var canonicalRequestBuilder = new StringBuilder();
-            canonicalRequestBuilder.Append(HttpMethod.Post.Method);
-            //canonicalRequestBuilder.Append("&");
-            //canonicalRequestBuilder.Append(Uri.EscapeDataString(AccessTokenEndpoint));
-            canonicalRequestBuilder.Append("&");
-            canonicalRequestBuilder.Append(Uri.EscapeDataString(parameterString));
-
-            var signature = ComputeSignature(token.TokenSecret, canonicalRequestBuilder.ToString());
-            authorizationParts.Add("oauth_signature", signature);
-
-            var authorizationHeaderBuilder = new StringBuilder();
-            authorizationHeaderBuilder.Append("OAuth ");
-            foreach (var authorizationPart in authorizationParts)
-            {
-                authorizationHeaderBuilder.AppendFormat(
-                    "{0}=\"{1}\", ", authorizationPart.Key, Uri.EscapeDataString(authorizationPart.Value));
-            }
-            authorizationHeaderBuilder.Length = authorizationHeaderBuilder.Length - 2;
-
-            var request = new HttpRequestMessage(HttpMethod.Post, AuthenticationEndpoint);
-            request.Headers.Add("Authorization", authorizationHeaderBuilder.ToString());
-            
-            var formPairs = new List<KeyValuePair<string, string>>()
-            {
-                new KeyValuePair<string, string>("oauth_verifier", verifier)
-            };
-
-            request.Content = new FormUrlEncodedContent(formPairs);
-
-            var response = await _httpClient.SendAsync(request, Request.CallCancelled);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                _logger.WriteError("AccessToken request failed with a status code of " + response.StatusCode);
-                response.EnsureSuccessStatusCode(); // throw
-            }
-
-            var responseText = await response.Content.ReadAsStringAsync();
-            var responseParameters = WebHelpers.ParseForm(responseText);
-
-            return new AccessToken
-            {
-                Token = Uri.UnescapeDataString(responseParameters["oauth_token"]),
-                TokenSecret = Uri.UnescapeDataString(responseParameters["oauth_token_secret"]),
-                UserId = Uri.UnescapeDataString(responseParameters["user_nsid"]),
-                UserName = Uri.UnescapeDataString(responseParameters["username"]),
-                FullName = Uri.UnescapeDataString(responseParameters["fullname"]),
-            };
-        }
+        }        
 
         private static string GenerateTimeStamp()
         {

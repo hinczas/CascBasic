@@ -38,7 +38,7 @@ namespace CascBasic
                 }
             });
             //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ApplicationCookie);
+            app.UseExternalSignInCookie(Owin.Security.Providers.Raven.Constants.DefaultAuthenticationType);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
             app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));

@@ -2,7 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Provider;
-using Owin.Security.Providers.Raven.Messages;
+//using Owin.Security.Providers.Raven.Messages;
 
 namespace Owin.Security.Providers.Raven {
     /// <summary>
@@ -14,14 +14,15 @@ namespace Owin.Security.Providers.Raven {
         /// </summary>
         /// <param name="context">The OWIN environment</param>
         /// <param name="accessToken">Flick access toke</param>
-        public RavenAuthenticatedContext(IOwinContext context, AccessToken accessToken)
+        //public RavenAuthenticatedContext(IOwinContext context, AccessToken accessToken)
+        public RavenAuthenticatedContext(IOwinContext context)
             : base(context)
         {
-            FullName = accessToken.FullName;
-            UserId = accessToken.UserId;
-            UserName = accessToken.UserName;
-            AccessToken = accessToken.Token;
-            AccessTokenSecret = accessToken.TokenSecret;
+            //FullName = accessToken.FullName;
+            //UserId = accessToken.UserId;
+            //UserName = accessToken.UserName;
+            //AccessToken = accessToken.Token;
+            //AccessTokenSecret = accessToken.TokenSecret;
         }
 
         /// <summary>

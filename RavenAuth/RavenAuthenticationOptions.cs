@@ -2,7 +2,7 @@
 using System.Net.Http;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Owin.Security.Providers.Raven.Messages;
+//using Owin.Security.Providers.Raven.Messages;
 
 namespace Owin.Security.Providers.Raven {
     public class RavenAuthenticationOptions : AuthenticationOptions
@@ -70,7 +70,7 @@ namespace Owin.Security.Providers.Raven {
         /// <summary>
         ///     Gets or sets the type used to secure data handled by the middleware.
         /// </summary>
-        public ISecureDataFormat<RequestToken> StateDataFormat { get; set; }
+        //public ISecureDataFormat<RequestToken> StateDataFormat { get; set; }
 
         /// <summary>
         ///     Initializes a new <see cref="RavenAuthenticationOptions" />

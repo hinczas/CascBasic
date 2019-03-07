@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Globalization;
 using System.Net.Http;
 using Microsoft.Owin;
 using Microsoft.Owin.Logging;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.DataHandler;
-using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Infrastructure;
-using Owin.Security.Providers.Raven.Messages;
-using Microsoft.Owin.Security.DataHandler.Encoder;
 
 namespace Owin.Security.Providers.Raven
 {
@@ -17,26 +12,14 @@ namespace Owin.Security.Providers.Raven
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
 
-        public RavenAuthenticationMiddleware(OwinMiddleware next, IAppBuilder app,
-            RavenAuthenticationOptions options)
+        public RavenAuthenticationMiddleware(OwinMiddleware next, IAppBuilder app, RavenAuthenticationOptions options)
             : base(next, options)
         {
             _logger = app.CreateLogger<RavenAuthenticationMiddleware>();
 
             if (Options.Provider == null)
                 Options.Provider = new RavenAuthenticationProvider();
-
-            if (Options.StateDataFormat == null)
-            {
-                var dataProtector = app.CreateDataProtector(
-                    typeof(RavenAuthenticationMiddleware).FullName,
-                    Options.AuthenticationType, "v1");
-                Options.StateDataFormat = new SecureDataFormat<RequestToken>(
-                    Serializers.RequestToken,
-                    dataProtector,
-                    TextEncodings.Base64Url);
-            }
-
+            
             if (string.IsNullOrEmpty(Options.SignInAsAuthenticationType))
                 Options.SignInAsAuthenticationType = app.GetDefaultSignInAsAuthenticationType();
 
@@ -46,6 +29,7 @@ namespace Owin.Security.Providers.Raven
                 MaxResponseContentBufferSize = 1024*1024*10
             };
         }
+        
 
         /// <summary>
         ///     Provides the <see cref="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler" /> object for processing

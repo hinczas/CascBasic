@@ -179,68 +179,50 @@ input[type=text]:placeholder, input[type=password]:placeholder {
   width:60%;
 }
 
-.drag-handle {
-    position:absolute;
-    left:-5px;
-    top:-5px;
-    background-color: #10701c;
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor:pointer;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-}
-.drag-handle:active {
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-}
 /* Raven Button */
 .raven-button {
-        margin-left:20px;
-        display: table;
-        width: 40%;
-        min-width:150px;
-        height: 32px;
-        background-color: #106470;
-        border-radius:5px;
-        box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
-        -webkit-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        -ms-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
+    cursor:pointer;
+    margin-left:20px;
+    display: table;
+    width: 40%;
+    min-width:150px;
+    height: 32px;
+    background-color: #106470;
+    border-radius:5px;
+    box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+    .raven-button:hover {
+        background-color: #10701c;
     }
-        .raven-button:hover {
-            background-color: #10701c;
-        }
-        .raven-button:active  {
-          -moz-transform: scale(0.95);
-          -webkit-transform: scale(0.95);
-          -o-transform: scale(0.95);
-          -ms-transform: scale(0.95);
-          transform: scale(0.95);
-        }
-    .rb-icon, .rb-main {
-        padding: 5px;
-        display: table-cell;
+    .raven-button:active  {
+        -moz-transform: scale(0.95);
+        -webkit-transform: scale(0.95);
+        -o-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        transform: scale(0.95);
     }
-    .rb-icon {
-        min-width:10%;
-        background-color: lightgray;
-        border-radius:5px 0px 0px 5px;
+.rb-icon, .rb-main {
+    padding: 5px;
+    display: table-cell;
+}
+.rb-icon {
+    min-width:10%;
+    background-color: lightgray;
+    border-radius:5px 0px 0px 5px;
+}
+    .rb-icon img {
+        height:20px;
+        padding:0;
     }
-        .rb-icon img {
-            height:20px;
-            padding:0;
-        }
-    .rb-main {
-        width:90%;
-        color:white;
-    }
-    .rb-row {
-        border-radius:5px;
-    }
+.rb-main {
+    width:90%;
+    color:white;
+}
+.rb-row {
+    border-radius:5px;
+}
