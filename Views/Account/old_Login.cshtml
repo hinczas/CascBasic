@@ -8,7 +8,7 @@
 <link href="~/Content/login.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
-
+<script src="~/Scripts/login.js"></script>
 
 <div class="wrapper">
 
@@ -22,7 +22,7 @@
     }
 
   <div id="formContent">
-    <!-- Tabs Titles -->
+    <div class="drag-handle"></div>
 
     <!-- Icon -->
     <!--div class="fadeIn first">
@@ -36,17 +36,16 @@
         <fieldset id="socialLoginList">
             <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
             <p>
-                If you have a Raven account then please click below to login
+                Click below to login with Raven
             </p>
             <input type="hidden" name="provider" value="Raven" />
             <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
                 <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
                     <div class="rb-icon">
-                        <img src="~/Content/media/images/tiny-raven.png" style="height:30px;"/></div>
-                    <div class="rb-main"><a href="https://demo.raven.cam.ac.uk/auth/authenticate.html?ver=3&date=20190306T155014Z&url=http%3a%2f%2flocalhost%3a5312%2fAccount%2fExternalLoginCallback%3fReturnUrl%3d%252F%26__provider__%3dRaven%26__sid__%3d58e09bb28d024efc9d25c708cbd9848d">Login</a></div>
-                </div>                
+                        <img src="~/Content/media/images/tiny-raven.png"/></div>
+                    <div class="rb-main">Login</div>
+                </div>               
             </div>
-            
         </fieldset>
     }              
     </div>

@@ -49,7 +49,7 @@ h2 {
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 400px;
+  max-width: 300px;
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
@@ -123,6 +123,7 @@ input[type=button], input[type=submit], input[type=reset]  {
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   min-width: 85%;
+  height:32px;
 }
 
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
@@ -178,13 +179,32 @@ input[type=text]:placeholder, input[type=password]:placeholder {
   width:60%;
 }
 
+.drag-handle {
+    position:absolute;
+    left:-5px;
+    top:-5px;
+    background-color: #10701c;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor:pointer;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+.drag-handle:active {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
 /* Raven Button */
 .raven-button {
-        margin-left:30px;
+        margin-left:20px;
         display: table;
         width: 40%;
         min-width:150px;
-        height: 30px;
+        height: 32px;
         background-color: #106470;
         border-radius:5px;
         box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
@@ -213,6 +233,10 @@ input[type=text]:placeholder, input[type=password]:placeholder {
         background-color: lightgray;
         border-radius:5px 0px 0px 5px;
     }
+        .rb-icon img {
+            height:20px;
+            padding:0;
+        }
     .rb-main {
         width:90%;
         color:white;
