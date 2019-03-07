@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CascBasic.Auth
+namespace Owin.Security.Providers.Raven.RavenMore
 {
     public class RavenException : Exception
     {

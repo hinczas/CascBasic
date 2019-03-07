@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CascBasic.Auth
+namespace Owin.Security.Providers.Raven.RavenMore
 {
     /// <summary>
     /// Enumerates WLS status codes.
@@ -65,5 +65,11 @@ namespace CascBasic.Auth
         /// this occasion.
         /// </summary>
         AuthenticationDeclined = 570
+    }
+
+    public enum RavenCallbackCode
+    {
+        Login = 1,
+        Link = 2
     }
 }

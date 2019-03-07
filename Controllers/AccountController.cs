@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CascBasic.Models;
+using Owin.Security.Providers.Raven.RavenMore;
 
 namespace CascBasic.Controllers
 {
@@ -322,11 +323,13 @@ namespace CascBasic.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            //var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var loginInfo = new RavenClient().GetExternalLoginInfo(HttpContext, RavenCallbackCode.Login);
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");
             }
+
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
@@ -341,9 +344,11 @@ namespace CascBasic.Controllers
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
-                    ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    //ViewBag.ReturnUrl = returnUrl;
+                    //ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+
+                    return RedirectToAction("Login");
             }
         }
 

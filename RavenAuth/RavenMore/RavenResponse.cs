@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace CascBasic.Auth
+namespace Owin.Security.Providers.Raven.RavenMore
 {
     public class RavenResponse
     {

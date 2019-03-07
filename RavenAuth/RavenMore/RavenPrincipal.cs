@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CascBasic.Auth
+namespace Owin.Security.Providers.Raven.RavenMore
 {
     public class RavenPrincipal : IPrincipal
     {
@@ -14,6 +15,7 @@ namespace CascBasic.Auth
         /// 
         /// </summary>
         private RavenIdentity identity;
+        private ClaimsPrincipal claims;
         #endregion
 
         #region Properties
@@ -25,6 +27,15 @@ namespace CascBasic.Auth
             get { return this.identity; }
         }
         #endregion
+
+        public ClaimsPrincipal Claims
+        {
+            get
+            {
+                return this.claims;
+            }
+        }
+
 
         #region IsInRole
         /// <summary>
@@ -41,6 +52,7 @@ namespace CascBasic.Auth
         public RavenPrincipal(RavenIdentity identity)
         {
             this.identity = identity;
+            //this.claims = claims;
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CascBasic.Models;
+using Owin.Security.Providers.Raven.RavenMore;
 
 namespace CascBasic.Controllers
 {
@@ -313,7 +314,9 @@ namespace CascBasic.Controllers
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+            //var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+            var loginInfo = new RavenClient().GetExternalLoginInfo(HttpContext, RavenCallbackCode.Link);
+
             if (loginInfo == null)
             {
                 return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });

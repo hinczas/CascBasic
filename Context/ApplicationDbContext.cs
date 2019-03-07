@@ -16,5 +16,7 @@ namespace CascBasic.Context
         {
             return new ApplicationDbContext();
         }
+
+        //public System.Data.Entity.DbSet<CascBasic.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

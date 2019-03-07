@@ -1,21 +1,21 @@
-﻿using DotNetOpenAuth.AspNet;
-using Microsoft.Web.WebPages.OAuth;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.Cookies;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
-using WebMatrix.WebData;
 
-namespace CascBasic.Auth
+namespace Owin.Security.Providers.Raven.RavenMore
 {
-    public class RavenClient : IAuthenticationClient
+    public class RavenClient
     {
         #region Constants
         /// <summary>
@@ -88,8 +88,6 @@ namespace CascBasic.Auth
         }
         #endregion
 
-        // "https://demo.raven.cam.ac.uk/auth/authenticate.html"
-        //private const string baseUrl = "https://raven.cam.ac.uk/auth/";
 
         public RavenClient()
         {
@@ -103,7 +101,6 @@ namespace CascBasic.Auth
 
         public void RequestAuthentication(System.Web.HttpContextBase context, Uri returnUrl)
         {
-            HttpRequestBase request = context.Request;
             RavenRequest ravenRequest = new RavenRequest();
             ravenRequest.Parameters.Add("url", returnUrl.AbsoluteUri);
             //string url = baseUrl + "&redirect_uri=" + HttpUtility.UrlEncode(returnUrl.ToString());
@@ -111,7 +108,7 @@ namespace CascBasic.Auth
             context.Response.Redirect(url);
         }
 
-        public AuthenticationResult VerifyAuthentication(System.Web.HttpContextBase context)
+        public ExternalLoginInfo GetExternalLoginInfo(System.Web.HttpContextBase context, RavenCallbackCode ravenCallbackCode)
         {
             HttpRequestBase request = context.Request;
             HttpResponseBase response = context.Response;
@@ -140,34 +137,26 @@ namespace CascBasic.Auth
                         // redirect the user back to where they started
                         //response.Redirect(ravenResponse.URL);
 
-                        bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(ravenResponse.Principal));
-                        if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(ravenResponse.Principal).Count > 1)
-                        {
-                            this.LoadIdentity(context);
-                            this.CreateTicket(response, ravenResponse);
-                            return new AuthenticationResult(true, ProviderName, ravenResponse.Principal, ravenResponse.Principal, null);
-                        }
+                        //bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(ravenResponse.Principal));
+                        //if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(ravenResponse.Principal).Count > 1)
+                        //{
+                        if (ravenCallbackCode == RavenCallbackCode.Login)
+                            this.LoadIdentity(context, ravenResponse);
 
-                        return new AuthenticationResult(false, ProviderName, ravenResponse.Principal, ravenResponse.Principal, null);
+                        return GetExternalLoginInfo(context, ravenResponse);
+                        //this.CreateTicket(response, ravenResponse);
+                        //}
+
+                        //return new AuthenticationResult(false, ProviderName, ravenResponse.Principal, ravenResponse.Principal, null);
                     }
                     else
                     {
-                        // check to see if there is a URL we should redirect the user to
-                        // if not: throw an exception
-                        if (String.IsNullOrWhiteSpace(this.errorURL))
-                        {
-                            throw new RavenResponseException(
-                                "Authentication failed: " + ravenResponse.Status.ToString(),
-                                ravenResponse.Status);
-                        }
-
-                        //response.Redirect(this.errorURL + (Int32)ravenResponse.Status);
-                        return new AuthenticationResult(false, ProviderName, null, null, null);
+                        return null;
                     }
                 }
             }
             // At this point authe=orisation failed. Return null authorisation.
-            return new AuthenticationResult(false, ProviderName, null, null, null);
+            return null;
         }
 
         #region LoadCertificate
@@ -225,17 +214,28 @@ namespace CascBasic.Auth
         /// </summary>
         /// <param name="context"></param>
         /// <returns>Returns true if the user is authenticated or false if not.</returns>
-        public Boolean LoadIdentity(HttpContextBase context)
+        public bool LoadIdentity(HttpContextBase context, RavenResponse response)
         {
             // try to find the authentication cookie
-            HttpCookie authCookie = context.Request.Cookies[FormsAuthentication.FormsCookieName];
+            //HttpCookie authCookie = context.Request.Cookies[FormsAuthentication.FormsCookieName];
+            //HttpCookie authCookie1 = context.Request.Cookies["__RequestVerificationToken"];
+            //HttpCookie authCookie2 = context.Request.Cookies["ASP.NET_SessionId"];
+            //HttpCookie authCookie3 = context.Request.Cookies["__RavenState"];
 
-            if (authCookie != null)
+            if (response != null)
             {
                 // decrypt the contents
-                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+                //FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie1.Value);
 
-                context.User = new RavenPrincipal(new RavenIdentity(ticket.UserData));
+                var ravenUser = new RavenPrincipal(new RavenIdentity(response.Principal));
+                //ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new List<ClaimsIdentity>()
+                //{
+                //    ravenClaim
+                //});
+
+                //IPrincipal principal = claimsPrincipal as IPrincipal;
+
+                context.User = ravenUser;
 
                 // there is an active session
                 return true;
@@ -243,6 +243,28 @@ namespace CascBasic.Auth
 
             // there is no active session
             return false;
+        }
+        #endregion
+
+        #region ExternalLoginInfo
+        /// <summary>
+        /// Attempts to load the user's identity from a cookie.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns>Returns true if the user is authenticated or false if not.</returns>
+        private ExternalLoginInfo GetExternalLoginInfo(HttpContextBase context, RavenResponse ravenResponse)
+        {
+            var loginInfo = new UserLoginInfo(ProviderName, ravenResponse.Principal);
+            ClaimsIdentity claims = context.User.Identity as ClaimsIdentity;
+            var externalLogin = new ExternalLoginInfo()
+            {
+                DefaultUserName = ravenResponse.Principal,
+                Email = string.Empty,
+                Login = loginInfo,
+                ExternalIdentity = claims
+            };
+
+            return externalLogin;
         }
         #endregion
 
