@@ -17,8 +17,7 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                <li class="nav-item">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link" })</li>
                 <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
@@ -32,14 +31,11 @@
             </div>
         </div>
     </nav>
-
+    
     <main role="main">
         @RenderBody()
-    </main>
+    </main>    
 
-    <footer class="container">
-        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

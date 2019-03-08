@@ -1,0 +1,74 @@
+﻿<link href="~/Content/dashboard.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column dash-links">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home" data-view="Home">
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users" data-view="Users">
+                            <i class="material-icons">person</i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#groups" data-view="Groups">
+                            <i class="material-icons">group</i>
+                            <span>Groups</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#roles" data-view="Roles">
+                            <i class="material-icons">security</i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" hidden>
+                        <a class="nav-link" href="#reports" data-view="Reports">
+                            <i class="material-icons">assignment</i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+            </div>
+        </nav>
+
+        <div class="main col-md-9 ml-sm-auto col-lg-10 px-4">
+            @Html.Partial("Home")
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(function () {
+    $('.nav-link').click(function () {
+        var e = $(this);
+        var p = $('.dash-links');
+
+        var view = e.data('view');
+        var link = '@Url.Action("partialView", "Dashboard")';
+        link = link.replace("partialView", view);
+
+        $.ajax({
+
+            type: "get",
+            url: link,
+            success: function (d) {
+                /* d is the HTML of the returned response */
+                $('.main').html(d); //replaces previous HTML with action
+                p.find('.nav-link').each(function () {
+                    $(this).removeClass('active');
+                });
+                e.addClass("active");
+            }
+        });
+    });
+});
+</script>

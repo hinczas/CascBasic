@@ -197,6 +197,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -240,6 +241,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dashboard.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\media\images\bckg_cam.jpg" />
     <Content Include="Content\media\images\logo.jpg" />
@@ -308,7 +310,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
@@ -317,7 +318,7 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\old_Login.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Account\old_Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
@@ -342,6 +343,10 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Dashboard\Home.cshtml" />
+    <Content Include="Views\Dashboard\Users.cshtml" />
+    <Content Include="Views\Dashboard\Roles.cshtml" />
+    <Content Include="Views\Dashboard\Groups.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

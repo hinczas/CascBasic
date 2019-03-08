@@ -143,6 +143,13 @@ namespace CascBasic.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
+
+
         //
         // POST: /Account/Register
         [HttpPost]
