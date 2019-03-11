@@ -3,15 +3,37 @@
 <link href="~/Content/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
 <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
-
+<script src="~/Scripts/dashboard/users.js"></script>
+<style>
+    #userForm {
+        padding: 15px 10px 0px 15px;
+    }
+    #userForm input {
+        margin-bottom:5px;
+    }
+</style>
 <div class="pt-3">
     <h1 class="h2">Users</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-success"><i class="material-icons md-18">person_add</i>Add new</button>
+            <button type="button" class="btn btn-sm btn-outline-success" id="userFormBtn"><i class="material-icons md-18">add_circle_outline</i>Add new</button>
             <button type="button" class="btn btn-sm btn-outline-info" disabled><i class="material-icons md-18">get_app</i>Export</button>
         </div>
     </div>
+
+    <div id="userForm" class="open" style="display:none">
+        @using (Html.BeginForm("AddUser", "Account"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group" style="margin-bottom:0;">
+                <input type="email" class="form-control form-control-sm" name="Email" placeholder="email" required>
+                <input type="password" class="form-control form-control-sm" name="Password" placeholder="password" required>
+                <input type="password" class="form-control form-control-sm" name="ConfirmPassword" placeholder="confirm password" required>
+                <button type="button" class="btn btn-outline-success btn-sm" value="Add" style="margin-bottom:0px;" id="userSubmit">Add</button>
+            </div>
+        }
+    </div>
+
     <div class="dash-sub dash-sub-text">
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     </div>
@@ -40,13 +62,10 @@
                 </tbody>
             </table>
         </div>
-    </div>    
+    </div>
 </div>
 
 
 <script>
-    $(document).ready(function () {
-        $('#dash-users-tbl').DataTable();
-        
-    });
+
 </script>

@@ -8,6 +8,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CascBasic.Models;
 using Owin.Security.Providers.Raven.RavenMore;
+using CascBasic.Context;
+using Microsoft.AspNet.Identity.EntityFramework;
+using CascBasic.Models.ViewModels;
 
 namespace CascBasic.Controllers
 {
@@ -129,6 +132,32 @@ namespace CascBasic.Controllers
                 await UserManager.SmsService.SendAsync(message);
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddRole(string name)
+        {
+            // Generate the token and send it
+            ApplicationDbContext _db = new ApplicationDbContext();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_db));
+            IdentityRole role = roleManager.FindByName(name);
+
+            if (role==null)
+            {
+                var result = await roleManager.CreateAsync(new IdentityRole(name));
+                if (result.Succeeded)
+                {
+                    var resModel =  new ResultViewModel("Success!", "success", "Roles successfully added");
+                    return PartialView("_ResultMessage", resModel);
+                } else
+                {
+                    var resModel = new ResultViewModel("Warning!", "warning", result.ToString());
+                    return PartialView("_ResultMessage", resModel);
+                }
+            }
+            //var resModel = new ResultViewModel("Error!", "danger", "Failed to add new role");
+            return PartialView("_ResultMessage", new ResultViewModel("Warning!", "warning", "Role already exists"));
         }
 
         //

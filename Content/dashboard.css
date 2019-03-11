@@ -71,3 +71,12 @@ button .material-icons {
     font-size:18px;
     vertical-align: middle;
 }
+
+/*Alert message placing */
+#alertPlaceholder {
+    padding:5px;
+    position: absolute;
+    right: 10px;
+    top: 68px;
+    z-index: 99;
+}

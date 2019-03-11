@@ -1,5 +1,6 @@
 ﻿using CascBasic.Context;
 using CascBasic.Models;
+using CascBasic.Models.ViewModels;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,19 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;
 
+        public DashboardController()
+        {
+            _db = new ApplicationDbContext();
+        }
+
         public ActionResult Index()
         {
-            return View();
+                return View();
         }        
 
         [HttpGet]
@@ -31,7 +37,6 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Users()
         {
-            _db = new ApplicationDbContext();
             var users = _db.Users.ToList();
             return PartialView(users);
         }
@@ -45,7 +50,14 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Roles()
         {
-            return PartialView();
+            var roles = _db.Roles.Select(a => new RolesViewModel()
+            {
+                Id = a.Id,
+                Name = a.Name,
+                UsersCount = a.Users.Count
+            }).ToList();
+
+            return PartialView(roles);
         }
 
 

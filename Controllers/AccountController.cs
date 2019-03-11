@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CascBasic.Models;
 using Owin.Security.Providers.Raven.RavenMore;
+using CascBasic.Models.ViewModels;
 
 namespace CascBasic.Controllers
 {
@@ -163,21 +164,54 @@ namespace CascBasic.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
+                    return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
+            //return View(model);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddUser(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var exst = UserManager.FindByEmail(model.Email);
+                if (exst!=null)
+                {
+                    var resModel = new ResultViewModel("Warning!", "warning", "Cannot add user " + model.Email+". Email already exists");
+                    return PartialView("_ResultMessage", resModel);
+                }
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var resModel = new ResultViewModel("Success!", "success", "User successfully added");
+                    return PartialView("_ResultMessage", resModel);
+                }
+                else
+                {
+                    var resModel = new ResultViewModel("Error!", "danger", "Unknown error. Please try again later");
+                    return PartialView("_ResultMessage", resModel);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return PartialView("_ResultMessage", new ResultViewModel("Error!", "danger", "Failed to create user. Wrong parameter error."));
         }
 
         //
