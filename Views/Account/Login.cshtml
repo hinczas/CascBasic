@@ -29,17 +29,20 @@
         @Html.AntiForgeryToken()
         <fieldset id="socialLoginList">
             <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
-            <p>
-                Click below to login with Raven
-            </p>
-            <input type="hidden" name="provider" value="Raven" />
-            <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
-                <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
-                    <div class="rb-icon">
-                        <img src="~/Content/media/images/tiny-raven.png"/></div>
-                    <div class="rb-main">Login</div>
-                </div>               
-            </div>
+            <div class="raven-section">
+                <p>
+                    Click below to login with Raven
+                </p>
+                <input type="hidden" name="provider" value="Raven" />
+                <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
+                    <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
+                        <div class="rb-icon">
+                            <img src="~/Content/media/images/tiny-raven.png" />
+                        </div>
+                        <div class="rb-main">Login</div>
+                    </div>
+                </div>
+            </div>            
         </fieldset>
     }              
     </div>

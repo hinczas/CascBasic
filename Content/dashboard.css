@@ -57,3 +57,17 @@
     font-size: .75rem;
     text-transform: uppercase;
 }
+
+/* Right panel styling */
+.dash-sub {
+    padding:15px 10px 10px 15px;
+}
+.dash-sub-text {
+    min-height:200px;
+}
+
+button .material-icons {
+    margin: -3px 5px 0px 0px;
+    font-size:18px;
+    vertical-align: middle;
+}
