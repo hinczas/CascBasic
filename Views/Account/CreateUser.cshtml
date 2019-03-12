@@ -1,0 +1,100 @@
+﻿@model CascBasic.Models.CreateUserViewModel
+
+@using (Html.BeginForm("CreateUser", "Account"))
+{
+    @Html.AntiForgeryToken()
+    <nav class="navbar navbar-light navbar-subpage">
+        <span class="navbar-brand mb-0 h1">New user</span>
+        <div class="form-inline">
+            <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
+                <input type="submit" class="btn btn-sm btn-success" value="Save"/>
+                <button class="btn btn-sm btn-danger" type="button">Cancel</button>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.Email)
+        @Html.ValidationMessageFor(m => m.Password)
+        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Login details</h5>
+
+                        <div class="form-group required">
+                            @Html.TextBoxFor(m => m.Email, new { @placeholder = "email", required = "required", @class = "form-control form-control-sm" })
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <div class="form-group required">
+                            @Html.PasswordFor(m => m.Password, new { @placeholder = "password", required = "required", @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group required">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = "confirm password", required = "required", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Personal details</h5>
+
+                        <div class="form-group required">
+                            @Html.TextBoxFor(m => m.FirstName, new { @placeholder = "first name", @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group required">
+                            @Html.TextBoxFor(m => m.MiddleName, new { @placeholder = "middle names", @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group required">
+                            @Html.TextBoxFor(m => m.LastName, new { @placeholder = "last name", @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group required">
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @placeholder = "phone number", @class = "form-control form-control-sm" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Raven</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Link to Raven</h6>
+                        <p class="card-text">Tick this box to link with your Raven account</p>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.RavenLink)
+                            <label class="form-check-label">Link Raven</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="card card-select">
+                    <div class="card-body">
+                        <h5 class="card-title">Groups</h5>
+                        <p class="card-text">You can select multiple groups</p>
+                        <div class="form-group">
+                            @Html.ListBoxFor(m => m.Groups, (MultiSelectList)ViewBag.Groups)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card card-select">
+                    <div class="card-body">
+                        <h5 class="card-title">Roles</h5>
+                        <p class="card-text">You can select multiple roles</p>
+                        <div class="form-group">
+                            @Html.ListBoxFor(m => m.Roles, (MultiSelectList)ViewBag.Roles)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

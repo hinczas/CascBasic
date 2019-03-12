@@ -22,3 +22,19 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Bootstrap styling override */
+.card {
+    margin-bottom:10px;
+}
+    .card select {
+        width: 100%;
+        min-height:280px;
+    }
+
+/* Extra components */
+.navbar-subpage {
+    background-color: #e3f3fd;
+    margin-bottom:10px;
+    z-index:100;
+}

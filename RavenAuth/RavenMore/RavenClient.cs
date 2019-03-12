@@ -50,10 +50,6 @@ namespace Owin.Security.Providers.Raven.RavenMore
         /// </summary>
         private String certificatePath = CERTIFICATE_PATH;
         /// <summary>
-        /// The path to which a user should be redirected if something has gone wrong.
-        /// </summary>
-        private String errorURL = null;
-        /// <summary>
         /// The certificate store (this used to be a X509Store).
         /// </summary>
         private Dictionary<String, X509Certificate2> certificates;

@@ -1,9 +1,13 @@
 namespace CascBasic.Migrations
 {
+    using CascBasic.Context;
+    using CascBasic.Models;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Threading.Tasks;
 
     internal sealed class Configuration : DbMigrationsConfiguration<CascBasic.Context.ApplicationDbContext>
     {
@@ -17,7 +21,7 @@ namespace CascBasic.Migrations
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
+            //  to avoid creating duplicate seed data.            
         }
     }
 }

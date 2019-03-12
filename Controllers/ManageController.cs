@@ -56,7 +56,7 @@ namespace CascBasic.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public async Task<ActionResult> Index(string id, ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -67,9 +67,10 @@ namespace CascBasic.Controllers
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
 
-            var userId = User.Identity.GetUserId();
+            var userId = string.IsNullOrEmpty(id) ? User.Identity.GetUserId() : id;
             var model = new IndexViewModel
             {
+                Email = await UserManager.GetEmailAsync(userId),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -133,33 +134,7 @@ namespace CascBasic.Controllers
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddRole(string name)
-        {
-            // Generate the token and send it
-            ApplicationDbContext _db = new ApplicationDbContext();
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_db));
-            IdentityRole role = roleManager.FindByName(name);
-
-            if (role==null)
-            {
-                var result = await roleManager.CreateAsync(new IdentityRole(name));
-                if (result.Succeeded)
-                {
-                    var resModel =  new ResultViewModel("Success!", "success", "Roles successfully added");
-                    return PartialView("_ResultMessage", resModel);
-                } else
-                {
-                    var resModel = new ResultViewModel("Warning!", "warning", result.ToString());
-                    return PartialView("_ResultMessage", resModel);
-                }
-            }
-            //var resModel = new ResultViewModel("Error!", "danger", "Failed to add new role");
-            return PartialView("_ResultMessage", new ResultViewModel("Warning!", "warning", "Role already exists"));
-        }
-
+        
         //
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
@@ -339,6 +314,7 @@ namespace CascBasic.Controllers
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
 
+
         //
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
@@ -353,7 +329,7 @@ namespace CascBasic.Controllers
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)

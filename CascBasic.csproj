@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CascBasic</RootNamespace>
     <AssemblyName>CascBasic</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -203,17 +203,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903051714492_initial.cs" />
-    <Compile Include="Migrations\201903051714492_initial.Designer.cs">
-      <DependentUpon>201903051714492_initial.cs</DependentUpon>
+    <Compile Include="Migrations\201903121123081_init.cs" />
+    <Compile Include="Migrations\201903121123081_init.Designer.cs">
+      <DependentUpon>201903121123081_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903121551070_extraUserDetails.cs" />
+    <Compile Include="Migrations\201903121551070_extraUserDetails.Designer.cs">
+      <DependentUpon>201903121551070_extraUserDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Models\ViewModels\ResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupsViewModel.cs" />
     <Compile Include="Models\ViewModels\RolesViewModel.cs" />
+    <Compile Include="Models\ViewModels\UsersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RavenAuth\Constants.cs" />
     <Compile Include="RavenAuth\Provider\IRavenAuthenticationProvider.cs" />
@@ -356,6 +364,7 @@
     <Content Include="Views\Dashboard\Roles.cshtml" />
     <Content Include="Views\Dashboard\Groups.cshtml" />
     <Content Include="Views\Shared\_ResultMessage.cshtml" />
+    <Content Include="Views\Account\CreateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -369,8 +378,11 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903051714492_initial.resx">
-      <DependentUpon>201903051714492_initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903121123081_init.resx">
+      <DependentUpon>201903121123081_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903121551070_extraUserDetails.resx">
+      <DependentUpon>201903121551070_extraUserDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

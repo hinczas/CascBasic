@@ -11,6 +11,9 @@ using Microsoft.Owin.Security;
 using CascBasic.Models;
 using Owin.Security.Providers.Raven.RavenMore;
 using CascBasic.Models.ViewModels;
+using CascBasic.Context;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Net.Mail;
 
 namespace CascBasic.Controllers
 {
@@ -19,10 +22,12 @@ namespace CascBasic.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _db;
 
         #region Initializers
         public AccountController()
         {
+            _db = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -55,8 +60,8 @@ namespace CascBasic.Controllers
             }
         }
         #endregion
-
-        #region Login
+       
+        #region Login(off)
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -95,98 +100,94 @@ namespace CascBasic.Controllers
                     return View(model);
             }
         }
-        #endregion
 
         //
-        // GET: /Account/VerifyCode
-        [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        {
-            // Require that the user has already logged in via username/password or external login
-            if (!await SignInManager.HasBeenVerifiedAsync())
-            {
-                return View("Error");
-            }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        }
-
-        //
-        // POST: /Account/VerifyCode
+        // POST: /Account/LogOff
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
+        public ActionResult LogOff()
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // The following code protects for brute force attacks against the two factor codes. 
-            // If a user enters incorrect codes for a specified amount of time then the user account 
-            // will be locked out for a specified amount of time. 
-            // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid code.");
-                    return View(model);
-            }
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
         }
-
-
-        
-        public ActionResult Create()
+        #endregion
+               
+        #region Create
+        public ActionResult CreateUser()
         {
+            ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name");
+            ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name");
             return View();
         }
-
 
         //
         // POST: /Account/Register
         [HttpPost]        
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(RegisterViewModel model)
+        public async Task<ActionResult> CreateUser(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                MailAddress addr = new MailAddress(model.Email);
+                string username = addr.User;
+
+                var user = new ApplicationUser {
+                    FirstName = model.FirstName,
+                    MiddleName = model.MiddleName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber,
+                    UserName = username,
+                    Email = model.Email
+                };
+
+                // Create User
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    // Add personal details
 
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    //return RedirectToAction("Index", "Home");
-                    return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
+                    // Link user to DB object
+                    var dbUser = _db.Users.Find(user.Id);
+                    // Add User to Groups
+                    if (model.Groups!=null && model.Groups.Count > 0)
+                    {
+                        foreach(int id in model.Groups)
+                        {
+                            var group = _db.Groups.Find(id);
+                            if (group != null)
+                                dbUser.Groups.Add(group);
+                        }
+                        await _db.SaveChangesAsync();
+                    }
+                    // Add user to Roles
+                    if (model.Roles != null && model.Roles.Count > 0)
+                    {
+                        foreach (string id in model.Roles)
+                        {
+                            var role = _db.Roles.Find(id);
+                            if (role != null)
+                                await UserManager.AddToRoleAsync(user.Id, role.Name);
+                        }
+                    }
+                    // Link email address to Raven
+                    if(model.RavenLink)
+                    {
+                        var linkResult = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(Owin.Security.Providers.Raven.Constants.DefaultAuthenticationType, username));
+                        if (!linkResult.Succeeded)
+                            AddErrors(linkResult);
+                    }
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
-            return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
-            //return View(model);
+            // Something went wrong
+            ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
+            ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
+            return View(model);
         }
-
-
-        [AllowAnonymous]
-        public ActionResult Dashboard()
-        {
-            return View();
-        }
-
-
+        #endregion
+                     
         #region Register
         //
         // GET: /Account/Register
@@ -229,37 +230,49 @@ namespace CascBasic.Controllers
         }
         #endregion
 
+        #region Email and Password management
+               
+        //
+        // GET: /Account/VerifyCode
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
+        {
+            // Require that the user has already logged in via username/password or external login
+            if (!await SignInManager.HasBeenVerifiedAsync())
+            {
+                return View("Error");
+            }
+            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+        }
 
+        //
+        // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddUser(RegisterViewModel model)
+        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var exst = UserManager.FindByEmail(model.Email);
-                if (exst!=null)
-                {
-                    var resModel = new ResultViewModel("Warning!", "warning", "Cannot add user " + model.Email+". Email already exists");
-                    return PartialView("_ResultMessage", resModel);
-                }
-
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    var resModel = new ResultViewModel("Success!", "success", "User successfully added");
-                    return PartialView("_ResultMessage", resModel);
-                }
-                else
-                {
-                    var resModel = new ResultViewModel("Error!", "danger", "Unknown error. Please try again later");
-                    return PartialView("_ResultMessage", resModel);
-                }
+                return View(model);
             }
 
-            // If we got this far, something failed, redisplay form
-            return PartialView("_ResultMessage", new ResultViewModel("Error!", "danger", "Failed to create user. Wrong parameter error."));
+            // The following code protects for brute force attacks against the two factor codes. 
+            // If a user enters incorrect codes for a specified amount of time then the user account 
+            // will be locked out for a specified amount of time. 
+            // You can configure the account lockout settings in IdentityConfig
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(model.ReturnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid code.");
+                    return View(model);
+            }
         }
 
         //
@@ -395,7 +408,8 @@ namespace CascBasic.Controllers
             }
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
-
+        #endregion
+        
         #region ExternalLogin
         //
         // POST: /Account/ExternalLogin
@@ -479,17 +493,6 @@ namespace CascBasic.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
-        #endregion
-
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
-        }
 
         //
         // GET: /Account/ExternalLoginFailure
@@ -498,7 +501,8 @@ namespace CascBasic.Controllers
         {
             return View();
         }
-
+        #endregion
+                       
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -520,6 +524,7 @@ namespace CascBasic.Controllers
         }
 
         #region Helpers
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 

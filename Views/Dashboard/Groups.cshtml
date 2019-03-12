@@ -1,3 +1,42 @@
-﻿<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Groups</h1>
+﻿@model IEnumerable<CascBasic.Models.ViewModels.GroupsViewModel>
+
+<style>
+    #roleForm {
+        padding: 15px 10px 0px 15px;
+    }
+</style>
+<div>
+    <h4>Groups</h4>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <button type="button" class="btn btn-sm btn-outline-success" id="roleFormBtn"><i class="material-icons md-18">add_circle_outline</i>Add new</button>
+        </div>
+    </div>    
+    <div class="dash-sub dash-sub-text">
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    </div>
+    <h5>List</h5>
+    <div class="dash-sub dash-sub-detail">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm" id="dash-roles-tbl">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Users Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var g in Model)
+                    {
+                        <tr>
+                            <td>@g.Id</td>
+                            <td>@g.Name</td>
+                            <td>@g.UsersCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

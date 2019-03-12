@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;
@@ -37,14 +37,32 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Users()
         {
-            var users = _db.Users.ToList();
+            var users = _db.Users.Select(a => new UsersViewModel()
+            {
+                Id = a.Id,
+                FirstName = a.FirstName,
+                MiddleName = a.MiddleName,
+                LastName = a.LastName,
+                PhoneNumber = a.PhoneNumber,
+                Email = a.Email,
+                UserName = a.UserName,
+                Groups = a.Groups.Count,
+                Roles = a.Roles.Count
+            });
             return PartialView(users);
         }
 
         [HttpGet]
         public ActionResult Groups()
         {
-            return PartialView();
+            var groups = _db.Groups.Select(a => new GroupsViewModel()
+            {
+                Id = a.Id,
+                Name = a.Name,
+                UsersCount = a.Users.Count
+            }).ToList();
+
+            return PartialView(groups);
         }
 
         [HttpGet]
