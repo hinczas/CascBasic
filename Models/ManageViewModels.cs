@@ -7,6 +7,7 @@ namespace CascBasic.Models
 {
     public class IndexViewModel
     {
+        public string UserName { get; set; }
         public string Email { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }

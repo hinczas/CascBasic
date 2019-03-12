@@ -68,11 +68,13 @@ namespace CascBasic.Controllers
                 : "";
 
             var userId = string.IsNullOrEmpty(id) ? User.Identity.GetUserId() : id;
+            var user = await UserManager.FindByIdAsync(userId);
             var model = new IndexViewModel
             {
-                Email = await UserManager.GetEmailAsync(userId),
+                UserName = user.UserName,
+                Email = user.Email,
                 HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
+                PhoneNumber = user.PhoneNumber,
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
