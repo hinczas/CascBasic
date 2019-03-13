@@ -55,7 +55,7 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Groups()
         {
-            var groups = _db.Groups.Select(a => new GroupsViewModel()
+            var groups = _db.Groups.Select(a => new GroupViewModel()
             {
                 Id = a.Id,
                 Name = a.Name,
@@ -68,7 +68,7 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Roles()
         {
-            var roles = _db.Roles.Select(a => new RolesViewModel()
+            var roles = _db.Roles.Select(a => new RoleViewModel()
             {
                 Id = a.Id,
                 Name = a.Name,
@@ -77,36 +77,5 @@ namespace CascBasic.Controllers
 
             return PartialView(roles);
         }
-
-
-
-        #region CreateTestUsers
-        public async Task CreateTestUsers()
-        {
-            var db = new ApplicationDbContext();
-            var userStore = new UserStore<ApplicationUser>(db);
-            var userManager = new ApplicationUserManager(userStore);
-
-            for (var i = 6; i <= 200; i++)
-            {
-                var username = "test" + i.ToString().PadLeft(4, '0');
-
-                var user = db.Users.FirstOrDefault(u => u.UserName == username);
-                if (user == null)
-                {
-                    user = new ApplicationUser()
-                    {
-                        UserName = username,
-                        Email = username + "@test.test",
-                        EmailConfirmed = true,
-                        LockoutEnabled = false
-                    };
-
-                    var password = "Test12345*";
-                    var result = await userManager.CreateAsync(user, password);
-                }
-            }
-        }
-        #endregion
     }
 }

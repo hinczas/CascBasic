@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CascBasic.Models.ViewModels;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 
 namespace CascBasic.Models
 {
-    public class IndexViewModel
+    public class IndexViewModel : StatusViewModel
     {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public bool HasPassword { get; set; }
@@ -14,56 +20,60 @@ namespace CascBasic.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
-        public List<Group> Groups { get; set; }
-        public List<ApplicationRole> Roles { get; set; }
+        public List<GroupViewModel> UserGroups { get; set; }
+        public List<RoleViewModel> UserRoles { get; set; }
+        public List<GroupViewModel> AllGroups { get; set; }
+        public List<RoleViewModel> AllRoles { get; set; }
 
     }
 
-    public class ManageLoginsViewModel
+    public class ManageLoginsViewModel : StatusViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
 
-    public class FactorViewModel
+    public class FactorViewModel : StatusViewModel
     {
         public string Purpose { get; set; }
     }
 
-    public class SetPasswordViewModel
+    public class SetPasswordViewModel : StatusViewModel
     {
+        public string Id { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "New pass")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
+        [Display(Name = "Confirm pass")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ChangePasswordViewModel : StatusViewModel
     {
+        public string Id { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Current pass")]
         public string OldPassword { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "New pass")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
+        [Display(Name = "Confirm pass")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
-    public class AddPhoneNumberViewModel
+    public class AddPhoneNumberViewModel : StatusViewModel
     {
         [Required]
         [Phone]
@@ -71,7 +81,7 @@ namespace CascBasic.Models
         public string Number { get; set; }
     }
 
-    public class VerifyPhoneNumberViewModel
+    public class VerifyPhoneNumberViewModel : StatusViewModel
     {
         [Required]
         [Display(Name = "Code")]
@@ -83,7 +93,7 @@ namespace CascBasic.Models
         public string PhoneNumber { get; set; }
     }
 
-    public class ConfigureTwoFactorViewModel
+    public class ConfigureTwoFactorViewModel : StatusViewModel
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }

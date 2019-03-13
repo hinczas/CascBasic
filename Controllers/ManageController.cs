@@ -11,6 +11,8 @@ using Owin.Security.Providers.Raven.RavenMore;
 using CascBasic.Context;
 using Microsoft.AspNet.Identity.EntityFramework;
 using CascBasic.Models.ViewModels;
+using CascBasic.Models.ViewModels.ManageViewModels;
+using System.Collections.Generic;
 
 namespace CascBasic.Controllers
 {
@@ -19,9 +21,11 @@ namespace CascBasic.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext _db;
 
         public ManageController()
         {
+            _db = new ApplicationDbContext();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -58,6 +62,15 @@ namespace CascBasic.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(string id, ManageMessageId? message)
         {
+            string cod = "";
+            string hed = "";
+            string msg = "";
+            if(TempData["Messages"] != null)
+            {
+                cod = (string)TempData["Code"];
+                hed = (string)TempData["Head"];
+                msg = String.Join("\n", ((List<string>)TempData["Messages"]).ToArray());
+            }
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -65,16 +78,40 @@ namespace CascBasic.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.UpdateDetialsSuccess ? "Details have been updated."
+                : message == ManageMessageId.ErrorChangePassFail ? "Passwords do not match or do not meet requirements."
+                : message == ManageMessageId.ErrorChangePassModel ? "Cannot update password."
+                : message == ManageMessageId.ErrorSetPassFail ? "Passwords do not match or do not meet requirements."
+                : message == ManageMessageId.ErrorSetPassModel ? "Cannot update password."
                 : "";
 
             var userId = string.IsNullOrEmpty(id) ? User.Identity.GetUserId() : id;
             var user = await UserManager.FindByIdAsync(userId);
+            var userGroups = user.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name}).OrderBy(b => b.Name).ToList();
+            var userRoles = user.Roles.Select(a => new RoleViewModel(){ Id = a.RoleId, Name = a.Role.Name }).OrderBy(b => b.Name).ToList();
+            
+            var allGroups = _db.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name }).ToList().Except(userGroups).ToList();
+            var allRoles = _db.Roles.Select(a => new RoleViewModel(){ Id = a.Id, Name = a.Name }).ToList().Except(userRoles).ToList();
+
             var model = new IndexViewModel
             {
+                Code = cod,
+                Head = hed,
+                Message = msg,
+
+                Id = user.Id,
+                FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
+                LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
                 HasPassword = HasPassword(),
                 PhoneNumber = user.PhoneNumber,
+                UserGroups = userGroups,
+                UserRoles = userRoles,
+
+                AllGroups = allGroups,
+                AllRoles = allRoles,
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
@@ -220,68 +257,9 @@ namespace CascBasic.Controllers
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
 
-        //
-        // GET: /Manage/ChangePassword
-        public ActionResult ChangePassword()
-        {
-            return View();
-        }
+        
 
-        //
-        // POST: /Manage/ChangePassword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
-            {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-            }
-            AddErrors(result);
-            return View(model);
-        }
 
-        //
-        // GET: /Manage/SetPassword
-        public ActionResult SetPassword()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Manage/SetPassword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-                if (result.Succeeded)
-                {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                    if (user != null)
-                    {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    }
-                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
-                }
-                AddErrors(result);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
 
         //
         // GET: /Manage/ManageLogins
@@ -343,7 +321,174 @@ namespace CascBasic.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region PartialForms
+
+        [HttpGet]
+        public ActionResult PersonalForm(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var user = _db.Users.Find(id);
+                var model = new ManagePersonalVM
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    MiddleName = user.MiddleName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber
+                };
+
+                // Request a redirect to the external login provider to link a login for the current user
+                return PartialView(model);
+            }
+            return PartialView("ErrorForm");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> PersonalForm(ManagePersonalVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _db.Users.Find(model.Id);
+                user.FirstName = model.FirstName;
+                user.MiddleName = model.MiddleName;
+                user.LastName = model.LastName;
+                user.PhoneNumber = model.PhoneNumber;
+
+                await _db.SaveChangesAsync();
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "Details have been updated." };
+                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.UpdateDetialsSuccess });
+            }
+
+            var errors = ModelState.Values.SelectMany(a => a.Errors);
+            TempData["Code"] = "danger";
+            TempData["Head"] = "Error";
+            TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+            // Request a redirect to the external login provider to link a login for the current user
+            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.Error });
+        }
+
+        //
+        // GET: /Manage/ChangePassword
+        public ActionResult ChangePassword(string id)
+        {
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                var user = _db.Users.Find(id);
+                var model = new ChangePasswordViewModel
+                {
+                    Id = user.Id
+                };
+
+                // Request a redirect to the external login provider to link a login for the current user
+                return PartialView(model);
+            }
+            var error = new StatusViewModel()
+            {
+                Head = "Missing ID",
+                Message = "User ID is required",
+                Caller = "ChangePassword"
+            };
+            return PartialView("ErrorForm", error);
+        }
+
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorChangePassModel });
+            }
+            var result = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(model.Id);
+                if (user != null && User.Identity.GetUserId().Equals(model.Id))
+                {
+                   await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "Password has been updated." };
+                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.SetPasswordSuccess });
+            }
+            AddErrors(result);
+            TempData["Code"] = "danger";
+            TempData["Head"] = "Error";
+            TempData["Messages"] = result.Errors.ToList();
+            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorChangePassFail });
+        }
+
+        //
+        // GET: /Manage/SetPassword
+        public ActionResult SetPassword(string id)
+        {
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                var user = _db.Users.Find(id);
+                var model = new SetPasswordViewModel
+                {
+                    Id = user.Id
+                };
+
+                // Request a redirect to the external login provider to link a login for the current user
+                return PartialView(model);
+            }
+            var error = new StatusViewModel()
+            {
+                Head = "Missing ID",
+                Message = "User ID is required",
+                Caller = "SetPassword"
+            };
+            return PartialView("ErrorForm", error);
+        }
+
+        //
+        // POST: /Manage/SetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await UserManager.AddPasswordAsync(model.Id, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    var user = await UserManager.FindByIdAsync(model.Id);
+                    if (user != null && User.Identity.GetUserId().Equals(model.Id))
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    }
+                    TempData["Code"] = "success";
+                    TempData["Head"] = "Done";
+                    TempData["Messages"] = new List<string>() { "Password has been set." };
+                    return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.SetPasswordSuccess });
+                }
+                AddErrors(result);
+                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorSetPassFail });
+            }
+
+            var errors = ModelState.Values.SelectMany(a => a.Errors);
+            TempData["Code"] = "danger";
+            TempData["Head"] = "Error";
+            TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorSetPassModel });
+        }
+        #endregion
+
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -391,7 +536,12 @@ namespace CascBasic.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
+            UpdateDetialsSuccess,
+            ErrorChangePassModel,
+            ErrorChangePassFail,
+            ErrorSetPassFail,
+            ErrorSetPassModel
         }
 
 #endregion

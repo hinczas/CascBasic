@@ -1,0 +1,32 @@
+﻿@model  CascBasic.Models.ViewModels.ManageViewModels.ManagePersonalVM
+@using (Html.BeginForm("PersonalForm", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <h5 class="modal-title">Change personal details...</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <input type="text" value="@Model.Id" name="Id" hidden />
+        <dl class="row">
+            <dt class="col-sm-3">First Name</dt>
+            <dd class="col-sm-9">@Html.TextBoxFor(m => m.FirstName, new { @placeholder = "first name", @class = "form-control form-control-sm" })</dd>
+
+            <dt class="col-sm-3">Middle Names</dt>
+            <dd class="col-sm-9">@Html.TextBoxFor(m => m.MiddleName, new { @placeholder = "middle names", @class = "form-control form-control-sm" })</dd>
+
+            <dt class="col-sm-3">Last Name</dt>
+            <dd class="col-sm-9">@Html.TextBoxFor(m => m.LastName, new { @placeholder = "last name", @class = "form-control form-control-sm" })</dd>
+
+            <dt class="col-sm-3">Phone Number</dt>
+            <dd class="col-sm-9">@Html.TextBoxFor(m => m.PhoneNumber, new { @placeholder = "phone number", @class = "form-control form-control-sm" })</dd>
+        </dl>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-sm btn-outline-success"value="Save" />
+        <button type="button" class="btn btn-sm btn-outline-danger" data-dismiss="modal">Cancel</button>
+    </div>
+}
+

@@ -6,13 +6,14 @@ using System.Data.Entity;
 
 namespace CascBasic.Context
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string,
+                             IdentityUserLogin, ApplicationUserRole, IdentityUserClaim>
     {
-        new public virtual DbSet<ApplicationRole> Roles { get; set; }
+        //new public virtual DbSet<ApplicationRole> Roles { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
 
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultConnection")
         {
         }
 
@@ -45,6 +46,5 @@ namespace CascBasic.Context
                    mc.ToTable("AspNetUserGroups");
                });
         }
-        //public System.Data.Entity.DbSet<CascBasic.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

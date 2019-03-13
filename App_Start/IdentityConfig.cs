@@ -43,7 +43,7 @@ namespace CascBasic
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new ApplicationUserStore(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -105,6 +105,45 @@ namespace CascBasic
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+    }
+
+    public class ApplicationUserStore
+    : UserStore<ApplicationUser, ApplicationRole, string,
+        IdentityUserLogin, ApplicationUserRole,
+        IdentityUserClaim>, IUserStore<ApplicationUser>,
+        IDisposable
+    {
+        public ApplicationUserStore() : this(new IdentityDbContext())
+        {
+            base.DisposeContext = true;
+        }
+
+
+        public ApplicationUserStore(DbContext context)
+            : base(context)
+        {
+
+        }        
+    }
+
+
+    public class ApplicationRoleStore
+        : RoleStore<ApplicationRole, string, ApplicationUserRole>,
+        IQueryableRoleStore<ApplicationRole>,
+        IRoleStore<ApplicationRole>, IDisposable
+    {
+        public ApplicationRoleStore()
+            : base(new IdentityDbContext())
+        {
+            base.DisposeContext = true;
+        }
+
+
+        public ApplicationRoleStore(DbContext context)
+            : base(context)
+        {
+
         }
     }
 }

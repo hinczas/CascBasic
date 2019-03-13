@@ -1,52 +1,204 @@
 ﻿@model CascBasic.Models.IndexViewModel
-
+<link href="~/Content/manage.css" rel="stylesheet" />
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+<div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading">@Model.Head!</h4>
+    <p style="white-space: pre-line">@Model.Message</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
 <nav class="navbar navbar-light navbar-subpage">
     <span class="navbar-brand mb-0 h1">Manage @Model.UserName</span>
     <div class="form-inline">
     </div>
 </nav>
 <div class="container">
-    <p class="text-success">@ViewBag.StatusMessage</p>
-    <div>
-        <h4>@Model.Email</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>Password:</dt>
-            <dd>
+    <h5>
+        <i class="material-icons">person</i>
+        <span>Personal details</span>
+        <a href="#" data-toggle="modal" data-form="PersonalForm" onclick="btnEditClick(this)">
+            ...edit
+        </a>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-det">
+        <dl class="row">
+            <dt class="col-sm-3">First Name</dt>
+            <dd class="col-sm-9">@Model.FirstName</dd>
+
+            <dt class="col-sm-3">Middle Names</dt>
+            <dd class="col-sm-9">@Model.MiddleName</dd>
+
+            <dt class="col-sm-3">Last Name</dt>
+            <dd class="col-sm-9">@Model.LastName</dd>
+
+            <dt class="col-sm-3">Phone Number</dt>
+            <dd class="col-sm-9">@Model.PhoneNumber</dd>
+        </dl>
+    </div>
+    <h5>
+        <i class="material-icons">vpn_key</i>
+        <span>Login details</span>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-log">
+        <dl class="row">
+            <dt class="col-sm-3">Username</dt>
+            <dd class="col-sm-9">@Model.UserName</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Password</dt>
+            <dd class="col-sm-9">
                 [
                 @if (Model.HasPassword)
                 {
-                    @Html.ActionLink("Change your password", "ChangePassword")
+                    <a href="#" data-toggle="modal" data-form="ChangePassword" onclick="btnEditClick(this)">
+                        Change password
+                    </a>
                 }
                 else
                 {
-                    @Html.ActionLink("Create", "SetPassword")
+                    <a href="#" data-toggle="modal" data-form="SetPassword" onclick="btnEditClick(this)">
+                        Create
+                    </a>
                 }
                 ]
             </dd>
-            <dt>External Logins:</dt>
-            <dd>
+            <dt class="col-sm-3">External Logins</dt>
+            <dd class="col-sm-9">
                 @Model.Logins.Count [
                 @Html.ActionLink("Manage", "ManageLogins") ]
             </dd>
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None")
-                @if (Model.PhoneNumber != null)
-                {
-                    <br />
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                    }
-                }
-                else
-                {
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")]</text>
-                }
-            </dd>
         </dl>
     </div>
+    <h5>
+        <i class="material-icons">security</i>
+        <span>Groups and roles</span>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-sec">
+        <div class="row">
+            <div class="col-4">
+                <b>Permissions</b>
+                <p>
+                    <i>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </i>
+                </p>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Groups</h5>
+                        <div class="mgmt-list list-group">
+                            <div class="user-grp">
+                                @foreach (var grp in Model.UserGroups)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@grp.Id" checked>
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            @grp.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <hr />
+                            <div class="all-grp">
+                                @foreach (var grp in Model.AllGroups)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@grp.Id">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            @grp.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Roles</h5>
+                        <div class="mgmt-list list-role">
+                            <div class="user-rol">
+                                @foreach (var rol in Model.UserRoles)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@rol.Id" checked>
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            @rol.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <hr />
+                            <div class="all-rol">
+                                @foreach (var rol in Model.AllRoles)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@rol.Id">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            @rol.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<!-- Forms Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="formModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content replaceMe">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success">Save</button>
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function btnEditClick(e) {
+        var form = e.dataset.form;
+        var link = '@Url.Action("partialView", "Manage",new { id = Model.Id})';
+        link = link.replace("partialView", form);
+
+        $.ajax({
+
+            type: "get",
+            url: link,
+            success: function (d) {
+                /* d is the HTML of the returned response */
+                $('.replaceMe').html(d); //replaces previous HTML with action
+                $('#formModal').modal('show');
+            }
+        });
+    }
+</script>
