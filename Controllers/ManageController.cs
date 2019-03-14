@@ -11,8 +11,8 @@ using Owin.Security.Providers.Raven.RavenMore;
 using CascBasic.Context;
 using Microsoft.AspNet.Identity.EntityFramework;
 using CascBasic.Models.ViewModels;
-using CascBasic.Models.ViewModels.ManageViewModels;
 using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace CascBasic.Controllers
 {
@@ -87,11 +87,14 @@ namespace CascBasic.Controllers
 
             var userId = string.IsNullOrEmpty(id) ? User.Identity.GetUserId() : id;
             var user = await UserManager.FindByIdAsync(userId);
-            var userGroups = user.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name}).OrderBy(b => b.Name).ToList();
-            var userRoles = user.Roles.Select(a => new RoleViewModel(){ Id = a.RoleId, Name = a.Role.Name }).OrderBy(b => b.Name).ToList();
-            
-            var allGroups = _db.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name }).ToList().Except(userGroups).ToList();
-            var allRoles = _db.Roles.Select(a => new RoleViewModel(){ Id = a.Id, Name = a.Name }).ToList().Except(userRoles).ToList();
+
+            var userGroups = user.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name, Checked = "checked"}).OrderBy(b => b.Name).ToList();
+            var allGroups = _db.Groups.Select(a => new GroupViewModel() { Id = a.Id, Name = a.Name, Checked = "" }).ToList().Union(userGroups).ToList();
+            var groups = userGroups.Union(allGroups).ToList();
+
+            var userRoles = user.Roles.Select(a => new RoleViewModel(){ Id = a.RoleId, Name = a.Role.Name, Checked = "checked" }).OrderBy(b => b.Name).ToList();
+            var allRoles = _db.Roles.Select(a => new RoleViewModel(){ Id = a.Id, Name = a.Name, Checked = "" }).ToList().Except(userRoles).ToList();
+            var roles = userRoles.Union(allRoles).ToList();
 
             var model = new IndexViewModel
             {
@@ -110,8 +113,8 @@ namespace CascBasic.Controllers
                 UserGroups = userGroups,
                 UserRoles = userRoles,
 
-                AllGroups = allGroups,
-                AllRoles = allRoles,
+                AllGroups = groups,
+                AllRoles = roles,
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
@@ -119,30 +122,39 @@ namespace CascBasic.Controllers
             return View(model);
         }
 
+        #region TwoPartAuth
         //
-        // POST: /Manage/RemoveLogin
+        // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
+        public async Task<ActionResult> EnableTwoFactorAuthentication()
         {
-            ManageMessageId? message;
-            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
-            if (result.Succeeded)
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                message = ManageMessageId.RemoveLoginSuccess;
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
-            else
-            {
-                message = ManageMessageId.Error;
-            }
-            return RedirectToAction("ManageLogins", new { Message = message });
+            return RedirectToAction("Index", "Manage");
         }
 
+        //
+        // POST: /Manage/DisableTwoFactorAuthentication
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DisableTwoFactorAuthentication()
+        {
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+            }
+            return RedirectToAction("Index", "Manage");
+        }
+        #endregion
+
+        #region Phone
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
@@ -172,36 +184,6 @@ namespace CascBasic.Controllers
                 await UserManager.SmsService.SendAsync(message);
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
-        }
-        
-        //
-        // POST: /Manage/EnableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EnableTwoFactorAuthentication()
-        {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
-        }
-
-        //
-        // POST: /Manage/DisableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DisableTwoFactorAuthentication()
-        {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
         }
 
         //
@@ -256,73 +238,11 @@ namespace CascBasic.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
-
-        
-
-
-
-        //
-        // GET: /Manage/ManageLogins
-        public async Task<ActionResult> ManageLogins(ManageMessageId? message)
-        {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user == null)
-            {
-                return View("Error");
-            }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
-            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
-            ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            return View(new ManageLoginsViewModel
-            {
-                CurrentLogins = userLogins,
-                OtherLogins = otherLogins
-            });
-        }
-
-        //
-        // POST: /Manage/LinkLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LinkLogin(string provider)
-        {
-            // Request a redirect to the external login provider to link a login for the current user
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
-        }
-
-
-        //
-        // GET: /Manage/LinkLoginCallback
-        public async Task<ActionResult> LinkLoginCallback()
-        {
-            //var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
-            var loginInfo = new RavenClient().GetExternalLoginInfo(HttpContext, RavenCallbackCode.Link);
-
-            if (loginInfo == null)
-            {
-                return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-            }
-            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-        }
-        
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
+        #endregion
 
         #region PartialForms
 
+        #region Personal
         [HttpGet]
         public ActionResult PersonalForm(string id)
         {
@@ -359,17 +279,20 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "success";
                 TempData["Head"] = "Done";
                 TempData["Messages"] = new List<string>() { "Details have been updated." };
-                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.UpdateDetialsSuccess });
+            } else
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
             }
 
-            var errors = ModelState.Values.SelectMany(a => a.Errors);
-            TempData["Code"] = "danger";
-            TempData["Head"] = "Error";
-            TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
             // Request a redirect to the external login provider to link a login for the current user
-            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.Error });
+            return RedirectToAction("Index", new { id = model.Id });
         }
+        #endregion
 
+        #region PasswordChange
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword(string id)
@@ -407,28 +330,31 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
-                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorChangePassModel });
-            }
-            var result = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
+            } else
             {
-                var user = await UserManager.FindByIdAsync(model.Id);
-                if (user != null && User.Identity.GetUserId().Equals(model.Id))
+                var result = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
+                if (result.Succeeded)
                 {
-                   await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    var user = await UserManager.FindByIdAsync(model.Id);
+                    if (user != null && User.Identity.GetUserId().Equals(model.Id))
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    }
+                    TempData["Code"] = "success";
+                    TempData["Head"] = "Done";
+                    TempData["Messages"] = new List<string>() { "Password has been updated." };
+                } else
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = result.Errors.ToList();
                 }
-                TempData["Code"] = "success";
-                TempData["Head"] = "Done";
-                TempData["Messages"] = new List<string>() { "Password has been updated." };
-                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.SetPasswordSuccess });
             }
-            AddErrors(result);
-            TempData["Code"] = "danger";
-            TempData["Head"] = "Error";
-            TempData["Messages"] = result.Errors.ToList();
-            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorChangePassFail });
+            return RedirectToAction("Index", new { id = model.Id });
         }
+        #endregion
 
+        #region PasswordSet
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword(string id)
@@ -473,19 +399,283 @@ namespace CascBasic.Controllers
                     TempData["Code"] = "success";
                     TempData["Head"] = "Done";
                     TempData["Messages"] = new List<string>() { "Password has been set." };
-                    return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.SetPasswordSuccess });
+                } else
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = result.Errors.ToList();
                 }
-                AddErrors(result);
-                return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorSetPassFail });
+            } else
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+            }            
+            return RedirectToAction("Index", new { id = model.Id});
+        }
+        #endregion
+
+        #region ExternalLogins
+        //
+        // GET: /Manage/ManageLogins
+        public async Task<ActionResult> ManageLogins(string id, ManageMessageId? message)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+
+            ViewBag.StatusMessage =
+                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                : message == ManageMessageId.Error ? "An error has occurred."
+                : "";
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var userLogins = await UserManager.GetLoginsAsync(id);            
+            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
+            bool remButton = user.PasswordHash != null || userLogins.Count > 1;
+
+            bool ravenEnabled = false;
+            string ravenUser = "";
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                MailAddress addr = new MailAddress(user.Email);
+                string userPart = addr.User;
+                string domainPart = addr.Host;
+                if ((domainPart.ToLower().Equals("cam.ac.uk")))
+                {
+                    ravenEnabled = true;
+                    ravenUser = userPart;
+                }
             }
 
-            var errors = ModelState.Values.SelectMany(a => a.Errors);
-            TempData["Code"] = "danger";
-            TempData["Head"] = "Error";
-            TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
-            // If we got this far, something failed, redisplay form
-            return RedirectToAction("Index", new { id = model.Id, Message = ManageMessageId.ErrorSetPassModel });
+            string ravenProvider = Owin.Security.Providers.Raven.Constants.DefaultAuthenticationType;
+            bool ravenLinked = userLogins.Where(a=> a.ProviderKey.Equals(ravenUser)).Count() > 0;
+            return PartialView(new ManageLoginsViewModel
+            {
+                RavenLinked = ravenLinked,
+                RavenCompatible = ravenEnabled,
+                ProviderKey = ravenUser,
+                RemoveButton = remButton,
+                RavenProvider = ravenProvider,
+                Id = id,
+                CurrentLogins = userLogins,
+                OtherLogins = otherLogins
+            });
         }
+
+        //
+        // POST: /Manage/RemoveLogin
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemoveLogin(string id, string loginProvider, string providerKey)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+
+            var result = await UserManager.RemoveLoginAsync(id, new UserLoginInfo(loginProvider, providerKey));
+            if (result.Succeeded)
+            {
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "External login removed." }; 
+            }
+            else
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = result.Errors.ToList();
+            }
+            return RedirectToAction("Index", new { id });
+        }
+
+        //
+        // POST: /Manage/LinkLoginPartial
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LinkLoginPartial(string id, string loginProvider, string providerKey)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+
+            var result = await UserManager.AddLoginAsync(id, new UserLoginInfo(loginProvider, providerKey));
+            if (result.Succeeded)
+            {
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "External "+ loginProvider + " login added." };
+            }
+            else
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = result.Errors.ToList();
+            }
+            return RedirectToAction("Index", new { id });
+        }
+
+        //
+        // POST: /Manage/LinkLogin
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LinkLogin(string id, string provider)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+            // Request a redirect to the external login provider to link a login for the current user
+            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage", new { id }), id);
+        }
+
+        //
+        // GET: /Manage/LinkLoginCallback
+        public async Task<ActionResult> LinkLoginCallback(string id)
+        {
+            //var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+            var loginInfo = new RavenClient().GetExternalLoginInfo(HttpContext, RavenCallbackCode.Link);
+
+            if (loginInfo == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Failed to authenticate user." };
+                return RedirectToAction("Index", new { id });
+            }
+            var result = await UserManager.AddLoginAsync(id, loginInfo.Login);
+            if (result.Succeeded)
+            {
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "External " + loginInfo.Login.LoginProvider + " login added." };
+            }
+            else
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = result.Errors.ToList();
+            }
+
+            return RedirectToAction("Index", new { id });
+        }
+        #endregion
+
+        #region Permissions
+        [HttpPost]
+        public async Task<ActionResult> ChangeRoles(List<string> roles, string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+            if (roles==null || roles.Count < 1)
+            {
+                roles = new List<string>();
+            } 
+            var user = _db.Users.Find(id);
+            if (user == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Error getting user details from DB." };
+                return RedirectToAction("Index", new { id });
+            }
+            if (ModelState.IsValid)
+            {
+                // Logic
+                var userRoles = user.Roles.Select(a => a.Role.Name).ToList();
+                var addRoles = roles.Except(userRoles).ToList();
+                var remRoles = userRoles.Except(roles).ToList();
+
+                var remResult = await UserManager.RemoveFromRolesAsync(id, remRoles.ToArray());
+                var addResult = await UserManager.AddToRolesAsync(id, addRoles.ToArray());
+
+                if (!remResult.Succeeded || !addResult.Succeeded)
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = remResult.Errors.Union(addResult.Errors).ToList();
+                } else
+                {
+                    TempData["Code"] = "success";
+                    TempData["Head"] = "Done";
+                    TempData["Messages"] = new List<string>() { "Roles have been updated." };
+                }
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+            }
+
+            // Request a redirect to the external login provider to link a login for the current user
+            return RedirectToAction("Index", new { id });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeGroups(List<long> groups, string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = User.Identity.GetUserId();
+            if (groups == null || groups.Count < 1)
+            {
+                groups = new List<long>();
+            }
+            var user = _db.Users.Find(id);
+            if (user == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Error getting user details from DB." };
+                return RedirectToAction("Index", new { id });
+            }
+            if (ModelState.IsValid)
+            {
+                // Logic
+                var userGroups = user.Groups.Select(a => a.Id).ToList();
+                var addGroups = groups.Except(userGroups).ToList();
+                var remGroups = userGroups.Except(groups).ToList();
+
+                try
+                {
+                    foreach (long gId in remGroups)
+                    {
+                        var grp = _db.Groups.Find(gId);
+                        user.Groups.Remove(grp);
+                    }
+                    await _db.SaveChangesAsync();
+
+                    foreach (long gId in addGroups)
+                    {
+                        var grp = _db.Groups.Find(gId);
+                        user.Groups.Add(grp);
+                    }
+                    await _db.SaveChangesAsync();
+                } catch (Exception e)
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = new List<string>() { e.Message };
+                    return RedirectToAction("Index", new { id });
+                }
+
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "Groups have been updated." };
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+            }
+
+            // Request a redirect to the external login provider to link a login for the current user
+            return RedirectToAction("Index", new { id });
+        }
+        #endregion
+
         #endregion
 
         #region Helpers
@@ -544,6 +734,19 @@ namespace CascBasic.Controllers
             ErrorSetPassModel
         }
 
-#endregion
+        #endregion
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _userManager != null)
+            {
+                _userManager.Dispose();
+                _userManager = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
     }
 }

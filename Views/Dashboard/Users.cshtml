@@ -32,10 +32,8 @@
                 <thead>
                     <tr>
                         <th>Username</th>
-                        <th>First name</th>
-                        <th>Last name</th>
                         <th>Email</th>
-                        <th>Phone</th>
+                        <th>External logins</th>
                         <th>Groups</th>
                         <th>Roles</th>
                         <th></th>
@@ -46,10 +44,8 @@
                     {
                     <tr href="##">
                         <td>@user.UserName</td>
-                        <td>@user.FirstName</td>
-                        <td>@user.LastName</td>
                         <td>@user.Email</td>
-                        <td>@user.PhoneNumber</td>
+                        <td>@user.ExternalLogins</td>
                         <td>@user.Groups</td>
                         <td>@user.Roles</td>
                         <td>@Html.ActionLink("details", "Index", "Manage", new { id = user.Id}, new { @class = "badge badge-primary" })</td>

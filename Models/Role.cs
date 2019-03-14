@@ -18,6 +18,7 @@ namespace CascBasic.Models
         }
 
         public virtual ICollection<Group> Groups { get; set; }
+
     }
 
     public class ApplicationUserRole : IdentityUserRole<string>
@@ -25,6 +26,6 @@ namespace CascBasic.Models
         public ApplicationUserRole() : base() { }
 
         public virtual ApplicationUser User { get; set; }
-        public virtual ApplicationRole Role { get; set; }
+        public virtual ApplicationRole Role { get; set; }        
     }
 }

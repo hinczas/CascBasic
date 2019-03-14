@@ -1,4 +1,6 @@
-﻿<link href="~/Content/dashboard.css" rel="stylesheet" />
+﻿@model CascBasic.Models.ViewModels.DashboardViewModel
+
+<link href="~/Content/dashboard.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -11,23 +13,23 @@
             <div class="sidebar-sticky">
                 <ul class="nav flex-column dash-links">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" data-view="Home">
+                        <div class="nav-link" data-view="Home">
                             <i class="material-icons">home</i>
                             <span>Home</span>
                             <span class="sr-only">(current)</span>
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-view="Users">
+                        <div class="nav-link" data-view="Users">
                             <i class="material-icons">person</i>
                             <span>Users</span>
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-view="Groups">
+                        <div class="nav-link" data-view="Groups">
                             <i class="material-icons">group</i>
                             <span>Groups</span>
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-view="Roles">
@@ -46,11 +48,33 @@
 
         <div id="alertPlaceholder"></div>
         <div class="main col-md-9 ml-sm-auto col-lg-10 px-4">
-            @Html.Partial("Home")
+            @{Html.RenderPartial("Loader");}
         </div>
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        var link = '@Url.Action(Model.PartialView, "Dashboard")';
+        var p = $('.dash-links');
+
+        $.ajax({
+            type: "get",
+            url: link,
+            success: function (d) {
+                /* d is the HTML of the returned response */
+                $('.main').html(d); //replaces previous HTML with action
+                p.find('.nav-link').each(function () {
+                    $(this).removeClass('active');
+                    if ($(this).data('view') =="@Model.PartialView") {
+                        $(this).addClass("active");
+                    }
+                });
+                
+            }
+        });
+    });
+
+
     $(function () {
         $('.nav-link').click(function () {
             var e = $(this);

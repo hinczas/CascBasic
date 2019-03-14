@@ -25,6 +25,7 @@
     }
         .sidebar-sticky .nav-link:hover {
             color: #10701c;
+            cursor:pointer;
         }
     .sidebar-sticky .nav-link i, span {
         display: inline-block;

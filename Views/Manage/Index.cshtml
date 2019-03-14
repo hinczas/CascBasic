@@ -1,27 +1,31 @@
-﻿@model CascBasic.Models.IndexViewModel
+﻿@model CascBasic.Models.ViewModels.IndexViewModel
+@using Microsoft.Owin.Security
+
 <link href="~/Content/manage.css" rel="stylesheet" />
+
 @if (!string.IsNullOrEmpty(Model.Message))
 {
-<div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
-    <h4 class="alert-heading">@Model.Head!</h4>
-    <p style="white-space: pre-line">@Model.Message</p>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-}
-<nav class="navbar navbar-light navbar-subpage">
-    <span class="navbar-brand mb-0 h1">Manage @Model.UserName</span>
-    <div class="form-inline">
+    <div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@Model.Head!</h4>
+        <p style="white-space: pre-line">@Model.Message</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-</nav>
+}
+    <nav class="navbar navbar-light navbar-subpage">
+        <span class="navbar-brand mb-0 h1">Manage @Model.UserName</span>
+        <div class="form-inline">
+            <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
+                @Html.ActionLink("Back", "Index", "Dashboard", new { sub = "Users" }, new { @class = "btn btn-sm btn-outline-secondary" })
+            </div>
+        </div>
+    </nav>
 <div class="container">
     <h5>
         <i class="material-icons">person</i>
         <span>Personal details</span>
-        <a href="#" data-toggle="modal" data-form="PersonalForm" onclick="btnEditClick(this)">
-            ...edit
-        </a>
+        <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-form="PersonalForm" onclick="btnEditClick(this)">edit</button>
     </h5>
     <hr />
     <div class="mgmt mgmt-det">
@@ -69,11 +73,24 @@
                 }
                 ]
             </dd>
+
             <dt class="col-sm-3">External Logins</dt>
-            <dd class="col-sm-9">
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>
+            @{
+                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+                if (loginProviders.Count() == 0)
+                {
+                    <dd class="col-sm-9"> There are no external authentication services configured. </dd>
+                }
+                else
+                {
+                    <dd class="col-sm-9">
+                        @Model.Logins.Count [
+                        <a href="#" data-toggle="modal" data-form="ManageLogins" onclick="btnEditClick(this)">
+                            Manage
+                        </a> ]
+                    </dd>
+                }
+            }
         </dl>
     </div>
     <h5>
@@ -95,29 +112,21 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Groups</h5>
+                        <h5 class="card-title">Groups<button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('groupsForm').submit()">save</button></h5>
                         <div class="mgmt-list list-group">
                             <div class="user-grp">
-                                @foreach (var grp in Model.UserGroups)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@grp.Id" checked>
-                                        <label class="form-check-label" for="defaultCheck1">
-                                            @grp.Name
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                            <hr />
-                            <div class="all-grp">
-                                @foreach (var grp in Model.AllGroups)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@grp.Id">
-                                        <label class="form-check-label" for="defaultCheck1">
-                                            @grp.Name
-                                        </label>
-                                    </div>
+                                @using (Html.BeginForm("ChangeGroups", "Manage", FormMethod.Post, new { id = "groupsForm" }))
+                                {                                    
+                                    foreach (var grp in Model.AllGroups)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-input" name="id" type="text" value="@Model.Id" hidden>
+                                            <input class="form-check-input" name="groups" type="checkbox" value="@grp.Id" @grp.Checked>
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                @grp.Name
+                                            </label>
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>
@@ -127,29 +136,21 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Roles</h5>
+                        <h5 class="card-title">Roles<button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('rolesForm').submit()">save</button></h5>
                         <div class="mgmt-list list-role">
                             <div class="user-rol">
-                                @foreach (var rol in Model.UserRoles)
+                                @using (Html.BeginForm("ChangeRoles", "Manage",FormMethod.Post,new { id = "rolesForm" }))
                                 {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@rol.Id" checked>
-                                        <label class="form-check-label" for="defaultCheck1">
-                                            @rol.Name
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                            <hr />
-                            <div class="all-rol">
-                                @foreach (var rol in Model.AllRoles)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@rol.Id">
-                                        <label class="form-check-label" for="defaultCheck1">
-                                            @rol.Name
-                                        </label>
-                                    </div>
+                                    foreach (var rol in Model.AllRoles)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-input" name="id" type="text" value="@Model.Id" hidden>
+                                            <input class="form-check-input" name="roles" type="checkbox" id="@rol.Id" value="@rol.Name" @rol.Checked>
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                @rol.Name
+                                            </label>
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>
@@ -177,7 +178,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-success">Save</button>
-                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

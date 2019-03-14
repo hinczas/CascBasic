@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 
-namespace CascBasic.Models
+namespace CascBasic.Models.ViewModels
 {
     public class IndexViewModel : StatusViewModel
     {
@@ -29,6 +29,12 @@ namespace CascBasic.Models
 
     public class ManageLoginsViewModel : StatusViewModel
     {
+        public string Id { get; set; }
+        public string ProviderKey { get; set; }
+        public bool RavenCompatible { get; set; }
+        public bool RemoveButton { get; set; }
+        public string RavenProvider { get; set; }
+        public bool RavenLinked { get; set; }
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
@@ -97,5 +103,14 @@ namespace CascBasic.Models
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+    }
+
+    public class ManagePersonalVM : StatusViewModel
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

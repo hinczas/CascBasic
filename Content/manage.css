@@ -5,17 +5,17 @@
 }
 h5 {
     margin-bottom:0px;
+    width:100%;
 }
-h5, h5 i, h5 span, h5 a {
+h5, h5 i, h5 span, h5 button {
     display:inline-block;
     vertical-align:middle;
 }
     h5 i {
         color: #007bff;
     }
-    h5 a {
-        font-weight:500;
-        font-size:1.25rem;
+    h5 button {
+        float: right;
     }
 .mgmt {
     padding:0px 10px 0px 10px;
@@ -24,7 +24,9 @@ h5, h5 i, h5 span, h5 a {
 .mgmt input:disabled {
     background:white;
 }
-
+dt {
+    font-weight:500;
+}
 dt, dd {
     min-height:24px;
 }

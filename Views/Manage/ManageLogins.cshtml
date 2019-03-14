@@ -1,70 +1,105 @@
-﻿@model CascBasic.Models.ManageLoginsViewModel
+﻿@model CascBasic.Models.ViewModels.ManageLoginsViewModel
 @using Microsoft.Owin.Security
-@{
-    ViewBag.Title = "Manage your external logins";
-}
 
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
-@{
-    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-    if (loginProviders.Count() == 0) {
-        <div>
-            <p>
-                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=313242">this article</a>
-                for details on setting up this ASP.NET application to support logging in via external services.
-            </p>
-        </div>
-    }
-    else
-    {
-        if (Model.CurrentLogins.Count > 0)
+<div class="modal-header">
+    <h5 class="modal-title">Manage logins...</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <input type="text" value="@Model.Id" name="Id" hidden />
+    @{
+        var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+        if (loginProviders.Count() == 0)
         {
-            <h4>Registered Logins</h4>
-            <table class="table">
-                <tbody>
+            <p> There are no external authentication services configured. </p>
+        }
+        else
+        {
+            if (Model.CurrentLogins.Count > 0)
+            {
+                <h6>Current user logins:</h6>
+                <div class="row" style="padding-left:10px;">
                     @foreach (var account in Model.CurrentLogins)
                     {
-                        <tr>
-                            <td>@account.LoginProvider</td>
-                            <td>
-                                @if (ViewBag.ShowRemoveButton)
+                        <div class="col col-6">@account.LoginProvider (@account.ProviderKey)</div>
+                        <div>
+                            @if (Model.RemoveButton)
+                            {
+                                using (Html.BeginForm("RemoveLogin", "Manage"))
                                 {
-                                    using (Html.BeginForm("RemoveLogin", "Manage"))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <div>
-                                            @Html.Hidden("loginProvider", account.LoginProvider)
-                                            @Html.Hidden("providerKey", account.ProviderKey)
-                                            <input type="submit" class="btn btn-default" value="Remove" title="Remove this @account.LoginProvider login from your account" />
-                                        </div>
-                                    }
+                                    @Html.AntiForgeryToken()
+                                    <div class="col col-2">
+                                        @Html.Hidden("id", Model.Id)
+                                        @Html.Hidden("loginProvider", account.LoginProvider)
+                                        @Html.Hidden("providerKey", account.ProviderKey)
+                                        <input type="submit" class="btn btn-sm btn-outline-danger" value="Remove" title="Remove this @account.LoginProvider login from your account" />
+                                    </div>
                                 }
-                                else
-                                {
-                                    @: &nbsp;
-                                }
-                            </td>
-                        </tr>
+                            }
+                            else
+                            {
+                                @: &nbsp;
+                            }
+                        </div>
                     }
-                </tbody>
-            </table>
-        }
-        if (Model.OtherLogins.Count > 0)
-        {
-            using (Html.BeginForm("LinkLogin", "Manage"))
-            {
-                @Html.AntiForgeryToken()
-                <div id="socialLoginList">
-                <p>
-                    @foreach (AuthenticationDescription p in Model.OtherLogins)
-                    {
-                        <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
-                    }
-                </p>
+
                 </div>
+                <hr />
+            }
+            if (Model.OtherLogins.Count > 0)
+            {
+                <h6>Available external logins:</h6>
+                <div style="padding-left:10px;">
+                    @if (Model.RavenCompatible && !Model.RavenLinked)
+                    {
+                        <div>
+                            <label>Auto link</label>
+                        </div>
+                        using (Html.BeginForm("LinkLoginPartial", "Manage"))
+                        {
+                            <div class="row" style="padding-left:20px;">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", Model.Id)
+                                @Html.Hidden("loginProvider", Model.RavenProvider)
+                                @Html.Hidden("providerKey", Model.ProviderKey)
+                                <button type="submit" class="btn btn-sm btn-outline-info" name="provider" title="Auto link your Raven account">@Model.RavenProvider</button>
+
+                            </div>
+                        }
+                        <br />
+                    }
+                </div>
+                <div style="padding-left:10px;">
+                    <div>
+                        <label>All</label>
+                    </div>
+                    @using (Html.BeginForm("LinkLogin", "Manage"))
+                    {
+                        <div class="row" style="padding-left:20px;">
+                            @Html.AntiForgeryToken()
+                            <div id="socialLoginList">
+                                <p>
+                                    @foreach (AuthenticationDescription p in Model.OtherLogins)
+                                    {
+                                        @Html.Hidden("id", Model.Id)
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
             }
         }
     }
-}
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Cancel</button>
+</div>
+
+

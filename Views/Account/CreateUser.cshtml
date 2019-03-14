@@ -7,8 +7,8 @@
         <span class="navbar-brand mb-0 h1">New user</span>
         <div class="form-inline">
             <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-                <input type="submit" class="btn btn-sm btn-success" value="Save"/>
-                <button class="btn btn-sm btn-danger" type="button">Cancel</button>
+                <input type="submit" class="btn btn-sm btn-outline-success" value="Save" />
+                @Html.ActionLink("Cancel", "Index", "Dashboard", new { sub = "Users" }, new { @class = "btn btn-sm btn-outline-secondary" })
             </div>
         </div>
     </nav>

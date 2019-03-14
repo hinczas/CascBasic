@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;
@@ -21,9 +21,14 @@ namespace CascBasic.Controllers
             _db = new ApplicationDbContext();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string sub)
         {
-                return View();
+            var model = new DashboardViewModel()
+            {
+                PartialView = string.IsNullOrEmpty(sub) ? "Home" : sub
+            };
+
+            return View(model);
         }        
 
         [HttpGet]
@@ -47,7 +52,8 @@ namespace CascBasic.Controllers
                 Email = a.Email,
                 UserName = a.UserName,
                 Groups = a.Groups.Count,
-                Roles = a.Roles.Count
+                Roles = a.Roles.Count,
+                ExternalLogins = a.Logins.Count
             });
             return PartialView(users);
         }
