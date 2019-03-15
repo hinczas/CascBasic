@@ -23,8 +23,22 @@ namespace CascBasic.Controllers
 
         public ActionResult Index(string sub)
         {
+            string cod = "";
+            string hed = "";
+            string msg = "";
+            if (TempData["Messages"] != null)
+            {
+                cod = (string)TempData["Code"];
+                hed = (string)TempData["Head"];
+                msg = String.Join("\n", ((List<string>)TempData["Messages"]).ToArray());
+            }
+
             var model = new DashboardViewModel()
             {
+                Code = cod,
+                Head = hed,
+                Message = msg,
+
                 PartialView = string.IsNullOrEmpty(sub) ? "Home" : sub
             };
 
@@ -65,7 +79,9 @@ namespace CascBasic.Controllers
             {
                 Id = a.Id,
                 Name = a.Name,
-                UsersCount = a.Users.Count
+                Description = a.Description,
+                UsersCount = a.Users.Count,
+                RolesCount = a.Roles.Count
             }).ToList();
 
             return PartialView(groups);
@@ -78,7 +94,9 @@ namespace CascBasic.Controllers
             {
                 Id = a.Id,
                 Name = a.Name,
-                UsersCount = a.Users.Count
+                Description = a.Description,
+                UsersCount = a.Users.Count,
+                GroupsCount = a.Groups.Count
             }).ToList();
 
             return PartialView(roles);

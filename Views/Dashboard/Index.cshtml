@@ -4,14 +4,29 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-<nav class="navbar navbar-light navbar-subpage">
-    <span class="navbar-brand mb-0 h1">Dashboard</span>
-</nav>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@Model.Head!</h4>
+        <p style="white-space: pre-line">@Model.Message</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <nav class="navbar navbar-light navbar-subpage">
+        <span class="navbar-brand mb-0 h1">Dashboard</span>
+        @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dashboardLinks" aria-controls="dashboardLinks" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>*@
+    </nav>
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column dash-links">
+            <div class="sidebar-sticky" id="dashboardLinks">
+                <ul class="nav flex-column dash-links navbar-nav mr-auto" >
                     <li class="nav-item">
                         <div class="nav-link" data-view="Home">
                             <i class="material-icons">home</i>
@@ -32,10 +47,10 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-view="Roles">
+                        <div class="nav-link" data-view="Roles">
                             <i class="material-icons">security</i>
                             <span>Roles</span>
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item" hidden>
                         <a class="nav-link" href="#" data-view="Reports">
@@ -69,7 +84,7 @@
                         $(this).addClass("active");
                     }
                 });
-                
+
             }
         });
     });

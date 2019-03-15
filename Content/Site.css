@@ -38,3 +38,11 @@ textarea {
     margin-bottom:10px;
     z-index:100;
 }
+
+/*Alert message placing */
+.alert {
+    position: absolute;
+    top: 115px;
+    right: 10px;
+    z-index:100;
+}

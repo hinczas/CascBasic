@@ -58,6 +58,9 @@
     font-size: .75rem;
     text-transform: uppercase;
 }
+.dash-links {
+    padding-left:15px;
+}
 
 /* Right panel styling */
 .dash-sub {
@@ -73,11 +76,24 @@ button .material-icons {
     vertical-align: middle;
 }
 
-/*Alert message placing */
-#alertPlaceholder {
-    padding:5px;
-    position: absolute;
-    right: 10px;
-    top: 68px;
-    z-index: 99;
+
+.card-body {
+    padding:0.5rem;
+}
+
+.col-lg-10, .col-md-9 {
+    -ms-flex: 0 0 83%;
+    flex: 0 0 83%;
+    max-width: 83%;
+}
+
+@media (min-width: 576px) {
+    .ml-sm-auto, .mx-sm-auto {
+        margin-left: 0 !important;
+    }
+}
+@media (min-width: 768px) {
+    .ml-sm-auto, .mx-sm-auto {
+        margin-left: auto !important;
+    }
 }

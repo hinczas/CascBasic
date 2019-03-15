@@ -15,8 +15,11 @@ namespace CascBasic.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64 Id { get; set; }
 
+        [StringLength(64)]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
-        
+        public string Description { get; set; }
+
         public virtual ICollection<ApplicationRole> Roles { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
 

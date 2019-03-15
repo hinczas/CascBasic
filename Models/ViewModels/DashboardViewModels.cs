@@ -5,7 +5,7 @@ using System.Web;
 
 namespace CascBasic.Models.ViewModels
 {
-    public class DashboardViewModel
+    public class DashboardViewModel : StatusViewModel
     {
         public string PartialView { get; set; }
     }
@@ -14,7 +14,9 @@ namespace CascBasic.Models.ViewModels
     {
         public Int64 Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public int UsersCount { get; set; }
+        public int RolesCount { get; set; }
         public string Checked { get; set; }
 
         #region Helpers
@@ -46,7 +48,9 @@ namespace CascBasic.Models.ViewModels
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public int UsersCount { get; set; }
+        public int GroupsCount { get; set; }
         public string Checked { get; set; }
 
 

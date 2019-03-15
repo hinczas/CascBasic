@@ -11,12 +11,17 @@ namespace CascBasic.Models
     [Table("AspNetRoles")]
     public class ApplicationRole : IdentityRole<string, ApplicationUserRole>
     {
-        public ApplicationRole() : base() { }
+        public ApplicationRole() : base() {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
         public ApplicationRole(string name) : this()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Name = name;
         }
 
+        public string Description { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
 
     }

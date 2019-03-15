@@ -198,6 +198,7 @@
     <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\PermissionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -215,10 +216,23 @@
     <Compile Include="Migrations\201903131111398_userRoles.Designer.cs">
       <DependentUpon>201903131111398_userRoles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903150825053_groupDesc.cs" />
+    <Compile Include="Migrations\201903150825053_groupDesc.Designer.cs">
+      <DependentUpon>201903150825053_groupDesc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903150840312_groupUnique.cs" />
+    <Compile Include="Migrations\201903150840312_groupUnique.Designer.cs">
+      <DependentUpon>201903150840312_groupUnique.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903150913410_roleDesc.cs" />
+    <Compile Include="Migrations\201903150913410_roleDesc.Designer.cs">
+      <DependentUpon>201903150913410_roleDesc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\PermViewModels.cs" />
     <Compile Include="Models\ViewModels\StatusViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Role.cs" />
@@ -392,9 +406,20 @@
     <EmbeddedResource Include="Migrations\201903131111398_userRoles.resx">
       <DependentUpon>201903131111398_userRoles.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903150825053_groupDesc.resx">
+      <DependentUpon>201903150825053_groupDesc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903150840312_groupUnique.resx">
+      <DependentUpon>201903150840312_groupUnique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903150913410_roleDesc.resx">
+      <DependentUpon>201903150913410_roleDesc.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Group\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
