@@ -46,3 +46,14 @@ textarea {
     right: 10px;
     z-index:100;
 }
+.nav-link-a {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 3px !important;
+}
+.nav-link-span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 0 !important;
+    cursor: pointer;
+}

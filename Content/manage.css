@@ -42,3 +42,6 @@ dt, dd {
     color:gray;
 }
 
+.form-check-input {
+    margin-left: 0;
+}

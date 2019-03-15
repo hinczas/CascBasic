@@ -8,12 +8,31 @@ using System.Web;
 
 namespace CascBasic.Models
 {
-    [Table("Groups")]
-    public class Group
+    [Table("AspNetGroups")]
+    public class ApplicationGroup
     {
+
+        public ApplicationGroup()
+        {
+            this.Id = Guid.NewGuid().ToString();
+            this.Roles = new List<ApplicationRole>();
+            this.Users = new List<ApplicationUser>();
+        }
+
+        public ApplicationGroup(string name)
+            : this()
+        {
+            this.Name = name;
+        }
+
+        public ApplicationGroup(string name, string description)
+            : this(name)
+        {
+            this.Description = description;
+        }
+
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int64 Id { get; set; }
+        public string Id { get; set; }
 
         [StringLength(64)]
         [Index(IsUnique = true)]
@@ -26,10 +45,10 @@ namespace CascBasic.Models
         #region Helpers
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as Group);
+            return this.Equals(obj as ApplicationGroup);
         }
 
-        public bool Equals(Group other)
+        public bool Equals(ApplicationGroup other)
         {
             if (other == null)
                 return false;

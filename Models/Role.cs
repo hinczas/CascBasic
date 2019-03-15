@@ -22,7 +22,7 @@ namespace CascBasic.Models
         }
 
         public string Description { get; set; }
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<ApplicationGroup> Groups { get; set; }
 
     }
 

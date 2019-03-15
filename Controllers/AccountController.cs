@@ -14,6 +14,7 @@ using CascBasic.Models.ViewModels;
 using CascBasic.Context;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
+using System.Collections.Generic;
 
 namespace CascBasic.Controllers
 {
@@ -126,65 +127,99 @@ namespace CascBasic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateUser(CreateUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                MailAddress addr = new MailAddress(model.Email);
-                string username = addr.User;
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                ViewBag.Code = "danger";
+                ViewBag.Head = "Error";
+                ViewBag.Messages = errors.Select(a => a.ErrorMessage).ToList();
 
-                var user = new ApplicationUser {
-                    FirstName = model.FirstName,
-                    MiddleName = model.MiddleName,
-                    LastName = model.LastName,
-                    PhoneNumber = model.PhoneNumber,
-                    UserName = username,
-                    Email = model.Email
-                };
-
-                // Create User
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    // Add personal details
-
-                    // Link user to DB object
-                    var dbUser = _db.Users.Find(user.Id);
-                    // Add User to Groups
-                    if (model.Groups!=null && model.Groups.Count > 0)
-                    {
-                        foreach(int id in model.Groups)
-                        {
-                            var group = _db.Groups.Find(id);
-                            if (group != null)
-                                dbUser.Groups.Add(group);
-                        }
-                        await _db.SaveChangesAsync();
-                    }
-                    // Add user to Roles
-                    if (model.Roles != null && model.Roles.Count > 0)
-                    {
-                        foreach (string id in model.Roles)
-                        {
-                            var role = _db.Roles.Find(id);
-                            if (role != null)
-                                await UserManager.AddToRoleAsync(user.Id, role.Name);
-                        }
-                    }
-                    // Link email address to Raven
-                    if(model.RavenLink)
-                    {
-                        var linkResult = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(Owin.Security.Providers.Raven.Constants.DefaultAuthenticationType, username));
-                        if (!linkResult.Succeeded)
-                            AddErrors(linkResult);
-                    }
-                    return RedirectToAction("Index", "Dashboard");
-                }
-                AddErrors(result);
+                // Something went wrong
+                ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
+                ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
+                return View(model);
             }
 
-            // Something went wrong
-            ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
-            ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
-            return View(model);
+            MailAddress addr = new MailAddress(model.Email);
+            string username = addr.User;
+
+            var user = new ApplicationUser {
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                UserName = username,
+                Email = model.Email
+            };
+
+            // Create User
+            var result = new IdentityResult();
+            try {
+                result = await UserManager.CreateAsync(user, model.Password);
+            } catch (Exception e)
+            {
+                ViewBag.Code = "danger";
+                ViewBag.Head = "Error";
+                ViewBag.Messages = new List<string>() { e.Message } ;
+
+                // Something went wrong
+                ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
+                ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
+                return View(model);
+            }
+                
+            if (result.Succeeded)
+            {
+                // Add personal details
+
+                // Link user to DB object
+                var dbUser = _db.Users.Find(user.Id);
+                // Add User to Groups
+                if (model.Groups!=null && model.Groups.Count > 0)
+                {
+                    foreach(int id in model.Groups)
+                    {
+                        var group = _db.Groups.Find(id);
+                        if (group != null)
+                            dbUser.Groups.Add(group);
+                    }
+                    await _db.SaveChangesAsync();
+                }
+                // Add user to Roles
+                if (model.Roles != null && model.Roles.Count > 0)
+                {
+                    foreach (string id in model.Roles)
+                    {
+                        var role = _db.Roles.Find(id);
+                        if (role != null)
+                            await UserManager.AddToRoleAsync(user.Id, role.Name);
+                    }
+                }
+                // Link email address to Raven
+                if(model.RavenLink)
+                {
+                    var linkResult = await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(Owin.Security.Providers.Raven.Constants.DefaultAuthenticationType, username));
+                    if (!linkResult.Succeeded)
+                        AddErrors(linkResult);
+                }
+
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "User "+user.UserName+" added successfuly." };
+
+                return RedirectToAction("Index", "Dashboard", new { sub = "Users" });
+            } else
+            {
+                ViewBag.Code = "danger";
+                ViewBag.Head = "Error";
+                ViewBag.Messages = result.Errors.ToList();
+
+                // Something went wrong
+                ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
+                ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
+                return View(model);
+            }
+
         }
         #endregion
                      
@@ -255,7 +290,7 @@ namespace CascBasic.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
+            }            
 
             // The following code protects for brute force attacks against the two factor codes. 
             // If a user enters incorrect codes for a specified amount of time then the user account 

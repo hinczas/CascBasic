@@ -3,35 +3,53 @@ namespace CascBasic.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class initMVC : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.AspNetGroups",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(maxLength: 64),
+                        Description = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true);
+            
             CreateTable(
                 "dbo.AspNetRoles",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        Description = c.String(),
                         Name = c.String(nullable: false, maxLength: 256),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
             CreateTable(
-                "dbo.Groups",
+                "dbo.AspNetUserRoles",
                 c => new
                     {
-                        Id = c.Long(nullable: false, identity: true),
-                        Name = c.String(),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId)
+                .Index(t => t.RoleId);
             
             CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        FirstName = c.String(),
+                        MiddleName = c.String(),
+                        LastName = c.String(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -73,74 +91,62 @@ namespace CascBasic.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.AspNetUserRoles",
-                c => new
-                    {
-                        UserId = c.String(nullable: false, maxLength: 128),
-                        RoleId = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .Index(t => t.UserId)
-                .Index(t => t.RoleId);
-            
-            CreateTable(
-                "dbo.GroupRoles",
-                c => new
-                    {
-                        Group_Id = c.Long(nullable: false),
-                        ApplicationRole_Id = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => new { t.Group_Id, t.ApplicationRole_Id })
-                .ForeignKey("dbo.Groups", t => t.Group_Id, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetRoles", t => t.ApplicationRole_Id, cascadeDelete: true)
-                .Index(t => t.Group_Id)
-                .Index(t => t.ApplicationRole_Id);
-            
-            CreateTable(
                 "dbo.AspNetUserGroups",
                 c => new
                     {
-                        Group_Id = c.String(nullable: false, maxLength: 128),
-                        ApplicationUser_Id = c.Long(nullable: false),
+                        GroupId = c.String(nullable: false, maxLength: 128),
+                        UserId = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => new { t.Group_Id, t.ApplicationUser_Id })
-                .ForeignKey("dbo.AspNetUsers", t => t.Group_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Groups", t => t.ApplicationUser_Id, cascadeDelete: true)
-                .Index(t => t.Group_Id)
-                .Index(t => t.ApplicationUser_Id);
+                .PrimaryKey(t => new { t.GroupId, t.UserId })
+                .ForeignKey("dbo.AspNetUsers", t => t.GroupId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetGroups", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.GroupId)
+                .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.AspNetGroupRoles",
+                c => new
+                    {
+                        GroupId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.GroupId, t.RoleId })
+                .ForeignKey("dbo.AspNetGroups", t => t.GroupId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .Index(t => t.GroupId)
+                .Index(t => t.RoleId);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.AspNetGroupRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.AspNetGroupRoles", "GroupId", "dbo.AspNetGroups");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserGroups", "ApplicationUser_Id", "dbo.Groups");
-            DropForeignKey("dbo.AspNetUserGroups", "Group_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserGroups", "UserId", "dbo.AspNetGroups");
+            DropForeignKey("dbo.AspNetUserGroups", "GroupId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.GroupRoles", "ApplicationRole_Id", "dbo.AspNetRoles");
-            DropForeignKey("dbo.GroupRoles", "Group_Id", "dbo.Groups");
-            DropIndex("dbo.AspNetUserGroups", new[] { "ApplicationUser_Id" });
-            DropIndex("dbo.AspNetUserGroups", new[] { "Group_Id" });
-            DropIndex("dbo.GroupRoles", new[] { "ApplicationRole_Id" });
-            DropIndex("dbo.GroupRoles", new[] { "Group_Id" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropIndex("dbo.AspNetGroupRoles", new[] { "RoleId" });
+            DropIndex("dbo.AspNetGroupRoles", new[] { "GroupId" });
+            DropIndex("dbo.AspNetUserGroups", new[] { "UserId" });
+            DropIndex("dbo.AspNetUserGroups", new[] { "GroupId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.AspNetGroups", new[] { "Name" });
+            DropTable("dbo.AspNetGroupRoles");
             DropTable("dbo.AspNetUserGroups");
-            DropTable("dbo.GroupRoles");
-            DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.Groups");
+            DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.AspNetGroups");
         }
     }
 }

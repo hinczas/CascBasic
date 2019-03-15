@@ -126,8 +126,7 @@ namespace CascBasic
 
         }        
     }
-
-
+    
     public class ApplicationRoleStore
         : RoleStore<ApplicationRole, string, ApplicationUserRole>,
         IQueryableRoleStore<ApplicationRole>,
@@ -146,4 +145,5 @@ namespace CascBasic
 
         }
     }
+
 }

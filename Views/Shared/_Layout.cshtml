@@ -18,7 +18,18 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link" })</li>
+                <li class="nav-item dropdown">
+                    @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link nav-link-a" })
+                    <span class="nav-link nav-link-span dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </span>
+                    <div class="dropdown-menu">
+                        @Html.ActionLink("Home", "Index", "Dashboard", new { sub = "Home", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Users", "Index", "Dashboard", new { sub = "Users", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Groups", "Index", "Dashboard", new { sub = "Groups", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Roles", "Index", "Dashboard", new { sub = "Roles", area = "" }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+
                 <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
             </ul>
             <div class="form-inline my-2 my-lg-0">

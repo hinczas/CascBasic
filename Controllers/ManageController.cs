@@ -613,13 +613,13 @@ namespace CascBasic.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ChangeGroups(List<long> groups, string id)
+        public async Task<ActionResult> ChangeGroups(List<string> groups, string id)
         {
             if (string.IsNullOrEmpty(id))
                 id = User.Identity.GetUserId();
             if (groups == null || groups.Count < 1)
             {
-                groups = new List<long>();
+                groups = new List<string>();
             }
             var user = _db.Users.Find(id);
             if (user == null)
@@ -638,14 +638,14 @@ namespace CascBasic.Controllers
 
                 try
                 {
-                    foreach (long gId in remGroups)
+                    foreach (string gId in remGroups)
                     {
                         var grp = _db.Groups.Find(gId);
                         user.Groups.Remove(grp);
                     }
                     await _db.SaveChangesAsync();
 
-                    foreach (long gId in addGroups)
+                    foreach (string gId in addGroups)
                     {
                         var grp = _db.Groups.Find(gId);
                         user.Groups.Add(grp);

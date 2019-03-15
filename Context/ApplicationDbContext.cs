@@ -10,7 +10,7 @@ namespace CascBasic.Context
                              IdentityUserLogin, ApplicationUserRole, IdentityUserClaim>
     {
         //new public virtual DbSet<ApplicationRole> Roles { get; set; }
-        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<ApplicationGroup> Groups { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -26,14 +26,14 @@ namespace CascBasic.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Group>()
+            modelBuilder.Entity<ApplicationGroup>()
                .HasMany(p => p.Roles)
                .WithMany(r => r.Groups)
                .Map(mc =>
                {
-                   mc.MapLeftKey("Group_Id");
-                   mc.MapRightKey("ApplicationRole_Id");
-                   mc.ToTable("GroupRoles");
+                   mc.MapLeftKey("GroupId");
+                   mc.MapRightKey("RoleId");
+                   mc.ToTable("AspNetGroupRoles");
                });
 
             modelBuilder.Entity<ApplicationUser>()
@@ -41,8 +41,8 @@ namespace CascBasic.Context
                .WithMany(r => r.Users)
                .Map(mc =>
                {
-                   mc.MapLeftKey("Group_Id");
-                   mc.MapRightKey("ApplicationUser_Id");
+                   mc.MapLeftKey("GroupId");
+                   mc.MapRightKey("UserId");
                    mc.ToTable("AspNetUserGroups");
                });
         }

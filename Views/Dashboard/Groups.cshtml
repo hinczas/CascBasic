@@ -18,7 +18,7 @@
                 @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col col-md-2">
                             <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
                         </div>
@@ -37,7 +37,7 @@
     <h5>List</h5>
     <div class="dash-sub dash-sub-detail">
         <div class="table-responsive">
-            <table class="table table-striped table-sm" id="dash-roles-tbl">
+            <table class="table table-striped table-sm" id="dash-groups-tbl">
                 <thead>
                     <tr>
                         <th width="16%">Name</th>

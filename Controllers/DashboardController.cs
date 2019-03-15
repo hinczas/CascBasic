@@ -1,4 +1,5 @@
-﻿using CascBasic.Context;
+﻿using CascBasic.Classes;
+using CascBasic.Context;
 using CascBasic.Models;
 using CascBasic.Models.ViewModels;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -11,7 +12,7 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [AuthorizeRoles(Roles = "Admin")]
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;

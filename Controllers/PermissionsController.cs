@@ -20,13 +20,13 @@ namespace CascBasic.Controllers
             _db = new ApplicationDbContext();
         }
 
-        // GET: Group/Details/5
+        // GET: ApplicationGroup/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // POST: Group/Create
+        // POST: ApplicationGroup/Create
         [HttpPost]
         public async Task<ActionResult> CreateGroup(CreatePermViewModel model)
         {
@@ -40,7 +40,7 @@ namespace CascBasic.Controllers
                 return RedirectToAction("Index", "Dashboard", new { sub = "Groups" });
             }
 
-            var group = new Group()
+            var group = new ApplicationGroup()
             {
                 Name = model.Name,
                 Description = model.Description
@@ -66,7 +66,7 @@ namespace CascBasic.Controllers
             }
         }
 
-        // POST: Group/Create
+        // POST: ApplicationGroup/Create
         [HttpPost]
         public async Task<ActionResult> CreateRole(CreatePermViewModel model)
         {
@@ -107,13 +107,13 @@ namespace CascBasic.Controllers
             }
         }
 
-        // GET: Group/Edit/5
+        // GET: ApplicationGroup/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Group/Edit/5
+        // POST: ApplicationGroup/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
@@ -129,13 +129,13 @@ namespace CascBasic.Controllers
             }
         }
 
-        // GET: Group/Delete/5
+        // GET: ApplicationGroup/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Group/Delete/5
+        // POST: ApplicationGroup/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
