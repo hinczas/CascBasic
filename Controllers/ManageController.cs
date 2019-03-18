@@ -88,8 +88,8 @@ namespace CascBasic.Controllers
             var userId = string.IsNullOrEmpty(id) ? User.Identity.GetUserId() : id;
             var user = await UserManager.FindByIdAsync(userId);
 
-            var userGroups = user.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name, Checked = "checked"}).OrderBy(b => b.Name).ToList();
-            var allGroups = _db.Groups.Select(a => new GroupViewModel() { Id = a.Id, Name = a.Name, Checked = "" }).ToList().Union(userGroups).ToList();
+            var userGroups = user.Groups.Select(a => new GroupViewModel(){ Id = a.Id, Name = a.Name, Description= a.Description, UsersCount = a.Users.Count, RolesCount=a.Roles.Count, Checked = "checked"}).OrderBy(b => b.Name).ToList();
+            var allGroups = _db.Groups.Select(a => new GroupViewModel() { Id = a.Id, Name = a.Name, Description = a.Description, UsersCount = a.Users.Count, RolesCount = a.Roles.Count, Checked = "" }).ToList().Union(userGroups).ToList();
             var groups = userGroups.Union(allGroups).ToList();
 
             var userRoles = user.Roles.Select(a => new RoleViewModel(){ Id = a.RoleId, Name = a.Role.Name, Checked = "checked" }).OrderBy(b => b.Name).ToList();

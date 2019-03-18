@@ -3,6 +3,7 @@ using CascBasic.Context;
 using CascBasic.Models;
 using CascBasic.Models.ViewModels;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +102,48 @@ namespace CascBasic.Controllers
             }).ToList();
 
             return PartialView(roles);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SeedUsers(int from, int count)
+        {
+            if (count < 1)
+            {
+                ViewBag.Code = "danger";
+                ViewBag.Head = "Error";
+                ViewBag.Messages = new List<string>() { "Cannot generate empty list" };
+                return RedirectToAction("Index");
+            }
+
+            int errors = 0;
+            int success = 0;
+            for (int i = 0; i < count; i++)
+            {
+                string numb = from.ToString().PadLeft(4, '0');
+                var user = new ApplicationUser
+                {
+                    FirstName = "First" + numb,
+                    MiddleName = "Test" + numb,
+                    LastName = "Last" + numb,
+                    PhoneNumber = "1234567890",
+                    UserName = "test" + numb,
+                    Email = "test" + numb + "@cam.ac.uk"
+                };
+
+                var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var result = await UserManager.CreateAsync(user, "Password1!");
+                if (result.Succeeded)
+                    success++;
+                errors = +result.Errors.Count();
+                from++;
+            }
+            // Create User
+
+                ViewBag.Code = "info";
+                ViewBag.Head = "Info";
+                ViewBag.Messages = new List<string>() { "Created "+success+" users. Returned "+errors+" errors." };
+
+            return RedirectToAction("Index");
         }
     }
 }

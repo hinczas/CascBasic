@@ -241,7 +241,10 @@ namespace CascBasic.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                MailAddress addr = new MailAddress(model.Email);
+                string username = addr.User;
+
+                var user = new ApplicationUser { UserName = username, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -253,15 +256,13 @@ namespace CascBasic.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    //return RedirectToAction("Index", "Home");
-                    return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
-            return new RedirectResult(Request.UrlReferrer.AbsoluteUri);
-            //return View(model);
+            return View(model);
         }
         #endregion
 

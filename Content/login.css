@@ -189,8 +189,8 @@ input[type=text]:placeholder, input[type=password]:placeholder {
 .raven-button {
     cursor:pointer;
     display: table;
-    width: 40%;
-    min-width:150px;
+    width: 30%;
+    min-width:125px;
     height: 32px;
     background-color: #106470;
     border-radius:5px;
@@ -214,6 +214,7 @@ input[type=text]:placeholder, input[type=password]:placeholder {
 .rb-icon, .rb-main {
     padding: 5px;
     display: table-cell;
+    font-size: 14px;
 }
 .rb-icon {
     min-width:10%;

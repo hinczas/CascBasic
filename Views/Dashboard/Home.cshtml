@@ -1,3 +1,9 @@
 ﻿<div>
     <h4>Home</h4>
+    @using (Html.BeginForm("SeedUsers", "Dashboard"))
+    {
+        <input type="number" name="from" placeholder="starting number" class="form-control form-control-sm" required/>
+        <input type="number" name="count" placeholder="number of users" class="form-control form-control-sm" required/>
+        <button class="btn btn-sm btn-outline-warning" type="submit">Generate</button>
+    }
 </div>

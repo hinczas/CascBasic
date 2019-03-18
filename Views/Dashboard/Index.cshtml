@@ -15,7 +15,7 @@
         </button>
     </div>
 }
-
+@Html.Hidden("SubPage", Model.PartialView)
 <nav class="navbar navbar-light navbar-subpage">
     <span class="navbar-brand mb-0 h1">Dashboard</span>
     @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dashboardLinks" aria-controls="dashboardLinks" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,19 @@
                     e.addClass("active");
                 }
             });
+
+            ChangeUrl("Dashboard", view);
         });
     });
 
-
+    function ChangeUrl(page, url) {
+        if (typeof (history.pushState) != "undefined") {
+            var newUrl = "Dashboard?sub=" + url;
+            var obj = { Page: page, Url: newUrl };
+            history.pushState(obj, obj.Page, obj.Url);
+        }
+        //else {
+         //   alert("Browser does not support HTML5.");
+        //}
+    }
 </script>

@@ -365,6 +365,7 @@
     <Content Include="Views\Manage\PersonalForm.cshtml" />
     <Content Include="Views\Manage\ErrorForm.cshtml" />
     <Content Include="Views\Dashboard\Loader.cshtml" />
+    <Content Include="Views\Permissions\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -383,9 +384,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Group\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
