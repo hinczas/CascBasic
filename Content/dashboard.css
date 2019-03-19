@@ -115,10 +115,9 @@
         margin-left: 0 !important;
         padding-left: 150px !important;
     }
-}
-
-.navbar-subpage {
-    padding-left: 165px; /* sidebar width */
+    .navbar-subpage {
+        padding-left: 165px; /* sidebar width */
+    }
 }
 
 .subpage-container {
@@ -135,4 +134,5 @@
 .main.col-md-9 {
     min-width:100%;
     padding-right:0px !important;
+    padding-left:0px;
 }
