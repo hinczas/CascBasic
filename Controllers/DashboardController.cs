@@ -25,6 +25,7 @@ namespace CascBasic.Controllers
 
         public ActionResult Index(string sub)
         {
+            ViewBag.Title = "Dashboard";
             string cod = "";
             string hed = "";
             string msg = "";

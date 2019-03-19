@@ -15,12 +15,12 @@
         </button>
     </div>
 }
-<nav class="navbar navbar-light navbar-subpage">
+<nav class="navbar navbar-dark navbar-subpage">
     <span class="navbar-brand mb-0 h1">Group @Model.Name</span>
     <div class="form-inline">
         <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-            <button type="button" class="btn btn-sm btn-outline-secondary" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
-            @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-sm btn-outline-secondary" })
+            <button type="button" class="btn btn-sm btn-outline-light" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
+            @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-sm btn-outline-light" })
         </div>
     </div>
 </nav>
@@ -167,6 +167,7 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
+
         $("#searchRoles").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $("#group-roles-tbl tbody tr").filter(function () {

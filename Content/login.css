@@ -226,8 +226,9 @@ input[type=text]:placeholder, input[type=password]:placeholder {
         padding:0;
     }
 .rb-main {
-    width:90%;
-    color:white;
+    width: 90%;
+    color: white;
+    text-align: center;
 }
 .rb-row {
     border-radius:5px;

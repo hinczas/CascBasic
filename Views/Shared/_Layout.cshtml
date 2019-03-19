@@ -10,7 +10,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark navbar-master">
         @Html.ActionLink("CASC", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -30,7 +30,7 @@
                     </div>
                 </li>
 
-                <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                @*<li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>*@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 @Html.Partial("_LoginPartial")
@@ -43,10 +43,14 @@
             </div>
         </div>
     </nav>
-    
+    @*<nav class="navbar navbar-dark navbar-subpage">
+        <span class="navbar-brand mb-0 h1">@ViewBag.Title</span>
+
+    </nav>*@
+
     <main role="main">
         @RenderBody()
-    </main>    
+    </main>
 
 
     @Scripts.Render("~/bundles/jquery")
