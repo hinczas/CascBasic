@@ -1,5 +1,6 @@
 ﻿/*
  * Sidebar
+ * #003a43
  */
 
 .sidebar {
@@ -8,9 +9,10 @@
     bottom: 0;
     left: 0;
     z-index: 99; /* Behind the navbar */
-    padding: 96px 0 0; /* Height of navbar */
+    padding: 48px 0 0; /* Height of navbar */
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    width:150px;
+    width: 150px;
+    background-color: #003a43 !important; /* UIS theme */
 }
 
 .sidebar-sticky {
@@ -30,7 +32,7 @@
         transition: all 0.3s ease-in-out;*/
     }
         .sidebar-sticky .nav-link:hover {
-            color: #10701c;
+            color: #0ebe24;
             cursor: pointer;
             -moz-transform: scale(1.02);
             -webkit-transform: scale(1.02);
@@ -66,19 +68,21 @@
 
 .sidebar .nav-link {
     font-weight: 500;
-    color: #333;
+    color: #cfcfcf;
 }
 
     .sidebar .nav-link.active {
-        color: #007bff;
+        color: #218cff;
+        /* background-color: #194d55; */
     }
 
 .sidebar-heading {
     font-size: .75rem;
     text-transform: uppercase;
 }
-.dash-links {
+.dash-links .nav-item .nav-link {
     padding-left:15px;
+    width:100%;
 }
 
 /* Right panel styling */
@@ -89,11 +93,11 @@
     min-height:200px;
 }
 
-button .material-icons {
+/*button .material-icons {
     margin: -3px 5px 0px 0px;
     font-size:18px;
     vertical-align: middle;
-}
+}*/
 
 
 .card-body {
@@ -109,4 +113,8 @@ button .material-icons {
     .ml-sm-auto, .mx-sm-auto {
         margin-left: 150px !important;
     }
+}
+
+.navbar-subpage {
+    padding-left: 160px; /* sidebar width */
 }

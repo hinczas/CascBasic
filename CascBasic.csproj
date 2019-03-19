@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Classes\AuthorizeRoles.cs" />
+    <Compile Include="Classes\MenuService.cs" />
     <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -209,10 +210,24 @@
     <Compile Include="Migrations\201903151618322_initMVC.Designer.cs">
       <DependentUpon>201903151618322_initMVC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903191118482_menus.cs" />
+    <Compile Include="Migrations\201903191118482_menus.Designer.cs">
+      <DependentUpon>201903191118482_menus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903191124575_groupMenus.cs" />
+    <Compile Include="Migrations\201903191124575_groupMenus.Designer.cs">
+      <DependentUpon>201903191124575_groupMenus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903191130371_menuIcon.cs" />
+    <Compile Include="Migrations\201903191130371_menuIcon.Designer.cs">
+      <DependentUpon>201903191130371_menuIcon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\MenuModels.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\MenuViewModels.cs" />
     <Compile Include="Models\ViewModels\PermViewModels.cs" />
     <Compile Include="Models\ViewModels\StatusViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
@@ -266,8 +281,6 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\dashboard\users.js" />
-    <Content Include="Scripts\dashboard\roles.js" />
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
@@ -381,6 +394,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201903151618322_initMVC.resx">
       <DependentUpon>201903151618322_initMVC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191118482_menus.resx">
+      <DependentUpon>201903191118482_menus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191124575_groupMenus.resx">
+      <DependentUpon>201903191124575_groupMenus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191130371_menuIcon.resx">
+      <DependentUpon>201903191130371_menuIcon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

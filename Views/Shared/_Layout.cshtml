@@ -28,19 +28,19 @@
                         @Html.ActionLink("Groups", "Index", "Dashboard", new { sub = "Groups", area = "" }, new { @class = "dropdown-item" })
                         @Html.ActionLink("Roles", "Index", "Dashboard", new { sub = "Roles", area = "" }, new { @class = "dropdown-item" })
                     </div>
-                </li>
+                </li>              
 
                 @*<li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>*@
             </ul>
-            <div class="form-inline my-2 my-lg-0">
-                @Html.Partial("_LoginPartial")
-                <!--div class="input-group input-group-sm">
-                    <input class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="button-addon2"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-                    </div>
-                </div-->
+        <div class="form-inline my-2 my-lg-0">
+            @Html.Partial("_LoginPartial")
+            <!--div class="input-group input-group-sm">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="button-addon2"/>
+            <div class="input-group-append">
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
             </div>
+        </div-->
+        </div>
         </div>
     </nav>
     @*<nav class="navbar navbar-dark navbar-subpage">
@@ -51,7 +51,6 @@
     <main role="main">
         @RenderBody()
     </main>
-
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

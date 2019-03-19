@@ -8,6 +8,7 @@
 <link href="~/Content/login.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <div class="wrapper">
 
@@ -19,51 +20,57 @@
             @TempData["alertMessage"]
         </div>
     }
-
-  <div id="formContent">
-    <!-- Login Form -->
-    <div>
-    @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "externalForm" }))
-    {
-        @Html.AntiForgeryToken()
-        <fieldset id="socialLoginList">
-            <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
-            <div class="raven-section">
-                <p>
-                    Click below to login with Raven
-                </p>
-                <input type="hidden" name="provider" value="Raven" />
-                <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
-                    <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
-                        <div class="rb-icon">
-                            <img src="~/Content/media/images/tiny-raven.png" />
+    <div class="login-request">
+        <a href="mailto:team@casc.cam.ac.uk?subject=New account request" class="btn btn-sm">
+            <i class="material-icons md-18">mail_outline</i>
+            <span>Request new account</span>
+        </a>
+    </div>
+    <div id="formContent">
+        <!-- Login Form -->
+        <div>
+            @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "externalForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <fieldset id="socialLoginList">
+                    <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
+                    <div class="raven-section">
+                        <p>
+                            Click below to login with Raven
+                        </p>
+                        <input type="hidden" name="provider" value="Raven" />
+                        <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
+                            <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
+                                <div class="rb-icon">
+                                    <img src="~/Content/media/images/tiny-raven.png" />
+                                </div>
+                                <div class="rb-main">Login</div>
+                            </div>
                         </div>
-                        <div class="rb-main">Login</div>
                     </div>
-                </div>
-            </div>            
-        </fieldset>
-    }              
+                </fieldset>
+            }
+        </div>
+        <span><legend><small>Registered user</small></legend> </span>
+        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Password)
+
+            @Html.TextBoxFor(m => m.Email, new { @placeholder = "email", required = "required" })
+
+            @Html.PasswordFor(m => m.Password, new { @placeholder = "password", required = "required" })
+            <input type="submit" value="Login">
+        }
+
+        <!-- Register -->
+        <div id="formFooter">
+            &copy; @DateTime.Now.Year - CASC
+        </div>
+
     </div>
-    <span><legend><small>Registered user</small></legend> </span>
-    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "",new { @class = "text-danger" })
-        @Html.ValidationMessageFor(m => m.Email)
-        @Html.ValidationMessageFor(m => m.Password)
-                
-        @Html.TextBoxFor(m => m.Email, new { @placeholder = "email", required="required" })
-
-        @Html.PasswordFor(m => m.Password, new { @placeholder = "password", required="required" })
-        <input type="submit" value="Login">
-    }
-
-    <!-- Register -->
-    <div id="formFooter">
-      @Html.ActionLink("Register", "Register") if you don't have an account.
-    </div>
-
-  </div>
 </div>
 
 

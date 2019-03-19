@@ -11,6 +11,7 @@ namespace CascBasic.Context
     {
         //new public virtual DbSet<ApplicationRole> Roles { get; set; }
         public virtual DbSet<ApplicationGroup> Groups { get; set; }
+        public virtual DbSet<MenuItem> MenuItems { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection")
@@ -45,6 +46,21 @@ namespace CascBasic.Context
                    mc.MapRightKey("UserId");
                    mc.ToTable("AspNetUserGroups");
                });
+
+            modelBuilder.Entity<MenuItem>()
+                .HasOptional(c => c.Parent)
+                .WithMany()
+                .HasForeignKey(c => c.ParentId);
+
+            modelBuilder.Entity<ApplicationGroup>()
+                .HasMany(p => p.MenuItems)
+                .WithMany(r => r.Groups)
+                .Map(mc =>
+                {
+                    mc.MapLeftKey("GroupId");
+                    mc.MapRightKey("MenuId");
+                    mc.ToTable("GroupMenus");
+                });
         }
     }
 }

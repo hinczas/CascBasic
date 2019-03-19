@@ -15,7 +15,6 @@
         </button>
     </div>
 }
-@Html.Hidden("SubPage", Model.PartialView)
 <nav class="navbar navbar-dark navbar-subpage">
     <span class="navbar-brand mb-0 h1">Dashboard</span>
     @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dashboardLinks" aria-controls="dashboardLinks" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,32 +27,32 @@
             <div class="sidebar-sticky" id="dashboardLinks">
                 <ul class="nav flex-column dash-links navbar-nav mr-auto">
                     <li class="nav-item">
-                        <div class="nav-link" data-view="Home">
+                        <div class="nav-link dash-link" data-view="Home">
                             <i class="material-icons">home</i>
                             <span>Home</span>
                             <span class="sr-only">(current)</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="nav-link" data-view="Users">
+                        <div class="nav-link dash-link" data-view="Users">
                             <i class="material-icons">person</i>
                             <span>Users</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="nav-link" data-view="Groups">
+                        <div class="nav-link dash-link" data-view="Groups">
                             <i class="material-icons">group</i>
                             <span>Groups</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="nav-link" data-view="Roles">
+                        <div class="nav-link dash-link" data-view="Roles">
                             <i class="material-icons">security</i>
                             <span>Roles</span>
                         </div>
                     </li>
                     <li class="nav-item" hidden>
-                        <a class="nav-link" href="#" data-view="Reports">
+                        <a class="nav-link dash-link" href="#" data-view="Reports">
                             <i class="material-icons">assignment</i>
                             <span>Reports</span>
                         </a>
@@ -67,6 +66,9 @@
         </div>
     </div>
 </div>
+
+
+
 <script>
     $(document).ready(function () {
         var link = '@Url.Action(Model.PartialView, "Dashboard")';
@@ -91,7 +93,7 @@
 
 
     $(function () {
-        $('.nav-link').click(function () {
+        $('.dash-link').click(function () {
             var e = $(this);
             var p = $('.dash-links');
 
