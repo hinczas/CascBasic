@@ -107,14 +107,32 @@
 @media (min-width: 576px) {
     .ml-sm-auto, .mx-sm-auto {
         margin-left: 0 !important;
+        padding-left: 0 !important;
     }
 }
 @media (min-width: 768px) {
     .ml-sm-auto, .mx-sm-auto {
-        margin-left: 150px !important;
+        margin-left: 0 !important;
+        padding-left: 150px !important;
     }
 }
 
 .navbar-subpage {
-    padding-left: 160px; /* sidebar width */
+    padding-left: 165px; /* sidebar width */
+}
+
+.subpage-container {
+    /*margin-left: -25px;*/
+    margin-top: -10px;
+}
+.subpage-container-up, .subpage-container-down {
+    padding: 15px;
+}
+.subpage-container-up {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #eee
+}
+.main.col-md-9 {
+    min-width:100%;
+    padding-right:0px !important;
 }
