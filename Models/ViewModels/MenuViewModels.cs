@@ -9,6 +9,12 @@ namespace CascBasic.Models.ViewModels
     {
         public MenuEntryVM ParentMenu { get; set; }
         public List<MenuEntryVM> SubMenus { get; set; }
+
+        public MenuViewModel(MenuEntryVM parent, List<MenuEntryVM> subs)
+        {
+            ParentMenu = parent;
+            SubMenus = subs;
+        }
     }
 
     public class MenuEntryVM

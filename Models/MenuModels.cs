@@ -23,5 +23,31 @@ namespace CascBasic.Models
         public virtual MenuItem Parent { get; set; }
 
         public virtual ICollection<ApplicationGroup> Groups { get; set; }
+
+        #region Helpers
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as MenuItem);
+        }
+
+        public bool Equals(MenuItem other)
+        {
+            if (other == null)
+                return false;
+
+            return this.Id == other.Id && this.Label.Equals(other.Label);
+        }
+
+        public override int GetHashCode()
+        {
+
+            int label = Label.GetHashCode();
+            int id = Id.GetHashCode();
+
+            return label ^ id;
+        }
+        #endregion
     }
+
+
 }

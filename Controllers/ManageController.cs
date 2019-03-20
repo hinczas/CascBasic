@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using CascBasic.Models.ViewModels;
 using System.Collections.Generic;
 using System.Net.Mail;
+using CascBasic.Classes;
 
 namespace CascBasic.Controllers
 {
@@ -60,6 +61,7 @@ namespace CascBasic.Controllers
 
         //
         // GET: /Manage/Index
+        [AuthorizeRoles(Roles = "Admin")]
         public async Task<ActionResult> Index(string id, ManageMessageId? message)
         {
             string cod = "";

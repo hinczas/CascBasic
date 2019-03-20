@@ -15,6 +15,7 @@ using CascBasic.Context;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
 using System.Collections.Generic;
+using CascBasic.Classes;
 
 namespace CascBasic.Controllers
 {
@@ -91,6 +92,7 @@ namespace CascBasic.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    BuildUserMenus(model.Email);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -477,6 +479,10 @@ namespace CascBasic.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    //var username = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                    //var login = UserManager.Lo
+                    //var user = _db.Users.Where(a => a.Logins.Where(b => b.ProviderKey.Equals(loginInfo.DefaultUserName)).Select(c => c.UserId))
+                    BuildUserMenus(loginInfo.Email);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -558,6 +564,19 @@ namespace CascBasic.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private void BuildUserMenus(string email)
+        {
+            Session["UserMenus"] = null;
+            // Prepare User Menus
+            var user = UserManager.FindByEmail(email);
+            if (user!=null)
+            {
+                var userId = user.Id;
+                var _menu = new MenuService(_db).GetMenu(userId);
+                Session["UserMenus"] = _menu;
+            }
         }
 
         #region Helpers

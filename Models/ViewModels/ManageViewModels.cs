@@ -23,8 +23,7 @@ namespace CascBasic.Models.ViewModels
         public List<GroupViewModel> UserGroups { get; set; }
         public List<RoleViewModel> UserRoles { get; set; }
         public List<GroupViewModel> AllGroups { get; set; }
-        public List<RoleViewModel> AllRoles { get; set; }
-
+        public List<RoleViewModel> AllRoles { get; set; }        
     }
 
     public class ManageLoginsViewModel : StatusViewModel

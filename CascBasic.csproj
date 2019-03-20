@@ -379,6 +379,7 @@
     <Content Include="Views\Manage\ErrorForm.cshtml" />
     <Content Include="Views\Dashboard\Loader.cshtml" />
     <Content Include="Views\Permissions\Details.cshtml" />
+    <Content Include="Views\Shared\_UserMenus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

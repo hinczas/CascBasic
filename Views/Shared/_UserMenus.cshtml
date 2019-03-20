@@ -1,0 +1,25 @@
+﻿@if (Session["UserMenus"] != null)
+{
+    var userMenu = (List<CascBasic.Models.ViewModels.MenuViewModel>)Session["UserMenus"];
+
+    foreach (var menu in userMenu)
+    {
+        <li class="nav-item dropdown">
+            @if (menu.SubMenus == null || menu.SubMenus.Count < 1)
+            {
+                <a class="nav-link" href="@menu.ParentMenu.Url">@menu.ParentMenu.Label</a>
+            }
+            else
+            {
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@menu.ParentMenu.Label</a>
+                <div class="dropdown-menu">
+                    @foreach (var sub in menu.SubMenus)
+                    {
+                        <a class="dropdown-item" href="@sub.Url">@sub.Label</a>
+                    }
+                </div>
+            }
+        </li>
+    }
+}
+

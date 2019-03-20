@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    [AuthorizeRoles(Roles = "Admin")]
+    
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;

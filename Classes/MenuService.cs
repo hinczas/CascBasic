@@ -24,13 +24,34 @@ namespace CascBasic.Classes
             if (user == null)
                 return null;
 
-            var userMenus = user.Groups.SelectMany(a => a.MenuItems).ToList();
+            var userMenus = user.Groups.SelectMany(a => a.MenuItems).Distinct().ToList();
 
             if (userMenus == null || userMenus.Count < 1)
                 return null;
 
+            var menuParents = userMenus.Select(a => a.Parent).Where(b => b!=null).Distinct().ToList();
 
-            return null;
+            var allMenus = userMenus.Union(menuParents).Distinct().ToList();
+
+            List<MenuViewModel> menu = new List<MenuViewModel>();
+
+            foreach (var item in menuParents)
+            {
+                var parentMenu = new MenuEntryVM()
+                {
+                    Label = item.Label,
+                    Url = item.Url
+                };
+                var submenus = allMenus.Where(a => a.ParentId == item.Id).Select(b => new MenuEntryVM()
+                {
+                    Label = b.Label,
+                    Url = b.Url
+                }).ToList();
+
+                menu.Add(new MenuViewModel(parentMenu, submenus));
+            }
+
+            return menu;            
         }
 
         public List<MenuViewModel> GetMenu()
