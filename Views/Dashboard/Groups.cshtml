@@ -19,17 +19,20 @@
                     @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                        <div class="form-row">
-                            <div class="col col-md-2">
-                                <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
-                            </div>
-                            <div class="col col-md-4">
-                                <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
-                            </div>
-                            <div class="col col-md-1">
-                                <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
-                            </div>
+                    <div class="form-row">
+                        <div class="col col-md-2">
+                            @Html.DropDownList("InstId", (SelectList)ViewBag.Institutions,new { required = "required", @class= "form-control form-control-sm" })
                         </div>
+                        <div class="col col-md-2">
+                            <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
+                        </div>
+                        <div class="col col-md-4">
+                            <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
+                        </div>
+                        <div class="col col-md-1">
+                            <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
+                        </div>
+                    </div>
                     }
                 </div>
             </div>

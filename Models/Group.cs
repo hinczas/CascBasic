@@ -40,8 +40,13 @@ namespace CascBasic.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
+        [ForeignKey("Institution")]
+        public Int64 InstId { get; set; }
+
+        public virtual Institution Institution { get; set; }
         public virtual ICollection<ApplicationRole> Roles { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<Permission> Permissions { get; set; }
         public virtual ICollection<MenuItem> MenuItems { get; set; }
 
         #region Helpers

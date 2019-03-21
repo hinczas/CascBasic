@@ -1,11 +1,21 @@
 ﻿<div class="subpage-container">
     <div class="subpage-container-up">
         <h4>Home</h4>
+        <hr />
+        <h6>Add test users</h6>
         @using (Html.BeginForm("SeedUsers", "Dashboard"))
         {
             <input type="number" name="from" placeholder="starting number" class="form-control form-control-sm" required />
             <input type="number" name="count" placeholder="number of users" class="form-control form-control-sm" required />
             <button class="btn btn-sm btn-outline-warning" type="submit">Generate</button>
+        }
+        <hr />
+        <h6>Add college crests</h6>
+        @using (Html.BeginForm("AddCrest", "Institution", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.DropDownList("instId", (SelectList)ViewBag.Institutions)
+            <input type="file" name="uplFile" required>
+            <button class="btn btn-sm btn-outline-warning" type="submit">Upload</button>
         }
     </div>
     <div class="subpage-container-down"></div>

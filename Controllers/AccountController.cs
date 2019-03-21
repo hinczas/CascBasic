@@ -69,6 +69,8 @@ namespace CascBasic.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            ViewBag.Title = "Login";
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -119,6 +121,8 @@ namespace CascBasic.Controllers
         #region Create
         public ActionResult CreateUser()
         {
+            ViewBag.Title = "Users / New";
+
             ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name");
             ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name");
             return View();
@@ -232,6 +236,8 @@ namespace CascBasic.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.Title = "Register";
+
             return View();
         }
 

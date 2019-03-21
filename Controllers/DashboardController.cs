@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -25,7 +26,7 @@ namespace CascBasic.Controllers
 
         public ActionResult Index(string sub)
         {
-            ViewBag.Title = "Dashboard";
+
             string cod = "";
             string hed = "";
             string msg = "";
@@ -36,14 +37,18 @@ namespace CascBasic.Controllers
                 msg = String.Join("\n", ((List<string>)TempData["Messages"]).ToArray());
             }
 
+            sub = string.IsNullOrEmpty(sub) ? "Home" : sub;
+
             var model = new DashboardViewModel()
             {
                 Code = cod,
                 Head = hed,
                 Message = msg,
 
-                PartialView = string.IsNullOrEmpty(sub) ? "Home" : sub
+                PartialView = sub
             };
+
+            ViewBag.Title = "Admin";
 
             return View(model);
         }        
@@ -51,7 +56,8 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Home()
         {
-            ViewBag.Title = "Dashboard";
+
+            ViewBag.Institutions = new SelectList(_db.Institutions, "Id", "Name");
 
             return PartialView();
         }
@@ -59,6 +65,7 @@ namespace CascBasic.Controllers
         [HttpGet]
         public ActionResult Users()
         {
+
             var users = _db.Users.Select(a => new UsersViewModel()
             {
                 Id = a.Id,
@@ -87,12 +94,15 @@ namespace CascBasic.Controllers
                 RolesCount = a.Roles.Count
             }).ToList();
 
+            ViewBag.Institutions = new SelectList(_db.Institutions, "Id", "Name");
+
             return PartialView(groups);
         }
 
         [HttpGet]
         public ActionResult Roles()
         {
+
             var roles = _db.Roles.Select(a => new RoleViewModel()
             {
                 Id = a.Id,
@@ -103,6 +113,23 @@ namespace CascBasic.Controllers
             }).ToList();
 
             return PartialView(roles);
+        }
+
+        [HttpGet]
+        public ActionResult Inst()
+        {
+
+            var insts = _db.Institutions.Select(a => new InstViewModel()
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Campus = a.Campus,
+                Crest = a.CollegeCrest == null ? false : true
+            })
+            .OrderBy(b => b.Campus)
+            .ToList();
+
+            return PartialView(insts);
         }
 
         [HttpPost]
@@ -146,5 +173,8 @@ namespace CascBasic.Controllers
 
             return RedirectToAction("Index");
         }
+
+        
+
     }
 }

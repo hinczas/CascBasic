@@ -13,12 +13,18 @@ namespace CascBasic.Models.ViewModels
             public string Id { get; set; }
             public string Name { get; set; }
             public string Description { get; set; }
+            public string InstName { get; set; }
+            public long InstId { get; set; }
+            public bool InstCrest { get; set; }
             public List<UserDetViewModel> Users { get; set; }
             public List<RoleViewModel> Roles { get; set; }
         }
 
         public class CreatePermViewModel
         {
+            [Display(Name = "Institution")]
+            public long InstId { get; set; }
+
             [Required]
             [Display(Name = "Short name")]
             public string Name { get; set; }

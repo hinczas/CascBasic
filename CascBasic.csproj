@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.DependencyCollector, Version=2.9.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.9.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
     </Reference>
@@ -112,6 +115,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -196,10 +202,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Classes\AuthorizeRoles.cs" />
+    <Compile Include="Classes\FileService.cs" />
     <Compile Include="Classes\MenuService.cs" />
     <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\InstitutionController.cs" />
     <Compile Include="Controllers\PermissionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -222,11 +230,22 @@
     <Compile Include="Migrations\201903191130371_menuIcon.Designer.cs">
       <DependentUpon>201903191130371_menuIcon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903210859229_newPermissions.cs" />
+    <Compile Include="Migrations\201903210859229_newPermissions.Designer.cs">
+      <DependentUpon>201903210859229_newPermissions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903210923164_instNullsAllowed.cs" />
+    <Compile Include="Migrations\201903210923164_instNullsAllowed.Designer.cs">
+      <DependentUpon>201903210923164_instNullsAllowed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Institution.cs" />
+    <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\MenuModels.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\InstViewModels.cs" />
     <Compile Include="Models\ViewModels\MenuViewModels.cs" />
     <Compile Include="Models\ViewModels\PermViewModels.cs" />
     <Compile Include="Models\ViewModels\StatusViewModel.cs" />
@@ -269,8 +288,10 @@
     <Content Include="Content\manage.css" />
     <Content Include="Content\media\images\bckg_cam.jpg" />
     <Content Include="Content\media\images\logo.jpg" />
+    <Content Include="Content\media\images\no_photo.png" />
     <Content Include="Content\media\images\raven-logo-small.gif" />
     <Content Include="Content\media\images\tiny-raven.png" />
+    <Content Include="Content\theming.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -380,6 +401,8 @@
     <Content Include="Views\Dashboard\Loader.cshtml" />
     <Content Include="Views\Permissions\Details.cshtml" />
     <Content Include="Views\Shared\_UserMenus.cshtml" />
+    <Content Include="Views\Dashboard\Inst.cshtml" />
+    <Content Include="Views\Institution\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -404,6 +427,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903191130371_menuIcon.resx">
       <DependentUpon>201903191130371_menuIcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903210859229_newPermissions.resx">
+      <DependentUpon>201903210859229_newPermissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903210923164_instNullsAllowed.resx">
+      <DependentUpon>201903210923164_instNullsAllowed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

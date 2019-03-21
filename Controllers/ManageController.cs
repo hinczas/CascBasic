@@ -61,7 +61,7 @@ namespace CascBasic.Controllers
 
         //
         // GET: /Manage/Index
-        [AuthorizeRoles(Roles = "Admin")]
+        //[AuthorizeRoles(Roles = "Admin")]
         public async Task<ActionResult> Index(string id, ManageMessageId? message)
         {
             string cod = "";
@@ -121,6 +121,8 @@ namespace CascBasic.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+
+            ViewBag.Title = "Users / "+user.UserName;
             return View(model);
         }
 

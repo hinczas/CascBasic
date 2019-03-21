@@ -15,7 +15,7 @@
         </button>
     </div>
 }
-<nav class="navbar navbar-dark navbar-subpage">
+@*<nav class="navbar navbar-dark navbar-subpage">
     <span class="navbar-brand mb-0 h1">Group @Model.Name</span>
     <div class="form-inline">
         <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
@@ -23,7 +23,7 @@
             @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-sm btn-outline-light" })
         </div>
     </div>
-</nav>
+</nav>*@
 <div class="container">
     <h5>
         <i class="material-icons">group</i>
@@ -32,13 +32,25 @@
     </h5>
     <hr />
     <div class="mgmt mgmt-det">
+        
         <dl class="row">
-            <dt class="col-sm-3">Name</dt>
-            <dd class="col-sm-9">@Model.Name</dd>
-
-            <dt class="col-sm-3">Description</dt>
-            <dd class="col-sm-9">@Model.Description</dd>
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@Model.Name</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@Model.Description</dd>
+            <dt class="col-sm-2">Institution</dt>
+            <dd class="col-sm-10">
+                @if (Model.InstCrest)
+                {
+                    <img class="img-sm" src="/Institution/GetCrest/@Model.InstId" alt="@Model.InstName" /> @Html.ActionLink(Model.InstName, "Manage", "Institution", new { id = Model.InstId }, null)
+                }
+                else
+                {
+                    <img class="img-sm" src="/Content/media/images/no_photo.png" alt="@Model.InstName" /> @Html.ActionLink(Model.InstName, "Manage", "Institution",  new { id = Model.InstId }, null)
+                }
+            </dd>
         </dl>
+
     </div>
     <h5>
         <i class="material-icons">security</i>

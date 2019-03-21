@@ -1,0 +1,50 @@
+﻿@model IEnumerable<CascBasic.Models.ViewModels.InstViewModel>
+
+<style>
+    #roleForm {
+        padding: 15px 10px 0px 15px;
+    }
+</style>
+<div class="subpage-container">
+    <div class="subpage-container-up">
+        <h4>Institutions</h4>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <button type="button" class="btn btn-sm btn-outline-success" id="roleFormBtn" data-toggle="collapse" href="#roleFormCollapse" role="button" aria-expanded="false" aria-controls="roleFormCollapse"><i class="material-icons md-18">add_circle_outline</i>Add new</button>
+            </div>
+        </div>
+        <div class="dash-sub dash-sub-text">
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        </div>
+    </div>
+    <div class="subpage-container-down">
+        <h5>
+            <span>Current list</span>
+        </h5>
+        <div class="dash-sub dash-sub-detail">
+            <div class="coll-card-deck">
+                @foreach (var inst in Model)
+                {
+
+                <div class="coll-card anim-sm" onclick="location.href='/Institution/Manage/@inst.Id';">
+                    <div class="coll-card-head">
+                        @if (inst.Crest)
+                        {
+                            <img class="img-md" src="/Institution/GetCrest/@inst.Id" alt="@inst.Name" />
+                        }
+                        else
+                        {
+                            <img class="img-md" src="/Content/media/images/no_photo.png" alt="@inst.Name" />
+                        }
+
+                        <span class="h5">@inst.Campus</span>
+                    </div>
+                    <div class="coll-card-body">                        
+                        <h6>@inst.Name</h6>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>    
+</div>

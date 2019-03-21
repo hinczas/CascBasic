@@ -23,6 +23,7 @@ namespace CascBasic.Models
 
         public string Description { get; set; }
         public virtual ICollection<ApplicationGroup> Groups { get; set; }
+        public virtual ICollection<Permission> Permissions { get; set; }
 
     }
 

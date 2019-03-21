@@ -85,8 +85,13 @@ namespace CascBasic.Controllers
                 Name = group.Name,
                 Description = group.Description,
                 Users = users,
-                Roles = roles
+                Roles = roles,
+                InstName = group.Institution.Name,
+                InstId = group.InstId,
+                InstCrest = group.Institution.CollegeCrest==null ? false : true
             };
+
+            ViewBag.Title = "Groups / "+group.Name;
 
             return View(model);
         }
@@ -102,13 +107,26 @@ namespace CascBasic.Controllers
                 TempData["Head"] = "Error";
                 TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
 
-                return RedirectToAction("Index", "Dashboard", new { sub = "Groups" });
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+
+            var inst = _db.Institutions.Find(model.InstId);
+
+            if (inst == null)
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Select institution first!" };
+
+                return Redirect(Request.UrlReferrer.ToString());
             }
 
             var group = new ApplicationGroup()
             {
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                InstId = inst.Id
             };
 
             try
@@ -120,14 +138,14 @@ namespace CascBasic.Controllers
                 TempData["Head"] = "Done";
                 TempData["Messages"] = new List<string>() { "Group added successfuly" };
 
-                return RedirectToAction("Index", "Dashboard", new { sub = "Groups" });
+                return Redirect(Request.UrlReferrer.ToString());
             }
             catch (Exception e) {
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = new List<string>() { e.Message };
 
-                return RedirectToAction("Index", "Dashboard", new { sub = "Groups" });
+                return Redirect(Request.UrlReferrer.ToString());
             }
         }
 

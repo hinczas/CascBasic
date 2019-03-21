@@ -12,7 +12,6 @@
     padding: 48px 0 0; /* Height of navbar */
     box-shadow: 0px 0px 2px 0px #212529;
     width: 150px;
-    background-color: #003a43 !important; /* UIS theme */
 }
 
 .sidebar-sticky {
@@ -33,20 +32,6 @@
     }
         .sidebar-sticky .nav-link:hover {
             color: #0ebe24;
-            cursor: pointer;
-            -moz-transform: scale(1.02);
-            -webkit-transform: scale(1.02);
-            -o-transform: scale(1.02);
-            -ms-transform: scale(1.02);
-            transform: scale(1.02);
-        }
-
-        .sidebar-sticky .nav-link:active {
-            -moz-transform: scale(0.98);
-            -webkit-transform: scale(0.98);
-            -o-transform: scale(0.98);
-            -ms-transform: scale(0.98);
-            transform: scale(0.98);
         }
     .sidebar-sticky .nav-link i, span {
         display: inline-block;

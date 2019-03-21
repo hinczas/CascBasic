@@ -94,5 +94,12 @@ namespace CascBasic.Models.ViewModels
         public int ExternalLogins { get; set; }
     }
 
+    public class InstViewModel
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Campus { get; set; }
+        public bool Crest { get; set; }
+    }
 
 }
