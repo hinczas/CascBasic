@@ -15,6 +15,9 @@ namespace CascBasic
 
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<Institution, InstManageViewModel>();
+                cfg.CreateMap<Institution, InstBasicViewModel>();
+
+                cfg.CreateMap<InstBasicViewModel, Institution>().ForMember(x => x.Id, opt => opt.Ignore());
             });
         }
     }

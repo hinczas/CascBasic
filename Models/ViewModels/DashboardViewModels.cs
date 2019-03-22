@@ -17,6 +17,7 @@ namespace CascBasic.Models.ViewModels
         public string Description { get; set; }
         public int UsersCount { get; set; }
         public int RolesCount { get; set; }
+        public int PermCount { get; set; }
         public string Checked { get; set; }
 
         #region Helpers

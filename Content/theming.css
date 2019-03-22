@@ -12,10 +12,9 @@
     border-radius: 5px;
     margin: 0px 15px 15px 0px;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    width:225px;
 }
 
-    .coll-card img {
-    }
 
 .coll-card-head {
     width: 100%;
@@ -83,7 +82,7 @@ dt, dd {
 
 .modal-body dt {
     font-size: 12px;
-    color: gray;
+    color: dimgray;
 }
 
 .form-check-input {
@@ -94,28 +93,58 @@ dt, dd {
     min-height: 250px;
 }
 
+.input-group {
+    max-width:280px;
+}
+
 /* management pages END */
 
 /* Images */
+
+.img-wrapper {
+    position: relative;
+    display: block;
+}
+
+    .img-wrapper.wrapper-xl {
+        width: 170px;
+        height: 170px;
+    }
+
+    .img-wrapper.wrapper-lg {
+        width: 115px;
+        height: 115px;
+    }
+
+    .img-wrapper.wrapper-md {
+        width: 60px;
+        height: 60px;
+    }
+
+    .img-wrapper.wrapper-sm {
+        width: 25px;
+        height: 25px;
+    }
+
 .img-xl {
     width: 170px;
-    max-width: 170px;
-    max-height: 170px;
+    height: 170px;
+    object-fit: contain;
 }
 .img-lg {
     width: 115px;
-    max-width: 115px;
-    max-height: 115px;
+    height: 115px;
+    object-fit: contain;
 }
 .img-md {
     width: 60px;
-    max-width: 60px;
-    max-height: 60px;
+    height: 60px;
+    object-fit: contain;
 }
 .img-sm {
     width: 25px;
-    max-width: 25px;
-    max-height: 25px;
+    height: 25px;
+    object-fit: contain;
 }
 /* Images END */
 
@@ -132,18 +161,18 @@ dt, dd {
 /* page navbar END*/
 
 /* custom colours */
-.color-livegreen {
+.color-lg {
     color: #0ebe24 !important;
 }
-.color-liveblue {
+.color-lb {
     color: #218cff !important;
 }
 
-.color-raven {
+.color-rv {
     color: #106470 !important;
 }
 
-.color-paleblue {
+.color-pb {
     color: #e3f3fd !important;
 }
 
@@ -151,11 +180,11 @@ dt, dd {
     color: #003a43 !important;
 }
 
-.color-bg-raven {
+.color-bg-rv {
     background-color: #106470 !important;
 }
 
-.color-bg-paleblue {
+.color-bg-pb {
     background-color: #e3f3fd !important;
 }
 
@@ -164,7 +193,7 @@ dt, dd {
 }
 /* custom colours END*/
 
-/* Headers */
+/* Positioning */
 h5 {
     margin-bottom: 0px;
     width: 100%;
@@ -183,11 +212,35 @@ h5 {
             float: right;
         }
 
-.ver-algn, .ver-algn i, .ver-algn a, .ver-algn span, .ver-algn img, .ver-algn button {
+.ver-algn, .ver-algn input, .ver-algn i, .ver-algn a, .ver-algn span, .ver-algn img, .ver-algn button {
     display: inline-block;
     vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-/* headers END */
+
+.abs {
+    position:absolute;
+}
+    .abs.top-left {
+        top: 0px;
+        left: 0px;
+    }
+    .abs.top-right {
+        top: 0px;
+        right: 0px;
+    }
+    .abs.btm-left {
+        bottom: 0px;
+        left: 0px;
+    }
+    .abs.btm-right {
+        bottom: 0px;
+        right: 0px;
+    }
+
+/* Positioning END */
 
 /* Material icons */
 .material-icons.md-18 {
@@ -206,3 +259,11 @@ h5 {
     font-size: 48px;
 }
 /* Material icons END */
+
+.cust-btn {
+    cursor:pointer;
+    color: rgba(0,0,0,0.2);
+}
+.cust-btn:hover {
+    color: rgba(0,0,0,0.6);
+}

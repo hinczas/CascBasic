@@ -14,15 +14,7 @@
 @using (Html.BeginForm("CreateUser", "Account"))
 {
     @Html.AntiForgeryToken()
-    @*<nav class="navbar navbar-dark navbar-subpage">
-        <span class="navbar-brand mb-0 h1">New user</span>
-        <div class="form-inline">
-            <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-                <input type="submit" class="btn btn-sm btn-outline-light" value="Save" />
-                @Html.ActionLink("Cancel", "Index", "Dashboard", new { sub = "Users" }, new { @class = "btn btn-sm btn-outline-light" })
-            </div>
-        </div>
-    </nav>*@
+
     <div class="container">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.ValidationMessageFor(m => m.Email)
@@ -88,7 +80,7 @@
                         <h5 class="card-title">Groups</h5>
                         <p class="card-text">You can select multiple groups</p>
                         <div class="form-group">
-                            @Html.ListBoxFor(m => m.Groups, (MultiSelectList)ViewBag.Groups)
+                            @Html.ListBoxFor(m => m.Groups, (MultiSelectList)ViewBag.Groups, new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
@@ -99,7 +91,7 @@
                         <h5 class="card-title">Roles</h5>
                         <p class="card-text">You can select multiple roles</p>
                         <div class="form-group">
-                            @Html.ListBoxFor(m => m.Roles, (MultiSelectList)ViewBag.Roles)
+                            @Html.ListBoxFor(m => m.Roles, (MultiSelectList)ViewBag.Roles, new { @class="form-control"})
                         </div>
                     </div>
                 </div>

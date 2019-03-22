@@ -53,7 +53,8 @@ namespace CascBasic.Controllers
                 Id = a.Id,
                 Name = a.Name,
                 Description = a.Description,
-                Checked = "checked"
+                UsersCount = a.Users.Count,
+                PermCount = a.Permissions.Count
             }).ToList();
             model.Code = cod;
             model.Head = hed;
@@ -67,6 +68,57 @@ namespace CascBasic.Controllers
 
         }
 
+        [HttpGet]
+        public ActionResult Create()
+        {
+            ViewBag.Title = "Institution / New";
+
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(InstBasicViewModel model, HttpPostedFileBase instPhoto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                model.Code = "danger";
+                model.Head = "Error";
+                model.Message = string.Join("\n", errors.Select(a => a.ErrorMessage).ToList());
+                return View(model);
+            }
+            else
+            {
+                try
+                {
+                    var inst = Mapper.Map<Institution>(model);
+
+                    if (instPhoto != null)
+                    {
+                        inst.CollegeCrest = _fs.ConvertToBytes(instPhoto);
+                    }
+                    _db.Institutions.Add(inst);
+                    await _db.SaveChangesAsync();
+
+                    TempData["Code"] = "success";
+                    TempData["Head"] = "Done";
+                    TempData["Messages"] = new List<string>() { "Institution has been added." };
+                    return RedirectToAction("Manage", new { id = inst.Id });
+
+                }
+                catch (Exception e)
+                {
+                    var errors = ModelState.Values.SelectMany(a => a.Errors);
+                    model.Code = "danger";
+                    model.Head = "Error";
+                    model.Message = e.Message;
+                    return View(model);
+                }
+            }
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> AddCrest(long instId, HttpPostedFileBase uplFile)
         {
@@ -75,7 +127,7 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = new List<string>() { "Missing file" };
-                return RedirectToAction("Manage", new { instId });
+                return RedirectToAction("Manage", new { id = instId });
             }
             var inst = _db.Institutions.Find(instId);
             if (inst == null)
@@ -83,7 +135,7 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = new List<string>() { "Cannot find selected institution" };
-                return RedirectToAction("Manage", new { instId });
+                return RedirectToAction("Manage", new { id = instId });
             }
             // Create User
             try
@@ -97,7 +149,7 @@ namespace CascBasic.Controllers
                 TempData["Head"] = "Done";
                 TempData["Messages"] = new List<string>() { "Crest image added!" };
 
-                return RedirectToAction("Manage", new { instId });
+                return RedirectToAction("Manage", new { id = instId });
 
             }
             catch (Exception e)
@@ -105,11 +157,105 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = new List<string>() { e.Message };
-                return RedirectToAction("Manage", new { instId });
+                return RedirectToAction("Manage", new { id = instId });
             }
 
         }
 
+        [HttpPost]
+        public async Task<ActionResult> RemoveCrest(long instId)
+        {
+            var inst = _db.Institutions.Find(instId);
+            if (inst == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Cannot find selected institution" };
+                return RedirectToAction("Manage", new { id = instId });
+            }
+            // Create User
+            try
+            {
+
+                inst.CollegeCrest = null;
+                await _db.SaveChangesAsync();
+
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "Crest image deleted!" };
+
+                return RedirectToAction("Manage", new { id = instId });
+
+            }
+            catch (Exception e)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { e.Message };
+                return RedirectToAction("Manage", new { id = instId });
+            }
+
+        }
+
+        #region PartialForms
+        [HttpGet]
+        public ActionResult DetailsForm(long id)
+        {
+            var inst = _db.Institutions.Find(id);
+            if (inst == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Cannot find requested Institution" };
+                return RedirectToAction("Manage", new { id });
+            }
+
+            var model = Mapper.Map<InstBasicViewModel>(inst);
+
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DetailsForm(InstBasicViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(a => a.Errors);
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = errors.Select(a => a.ErrorMessage).ToList();
+
+            } else
+            {
+                var inst = await _db.Institutions.FindAsync(model.Id);
+                if (inst == null)
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = new List<string>() { "Cannot find requested Institution" };
+                }
+
+                try
+                {
+                    Mapper.Map(model, inst);
+                    await _db.SaveChangesAsync();
+
+                    TempData["Code"] = "success";
+                    TempData["Head"] = "Done";
+                    TempData["Messages"] = new List<string>() { "Institution details have been updated." };
+
+                } catch (Exception e)
+                {
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Error";
+                    TempData["Messages"] = new List<string>() { e.Message };
+                }
+
+            }
+            return RedirectToAction("Manage", new { id = model.Id });
+        }
+        #endregion
 
         public ActionResult GetCrest(int id)
         {

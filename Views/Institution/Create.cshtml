@@ -1,0 +1,95 @@
+﻿@model CascBasic.Models.ViewModels.InstBasicViewModel
+@using Microsoft.Owin.Security
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+@if (Model!=null && !string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@Model.Head!</h4>
+        <p style="white-space: pre-line">@Model.Message</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+    <div class="container">
+        @using (Html.BeginForm("Create", "Institution", FormMethod.Post, new { enctype = "multipart/form-data", id = "createInstForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Photo</h5>
+                            <div class="form-group">
+                                <input type="file" name="instPhoto" id="instPhoto" alt="Institution photo"  accept="image/*"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Basic details</h5>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.Campus, new { @placeholder = "Campus code", required = "required", @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.Name, new { @placeholder = "Name", required = "required", @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.CollegeName, new { @placeholder = "College name", @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Contact</h5>
+                            <div class="input-group input-group-sm mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="email-addon"><i class="material-icons md-18">email</i></span>
+                                </div>
+                                @Html.TextBoxFor(m => m.ZEmail, new { type="email", @placeholder = "Email", @class = "form-control form-control-sm", aria_label = "Email", aria_describedby = "email-addon" })
+                            </div>
+                            <div class="input-group input-group-sm mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="email-addon"><i class="material-icons md-18">phone</i></span>
+                                </div>
+                                @Html.TextBoxFor(m => m.CollegePhone, new { @placeholder = "Phone", @class = "form-control form-control-sm", aria_label = "Email", aria_describedby = "email-addon" })
+
+                            </div>
+                            <div class="input-group input-group-sm mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="email-addon"><i class="material-icons md-18">print</i></span>
+                                </div>
+                                @Html.TextBoxFor(m => m.CollegeFax, new { @placeholder = "Fax", @class = "form-control form-control-sm", aria_label = "Email", aria_describedby = "email-addon" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Additional information</h5>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.CollegeCharityNumber, new { @placeholder = "Charity number", @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.CollegeVATnumber, new { @placeholder = "VAT number", @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="form-group required">
+                                @Html.TextBoxFor(m => m.WelcomeMsg, new { @placeholder = "Welcome message", @class = "form-control form-control-sm" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-outline-success">create</button>
+        }
+    </div>

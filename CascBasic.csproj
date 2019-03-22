@@ -238,6 +238,10 @@
     <Compile Include="Migrations\201903210923164_instNullsAllowed.Designer.cs">
       <DependentUpon>201903210923164_instNullsAllowed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903221300482_instCleanUp.cs" />
+    <Compile Include="Migrations\201903221300482_instCleanUp.Designer.cs">
+      <DependentUpon>201903221300482_instCleanUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Institution.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -403,6 +407,8 @@
     <Content Include="Views\Shared\_UserMenus.cshtml" />
     <Content Include="Views\Dashboard\Inst.cshtml" />
     <Content Include="Views\Institution\Manage.cshtml" />
+    <Content Include="Views\Institution\DetailsForm.cshtml" />
+    <Content Include="Views\Institution\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -433,6 +439,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903210923164_instNullsAllowed.resx">
       <DependentUpon>201903210923164_instNullsAllowed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903221300482_instCleanUp.resx">
+      <DependentUpon>201903221300482_instCleanUp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

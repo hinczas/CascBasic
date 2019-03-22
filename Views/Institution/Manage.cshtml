@@ -15,16 +15,17 @@
 }
 
 
-    <div class="container">
-        <h5>
-            <i class="material-icons">info</i>
-            <span>Details</span>
-            <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#formModal">edit</button>
-        </h5>
-        <hr />
-        <div class="mgmt mgmt-det">
-            <div class="row">
-                <div class="mgmt-col col-3">
+<div class="container">
+    <h5>
+        <i class="material-icons">info</i>
+        <span>Details</span>
+        <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-form="DetailsForm" onclick="btnEditClick(this)">edit</button>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-det">
+        <div class="row">
+            <div class="mgmt-col col-4">
+                <div class="img-wrapper wrapper-xl">
                     @if (Model.Crest)
                     {
                         <img class="img-xl" src="/Institution/GetCrest/@Model.Id" alt="@Model.Name" />
@@ -34,132 +35,170 @@
                         <img class="img-xl" src="/Content/media/images/no_photo.png" alt="@Model.Name" />
                     }
                     <br />
-                    <span class="ver-algn"><i class="material-icons md-18 color-livegreen">email</i> <a href="mailto:@Model.ZEmail">@Model.ZEmail</a></span> <br />
-                    <span class="ver-algn"><i class="material-icons md-18 color-livegreen">phone</i> <span>@Model.CollegePhone</span></span> <br />
-                    <span class="ver-algn"><i class="material-icons md-18 color-livegreen">print</i> <span>@Model.CollegeFax</span></span> <br />
-                </div>
-                <div class="col">
-                    <dl class="row">
-                        <dt class="col-sm-3">Campus</dt>
-                        <dd class="col-sm-9">@Model.Campus</dd>
-                        <dt class="col-sm-3">Name</dt>
-                        <dd class="col-sm-9">@Model.Name</dd>
-                        <dt class="col-sm-3">College Name</dt>
-                        <dd class="col-sm-9">@Model.CollegeName</dd>
-                        <dt class="col-sm-3">Message</dt>
-                        <dd class="col-sm-9">@Model.WelcomeMsg</dd>
-                        <br />
-                        <br />
-                        <dt class="col-sm-3">Vat Number</dt>
-                        <dd class="col-sm-9">@Model.CollegeVATnumber</dd>
-                        <dt class="col-sm-3">Charity Number</dt>
-                        <dd class="col-sm-9">@Model.CollegeCharityNumber</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-
-
-        <h5>
-            <i class="material-icons">more</i>
-            <span>Additional information</span>
-            <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#formModal">edit</button>
-        </h5>
-        <hr />
-        <div class="mgmt mgmt-det">
-            <dl class="row">
-                <dt class="col-sm-2">InformChanges</dt>
-                <dd class="col-sm-4">@Model.InformChanges</dd>
-                <dt class="col-sm-2">TrumpSafeMinutesShortTerm</dt>
-                <dd class="col-sm-4">@Model.TrumpSafeMinutesShortTerm</dd>
-                <dt class="col-sm-2">TrumpSafeMinutesLongTerm</dt>
-                <dd class="col-sm-4">@Model.TrumpSafeMinutesLongTerm</dd>
-                <dt class="col-sm-2">NoAccountMsg</dt>
-                <dd class="col-sm-4">@Model.NoAccountMsg</dd>
-                <dt class="col-sm-2">ContactName</dt>
-                <dd class="col-sm-4">@Model.ContactName</dd>
-                <dt class="col-sm-2">ContactEmail</dt>
-                <dd class="col-sm-4">@Model.ContactEmail</dd>
-                <dt class="col-sm-2">AcceptInventory</dt>
-                <dd class="col-sm-4">@Model.AcceptInventory</dd>
-                <dt class="col-sm-2">BkAcceptInvInstructions</dt>
-                <dd class="col-sm-4">@Model.BkAcceptInvInstructions</dd>
-                <dt class="col-sm-2">BkAcceptInvLimitDays</dt>
-                <dd class="col-sm-4">@Model.BkAcceptInvLimitDays</dd>
-                <dt class="col-sm-2">AccInvoiceTypeID</dt>
-                <dd class="col-sm-4">@Model.AccInvoiceTypeID</dd>
-                <dt class="col-sm-2">AddrID</dt>
-                <dd class="col-sm-4">@Model.AddrID</dd>
-                <dt class="col-sm-2">ShowRoomState</dt>
-                <dd class="col-sm-4">@Model.ShowRoomState</dd>
-                <dt class="col-sm-2">BkEndDateEmailDays</dt>
-                <dd class="col-sm-4">@Model.BkEndDateEmailDays</dd>
-                <dt class="col-sm-2">PrevTicketsOnQuickIssue</dt>
-                <dd class="col-sm-4">@Model.PrevTicketsOnQuickIssue</dd>
-                <dt class="col-sm-2">PkgeReminderEmailDays</dt>
-                <dd class="col-sm-4">@Model.PkgeReminderEmailDays</dd>
-                <dt class="col-sm-2">PkgeFromEmail</dt>
-                <dd class="col-sm-4">@Model.PkgeFromEmail</dd>
-            </dl>
-        </div>
-        <h5>
-            <i class="material-icons">group</i>
-            <span>Groups</span>
-            <button type="button" class="btn btn-sm btn-outline-success" id="roleFormBtn" data-toggle="collapse" href="#groupFormCollapse" role="button" aria-expanded="false" aria-controls="groupFormCollapse">add</button>
-        </h5>
-        <hr />
-        <div class="mgmt mgmt-det">
-            <div class="collapse" id="groupFormCollapse">
-                <div class="card card-body">
-                    @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("AddCrest", "Institution", FormMethod.Post, new { enctype = "multipart/form-data", id = "crestForm" }))
                     {
-                        @Html.AntiForgeryToken()
-                        <div class="form-row">
-                            <input type="text" class="form-control form-control-sm" name="InstId" placeholder="Group name" hidden value="@Model.Id">
-                            <div class="col col-md-2">
-                                <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
-                            </div>
-                            <div class="col col-md-4">
-                                <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
-                            </div>
-                            <div class="col col-md-1">
-                                <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
-                            </div>
-                        </div>
+                        <span class="abs btm-right">
+                            <input type="text" name="instId" value="@Model.Id" hidden />
+                            <input type="file" id="hiddenFile" name="uplFile" accept="image/*" hidden />
+                            <i class="material-icons md-36 cust-btn" id="addPhoto">add_photo_alternate</i>
+                        </span>
                     }
+                    @using (Html.BeginForm("RemoveCrest", "Institution", FormMethod.Post, new { id = "remCrestForm" }))
+                    {
+                        <span class="abs btm-left">
+                            <input type="text" name="instId" value="@Model.Id" hidden />
+                            <i class="material-icons md-36 cust-btn" id="remPhoto">remove_circle_outline</i>
+                        </span>
+                    }
+
                 </div>
+                <span class="ver-algn"><i class="material-icons md-18 color-lg">email</i> <a href="mailto:@Model.ZEmail">@Model.ZEmail</a></span> <br />
+                <span class="ver-algn"><i class="material-icons md-18 color-lg">phone</i> <span>@Model.CollegePhone</span></span> <br />
+                <span class="ver-algn"><i class="material-icons md-18 color-lg">print</i> <span>@Model.CollegeFax</span></span> <br />
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-sm table-hover" id="user-groups-tbl">
-                            <thead>
-                                <tr>
-                                    <th width="1%">#</th>
-                                    <th width="1%"></th>
-                                    <th width="16%">Name</th>
-                                    <th>Description</th>
-                                    <th width="2%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @*@using (Html.BeginForm("ChangeGroups", "Manage", FormMethod.Post, new { id = "groupsForm" }))
-                                {*@
-                                    @foreach (var grp in Model.BasicGroups)
-                                    {
-                                        <tr>
-                                            <td><input class="form-check-input" name="groups" type="checkbox" value="@grp.Id" @grp.Checked></td>
-                                            <td><input class="form-input" name="id" type="text" value="@Model.Id" hidden></td>
-                                            <td>@Html.ActionLink(grp.Name, "Details", "Permissions", new { id = grp.Id }, null)</td>
-                                            <td>@grp.Description</td>
-                                            <td>@Html.ActionLink("details", "Details", "Permissions", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
-                                        </tr>
-                                    }
-                                @*}*@
-                            </tbody>
-                        </table>
+            <div class="col">
+                <dl class="row">
+                    <dt class="col-sm-3">Campus</dt>
+                    <dd class="col-sm-9">@Model.Campus</dd>
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Name</dd>
+                    <dt class="col-sm-3">College Name</dt>
+                    <dd class="col-sm-9">@Model.CollegeName</dd>
+                    <dt class="col-sm-3">Message</dt>
+                    <dd class="col-sm-9">@Model.WelcomeMsg</dd>
+                    <br />
+                    <br />
+                    <dt class="col-sm-3">Vat Number</dt>
+                    <dd class="col-sm-9">@Model.CollegeVATnumber</dd>
+                    <dt class="col-sm-3">Charity Number</dt>
+                    <dd class="col-sm-9">@Model.CollegeCharityNumber</dd>
+                    @*<dt class="col-sm-3">Contact Name</dt>
+                    <dd class="col-sm-3">@Model.ContactName</dd>
+                    <dt class="col-sm-3">Contact Email</dt>
+                    <dd class="col-sm-3">@Model.ContactEmail</dd>*@
+                </dl>
+            </div>
+        </div>
+    </div>    
+    <h5>
+        <i class="material-icons">group</i>
+        <span>Groups</span>
+        <button type="button" class="btn btn-sm btn-outline-success" id="roleFormBtn" data-toggle="collapse" href="#groupFormCollapse" role="button" aria-expanded="false" aria-controls="groupFormCollapse">add</button>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-det">
+        <div class="collapse" id="groupFormCollapse">
+            <div class="card card-body">
+                @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-row">
+                        <input type="text" class="form-control form-control-sm" name="InstId" placeholder="Group name" hidden value="@Model.Id">
+                        <div class="col col-md-3">
+                            <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
+                        </div>
+                        <div class="col col-md-1">
+                            <button type="submit" class="btn btn-sm btn-outline-success">create</button>
+                        </div>
                     </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm table-hover" id="user-groups-tbl">
+                        <thead>
+                            <tr>
+                                <th width="16%">Name</th>
+                                <th>Description</th>
+                                <th>Parent</th>
+                                <th>Users</th>
+                                <th>Permisions</th>
+                                <th width="2%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@using (Html.BeginForm("ChangeGroups", "Manage", FormMethod.Post, new { id = "groupsForm" }))
+                                {*@
+                            @foreach (var grp in Model.BasicGroups)
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(grp.Name, "Details", "Permissions", new { id = grp.Id }, null)</td>
+                                    <td>@grp.Description</td>
+                                    <td>xxx</td>
+                                    <td><span class="badge badge-pill badge-secondary">@grp.UsersCount</span></td>
+                                    <td><span class="badge badge-pill badge-secondary">@grp.PermCount</span></td>
+                                    <td>@Html.ActionLink("details", "Details", "Permissions", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
+                                </tr>
+                            }
+                            @*}*@
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+<!-- Forms Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="formModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content replaceMe">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success">Save</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function btnEditClick(e) {
+        var form = e.dataset.form;
+        var link = '@Url.Action("partialView", "Institution",new { id = Model.Id})';
+        link = link.replace("partialView", form);
+
+        $.ajax({
+
+            type: "get",
+            url: link,
+            success: function (d) {
+                /* d is the HTML of the returned response */
+                $('.replaceMe').html(d); //replaces previous HTML with action
+                $('#formModal').modal('show');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#addPhoto").on("click", function () {
+            $("#hiddenFile").trigger("click");
+        });
+
+        $("#hiddenFile").change(function () {
+            $("#crestForm").submit();
+        });
+
+
+        $("#remPhoto").on("click", function () {
+            if (confirm('Are you sure you want to delete photo?')) {
+                $("#remCrestForm").submit();
+            }
+        });
+    });
+</script>
