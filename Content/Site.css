@@ -63,7 +63,7 @@ textarea {
     vertical-align: middle;
     width: 200px;
     float: right;
-    margin: 0px 5px 0px 5px;
+    /* margin: 0px 5px 0px 5px; */
 }
 
 .navbar-master {

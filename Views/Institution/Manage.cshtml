@@ -89,7 +89,7 @@
     <div class="mgmt mgmt-det">
         <div class="collapse" id="groupFormCollapse">
             <div class="card card-body">
-                @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("CreateGroup", "Permission", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="form-row">
@@ -127,12 +127,12 @@
                             @foreach (var grp in Model.BasicGroups)
                             {
                                 <tr>
-                                    <td>@Html.ActionLink(grp.Name, "Details", "Permissions", new { id = grp.Id }, null)</td>
+                                    <td>@Html.ActionLink(grp.Name, "Group", "Permission", new { id = grp.Id }, null)</td>
                                     <td>@grp.Description</td>
                                     <td>xxx</td>
                                     <td><span class="badge badge-pill badge-secondary">@grp.UsersCount</span></td>
                                     <td><span class="badge badge-pill badge-secondary">@grp.PermCount</span></td>
-                                    <td>@Html.ActionLink("details", "Details", "Permissions", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
+                                    <td>@Html.ActionLink("details", "Group", "Permission", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
                                 </tr>
                             }
                             @*}*@

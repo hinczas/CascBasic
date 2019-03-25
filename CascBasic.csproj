@@ -208,7 +208,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\InstitutionController.cs" />
-    <Compile Include="Controllers\PermissionsController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201903221300482_instCleanUp.cs" />
     <Compile Include="Migrations\201903221300482_instCleanUp.Designer.cs">
       <DependentUpon>201903221300482_instCleanUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903251352353_groupInheritance.cs" />
+    <Compile Include="Migrations\201903251352353_groupInheritance.Designer.cs">
+      <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Institution.cs" />
@@ -403,12 +407,14 @@
     <Content Include="Views\Manage\PersonalForm.cshtml" />
     <Content Include="Views\Manage\ErrorForm.cshtml" />
     <Content Include="Views\Dashboard\Loader.cshtml" />
-    <Content Include="Views\Permissions\Details.cshtml" />
+    <Content Include="Views\Permission\Group.cshtml" />
     <Content Include="Views\Shared\_UserMenus.cshtml" />
     <Content Include="Views\Dashboard\Inst.cshtml" />
     <Content Include="Views\Institution\Manage.cshtml" />
     <Content Include="Views\Institution\DetailsForm.cshtml" />
     <Content Include="Views\Institution\Create.cshtml" />
+    <Content Include="Views\Dashboard\Perm.cshtml" />
+    <Content Include="Views\Permission\Role.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -442,6 +448,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903221300482_instCleanUp.resx">
       <DependentUpon>201903221300482_instCleanUp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903251352353_groupInheritance.resx">
+      <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

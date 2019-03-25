@@ -16,17 +16,20 @@
         <div class="dash-sub dash-sub-text">
             <div class="collapse" id="groupFormCollapse">
                 <div class="card card-body">
-                    @using (Html.BeginForm("CreateGroup", "Permissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("CreateGroup", "Permission", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                     <div class="form-row">
                         <div class="col col-md-2">
-                            @Html.DropDownList("InstId", (SelectList)ViewBag.Institutions,new { required = "required", @class= "form-control form-control-sm" })
+                            @Html.DropDownList("ParentId", (SelectList)ViewBag.Groups, "- Parent Group -", new { @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="col col-md-2">
+                            @Html.DropDownList("InstId", (SelectList)ViewBag.Institutions, new { required = "required", @class = "form-control form-control-sm" })
                         </div>
                         <div class="col col-md-2">
                             <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
                         </div>
-                        <div class="col col-md-4">
+                        <div class="col col-md-5">
                             <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
                         </div>
                         <div class="col col-md-1">
@@ -42,7 +45,7 @@
     <div class="subpage-container-down">
         <h5>
             <span>List</span>
-            <input type="text" class="form-control form-control-sm search-js" id="searchGroups" placeholder="group..." name="search" />
+            <input type="text" class="form-control form-control-sm search-js" id="searchGroups" placeholder="filter..." name="search" />
         </h5>
         <div class="dash-sub dash-sub-detail">
             <div class="table-responsive">
@@ -50,8 +53,10 @@
                     <thead>
                         <tr>
                             <th width="16%">Name</th>
+                            <th>Parent</th>
+                            <th>Institution</th>
                             <th>Description</th>
-                            <th width="10%">Roles</th>
+                            <th width="10%">Permissions</th>
                             <th width="10%">Users</th>
                             <th width="1%"></th>
                         </tr>
@@ -59,13 +64,21 @@
                     <tbody>
                         @foreach (var g in Model)
                         {
-                            <tr>
-                                <td>@Html.ActionLink(g.Name, "Details", "Permissions", new { id = g.Id }, null)</td>
-                                <td>@g.Description</td>
-                                <td><span class="badge badge-pill badge-secondary">@g.RolesCount</span></td>
-                                <td><span class="badge badge-pill badge-secondary">@g.UsersCount</span></td>
-                                <td>@Html.ActionLink("details", "Details", "Permissions", new { id = g.Id }, new { @class = "badge badge-primary" })</td>
-                            </tr>
+                        <tr>
+                            <td>@Html.ActionLink(g.Name, "Group", "Permission", new { id = g.Id }, null)</td>
+                            
+                                @if (!string.IsNullOrEmpty(g.ParentId)) {
+                                <td>@Html.ActionLink(g.Parent, "Group", "Permission", new { id = g.ParentId }, null)</td>
+                                } else
+                                {
+                                    <td></td>
+                                }
+                            <td>@Html.ActionLink(g.Institution, "Manage", "Institution", new { id = g.InstId }, null)</td>
+                            <td>@g.Description</td>
+                            <td><span class="badge badge-pill badge-secondary">@g.PermCount</span></td>
+                            <td><span class="badge badge-pill badge-secondary">@g.UsersCount</span></td>
+                            <td>@Html.ActionLink("details", "Group", "Permission", new { id = g.Id }, new { @class = "badge badge-primary" })</td>
+                        </tr>
                         }
                     </tbody>
                 </table>

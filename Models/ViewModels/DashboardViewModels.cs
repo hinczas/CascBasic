@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CascBasic.Models.ViewModels
+﻿namespace CascBasic.Models.ViewModels
 {
     public class DashboardViewModel : StatusViewModel
     {
@@ -15,6 +10,10 @@ namespace CascBasic.Models.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public long InstId { get; set; }
+        public string Institution { get; set; }
+        public string ParentId { get; set; }
+        public string Parent { get; set; }
         public int UsersCount { get; set; }
         public int RolesCount { get; set; }
         public int PermCount { get; set; }
@@ -52,6 +51,7 @@ namespace CascBasic.Models.ViewModels
         public string Description { get; set; }
         public int UsersCount { get; set; }
         public int GroupsCount { get; set; }
+        public int PermCount { get; set; }
         public string Checked { get; set; }
 
 
@@ -93,6 +93,41 @@ namespace CascBasic.Models.ViewModels
         public int Groups { get; set; }
         public int Roles { get; set; }
         public int ExternalLogins { get; set; }
+    }
+
+    public class PermsViewModel
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Groups { get; set; }
+        public int Roles { get; set; }
+        public int Users { get; set; }
+        public string Checked { get; set; }
+
+        #region Helpers
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as PermsViewModel);
+        }
+
+        public bool Equals(PermsViewModel other)
+        {
+            if (other == null)
+                return false;
+
+            return this.Id.Equals(other.Id) && this.Name.Equals(other.Name);
+        }
+
+        public override int GetHashCode()
+        {
+
+            int name = Name.GetHashCode();
+            int id = Id.GetHashCode();
+
+            return name ^ id;
+        }
+        #endregion
     }
 
     public class InstViewModel

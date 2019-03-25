@@ -1,0 +1,207 @@
+﻿@model CascBasic.Models.ViewModels.PermViewModels.GroupDetViewModel
+@using Microsoft.Owin.Security
+
+<link href="~/Content/manage.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@Model.Head!</h4>
+        <p style="white-space: pre-line">@Model.Message</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@*<nav class="navbar navbar-dark navbar-subpage">
+    <span class="navbar-brand mb-0 h1">Group @Model.Name</span>
+    <div class="form-inline">
+        <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-sm btn-outline-light" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
+            @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-sm btn-outline-light" })
+        </div>
+    </div>
+</nav>*@
+<div class="container">
+    <h5>
+        <i class="material-icons">group</i>
+        <span>Group details</span>
+        <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#formModal">edit</button>
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-det">
+        
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@Model.Name</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@Model.Description</dd>
+            <dt class="col-sm-2">Institution</dt>
+            <dd class="col-sm-10">
+                @if (Model.InstCrest)
+                {
+                    <img class="img-sm" src="/Institution/GetCrest/@Model.InstId" alt="@Model.InstName" /> @Html.ActionLink(Model.InstName, "Manage", "Institution", new { id = Model.InstId }, null)
+                }
+                else
+                {
+                    <img class="img-sm" src="/Content/media/images/no_photo.png" alt="@Model.InstName" /> @Html.ActionLink(Model.InstName, "Manage", "Institution",  new { id = Model.InstId }, null)
+                }
+            </dd>
+        </dl>
+
+    </div>
+    <h5>
+        <i class="material-icons">vpn_key</i>
+        <span>Permissions</span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('permsForm').submit()">save</button>
+        <input type="text" class="form-control form-control-sm search-js" id="searchPerms" placeholder="filter..." name="search" />
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-log">
+        <div class="row">
+            <div class="col-6">
+                <strong>Group inheritance</strong>
+                @Html.DropDownList("ParentId", Model.Groups, new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-6">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm" id="group-perms-tbl">
+                        <thead>
+                            <tr>
+                                <th width="1%">#</th>
+                                <th width="1%"></th>
+                                <th width="16%">Name</th>
+                                <th width="82%">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @using (Html.BeginForm("ChangePerms", "Permission", FormMethod.Post, new { id = "permsForm" }))
+                            {
+                                foreach (var rol in Model.Perms)
+                                {
+                                    <tr>
+                                        <td><input class="form-check-input" name="perms" type="checkbox" value="@rol.Id" @rol.Checked></td>
+                                        <td><input class="form-input" name="id" type="text" value="@Model.Id" hidden></td>
+                                        <td>@rol.Name</td>
+                                        <td>@rol.Description</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5>
+        <i class="material-icons">person</i>
+        <span>Users</span>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('usersForm').submit()">save</button>
+        <input type="text" class="form-control form-control-sm search-js" id="searchUsers" placeholder="filter..." name="search" style="width:200px;" />
+    </h5>
+    <hr />
+    <div class="mgmt mgmt-sec">
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm table-hover" id="group-users-tbl">
+                        <thead>
+                            <tr>
+                                <th width="1%"><input class="check-all" name="toggle" type="checkbox" value="0" /></th>
+                                <th width="1%"></th>
+                                <th width="29%">Username</th>
+                                <th width="20%">Last name</th>
+                                <th width="20%">First name</th>
+                                <th width="29%">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @using (Html.BeginForm("ChangeUsers", "Permission", FormMethod.Post, new { id = "usersForm" }))
+                            {
+                                foreach (var usr in Model.Users)
+                                {
+                                    <tr>
+                                        <td><input class="form-check-input check-sngl" name="users" type="checkbox" value="@usr.Id" @usr.Checked /></td>
+                                        <td><input class="form-input" name="id" type="text" value="@Model.Id" hidden /></td>
+                                        <td>@Html.ActionLink(usr.UserName, "Index", "Manage", new { id = usr.Id }, null)</td>
+                                        <td>@usr.LastName</td>
+                                        <td>@usr.FirstName</td>
+                                        <td>@usr.Email</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Forms Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="formModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("EditGroup", "Permission", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Change Group details...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" value="@Model.Id" name="Id" hidden />
+                    <dl class="row">
+                        <dt class="col-sm-3">Name</dt>
+                        <dd class="col-sm-9">@Html.TextBoxFor(m => m.Name, new { @placeholder = "group name", @class = "form-control form-control-sm", required = "required" })</dd>
+
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">@Html.TextBoxFor(m => m.Description, new { @placeholder = "group description", @class = "form-control form-control-sm" })</dd>
+
+
+                        <dt class="col-sm-3">Institution</dt>
+                        <dd class="col-sm-9">@Html.DropDownList("InstId", Model.Insts, new { required = "required", @class = "form-control form-control-sm" })</dd>
+                        
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-sm btn-outline-success" value="Save" />
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#searchUsers").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#group-users-tbl tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $("#searchPerms").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#group-perms-tbl tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $('.check-all').on("change", function () {
+            var checked = $(this).prop('checked');
+            $('.check-sngl:visible').each(function () {
+                $(this).prop('checked', checked);
+            })
+        });
+
+    });
+</script>

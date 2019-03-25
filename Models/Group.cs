@@ -43,11 +43,17 @@ namespace CascBasic.Models
         [ForeignKey("Institution")]
         public Int64 InstId { get; set; }
 
+        [ForeignKey("Parent")]
+        public string ParentId { get; set; }
+
+
         public virtual Institution Institution { get; set; }
+        public virtual ApplicationGroup Parent { get; set; }
         public virtual ICollection<ApplicationRole> Roles { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
         public virtual ICollection<MenuItem> MenuItems { get; set; }
+        public virtual ICollection<ApplicationGroup> Children { get; set; }
 
         #region Helpers
         public override bool Equals(object obj)

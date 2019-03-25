@@ -91,9 +91,15 @@ namespace CascBasic.Controllers
                 Name = a.Name,
                 Description = a.Description,
                 UsersCount = a.Users.Count,
-                RolesCount = a.Roles.Count
+                PermCount = a.Permissions.Count,
+                InstId = a.InstId,
+                Institution = a.Institution.Name,
+                ParentId = a.ParentId,
+                Parent = a.ParentId == null ? "" : a.Parent.Name
+
             }).ToList();
 
+            ViewBag.Groups = new SelectList(_db.Groups, "Id", "Name");
             ViewBag.Institutions = new SelectList(_db.Institutions, "Id", "Name");
 
             return PartialView(groups);
@@ -109,7 +115,7 @@ namespace CascBasic.Controllers
                 Name = a.Name,
                 Description = a.Description,
                 UsersCount = a.Users.Count,
-                GroupsCount = a.Groups.Count
+                PermCount = a.Permissions.Count
             }).ToList();
 
             return PartialView(roles);
@@ -130,6 +136,25 @@ namespace CascBasic.Controllers
             .ToList();
 
             return PartialView(insts);
+        }
+
+
+        [HttpGet]
+        public ActionResult Perm()
+        {
+
+            var perms = _db.Permissions.Select(a => new PermsViewModel()
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Description = a.Description,
+                Groups = a.Groups.Count,
+                Roles = a.Roles.Count
+            })
+            .OrderBy(b => b.Name)
+            .ToList();
+
+            return PartialView(perms);
         }
 
         [HttpPost]

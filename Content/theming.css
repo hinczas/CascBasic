@@ -24,6 +24,7 @@
         display: inline-block;
         vertical-align: top;
     }
+
 /* Custom cards END */
 
 /* Animations */
@@ -260,6 +261,7 @@ h5 {
 }
 /* Material icons END */
 
+/* inputs buttons etc */
 .cust-btn {
     cursor:pointer;
     color: rgba(0,0,0,0.2);
@@ -267,3 +269,16 @@ h5 {
 .cust-btn:hover {
     color: rgba(0,0,0,0.6);
 }
+
+.form-check {
+    padding-left:.25rem;
+}
+.form-check-input {
+    position: relative;
+    margin-top: 0.3rem;
+    margin-left: 0;
+}
+.btn-sm {
+    max-height:31px !important;
+}
+/**/
