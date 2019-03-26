@@ -61,11 +61,59 @@
     <hr />
     <div class="mgmt mgmt-log">
         <div class="row">
-            <div class="col-6">
-                <strong>Group inheritance</strong>
-                @Html.DropDownList("ParentId", Model.Groups, new { @class = "form-control form-control-sm" })
+            <div class="col-7">
+                <p><strong>Group inheritance</strong></p>
+                <div class="basic-card">
+                    <b>Parent</b>
+                    <hr />
+                    @if (Model.ParentId == null)
+                    {
+                        <p>This group does not belong to any parent group yet.</p>
+                    }
+                    else
+                    {
+                        <p>Current parrent group: @Html.ActionLink(Model.ParentName, "Group", "Permission", new { id = Model.ParentId }, null)</p>
+                    }
+                    @using (Html.BeginForm("SetParent", "Permission", FormMethod.Post, new { @class = "ver-algn" }))
+                    {
+                        <input type="text" name="id" value="@Model.Id" hidden />
+                        <span>Select parent for this group *: </span>
+                        <div class="ver-div">
+                            <div class="input-group input-group-sm">
+                                @Html.DropDownList("ParentId", Model.SelGroups, "- none -", new { @class = "custom-select", name = "parentId" })
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" type="submit">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <p>
+                        <br />
+                        <i style="color:red;">
+                            * All current rights will be replaced with parent group permissions!
+                        </i>
+                    </p>
+
+                </div>
+                <div class="basic-card mt-2">
+                    <b>Children</b>
+                    <hr />
+                    @if (Model.Children == null || Model.Children.Count < 1)
+                    {
+                        <p>This group has not got any children groups yet.</p>
+                    }
+                    else
+                    {
+                        <p>This group has following sub-groups:</p>
+                        foreach (var chil in Model.Children)
+                        {
+                            @Html.ActionLink(chil.Name, "Group", "Permission", new { id = chil.Id }, null)<br />
+                        }
+                    }
+                </div>
             </div>
-            <div class="col-6">
+            <div class="col-5">
+                <p><strong>Permissions list</strong></p>
                 <div class="table-responsive">
                     <table class="table table-striped table-sm" id="group-perms-tbl">
                         <thead>

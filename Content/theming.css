@@ -25,6 +25,12 @@
         vertical-align: top;
     }
 
+.basic-card {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
 /* Custom cards END */
 
 /* Animations */
@@ -92,6 +98,7 @@ dt, dd {
 
 .table-responsive {
     min-height: 250px;
+    max-height: 500px;
 }
 
 .input-group {
@@ -213,7 +220,7 @@ h5 {
             float: right;
         }
 
-.ver-algn, .ver-algn input, .ver-algn i, .ver-algn a, .ver-algn span, .ver-algn img, .ver-algn button {
+.ver-algn, .ver-algn input, .ver-algn i, .ver-algn a, .ver-algn span, .ver-algn img, .ver-algn button, .ver-algn .ver-div {
     display: inline-block;
     vertical-align: middle;
     white-space: nowrap;

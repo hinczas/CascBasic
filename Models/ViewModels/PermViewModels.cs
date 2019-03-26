@@ -25,7 +25,7 @@ namespace CascBasic.Models.ViewModels
                 if (other == null)
                     return false;
 
-                return this.Id == other.Id && this.Name.Equals(other.Name);
+                return this.Id.Equals(other.Id) && this.Name.Equals(other.Name);
             }
 
             public override int GetHashCode()
@@ -47,11 +47,14 @@ namespace CascBasic.Models.ViewModels
             public string InstName { get; set; }
             public long InstId { get; set; }
             public bool InstCrest { get; set; }
+            public string ParentId { get; set; }
+            public string ParentName { get; set; }
             public List<UserDetViewModel> Users { get; set; }
             public List<RoleViewModel> Roles { get; set; }
             public List<PermsViewModel> Perms { get; set; }
             public SelectList Insts { get; set; }
-            public SelectList Groups { get; set; }
+            public SelectList SelGroups { get; set; }
+            public List<BasicListPermVM> Children { get; set; }
         }
 
         public class RoleDetViewModel : StatusViewModel
@@ -77,6 +80,28 @@ namespace CascBasic.Models.ViewModels
             public string Name { get; set; }
 
             [Display(Name = "Description")]
+            public string Description { get; set; }
+        }
+
+
+        public class EditGroupViewModel
+        {
+            [Required]
+            public string Id { get; set; }
+            [Required]
+            public long InstId { get; set; }
+            public string ParentId { get; set; }
+            [Required]
+            public string Name { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class EditRoleViewModel
+        {
+            [Required]
+            public string Id { get; set; }
+            [Required]
+            public string Name { get; set; }
             public string Description { get; set; }
         }
 
