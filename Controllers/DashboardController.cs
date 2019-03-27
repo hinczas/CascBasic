@@ -78,7 +78,8 @@ namespace CascBasic.Controllers
                 Groups = a.Groups.Count,
                 Roles = a.Roles.Count,
                 ExternalLogins = a.Logins.Count
-            });
+            })
+            .OrderBy(b=> b.UserName);
             return PartialView(users);
         }
 
@@ -97,7 +98,9 @@ namespace CascBasic.Controllers
                 ParentId = a.ParentId,
                 Parent = a.ParentId == null ? "" : a.Parent.Name
 
-            }).ToList();
+            })
+            .OrderBy(b => b.Name)
+            .ToList();
 
             ViewBag.Groups = new SelectList(_db.Groups, "Id", "Name");
             ViewBag.Institutions = new SelectList(_db.Institutions, "Id", "Name");
@@ -116,7 +119,9 @@ namespace CascBasic.Controllers
                 Description = a.Description,
                 UsersCount = a.Users.Count,
                 PermCount = a.Permissions.Count
-            }).ToList();
+            })
+            .OrderBy(b => b.Name)
+            .ToList();
 
             return PartialView(roles);
         }

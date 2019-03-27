@@ -79,6 +79,15 @@ namespace CascBasic.Classes
 
             var users = groupUsers.Union(allUsers).ToList();
 
+            // all groups for navigation
+            var groups = _db.Groups.Select(a => new BasicListPermVM()
+            {
+                Id = a.Id,
+                Name = a.Name
+            })
+            .Where(b => b.Id != id)
+            .ToList();
+
             // FINAL model
             var model = new GroupDetViewModel()
             {
@@ -98,7 +107,8 @@ namespace CascBasic.Classes
                 {
                     Id = a.Id,
                     Name = a.Name
-                }).ToList()
+                }).ToList(),
+                NavGroups = new SelectList(groups, "Id", "Name")
             };
 
             return model;

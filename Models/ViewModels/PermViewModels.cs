@@ -55,6 +55,7 @@ namespace CascBasic.Models.ViewModels
             public SelectList Insts { get; set; }
             public SelectList SelGroups { get; set; }
             public List<BasicListPermVM> Children { get; set; }
+            public SelectList NavGroups { get; set; }
         }
 
         public class RoleDetViewModel : StatusViewModel

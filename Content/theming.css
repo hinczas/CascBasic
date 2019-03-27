@@ -230,6 +230,7 @@ h5 {
 
 .abs {
     position:absolute;
+    z-index:99;
 }
     .abs.top-left {
         top: 0px;
@@ -246,6 +247,10 @@ h5 {
     .abs.btm-right {
         bottom: 0px;
         right: 0px;
+    }
+    .abs.top-right-sp {
+        top: 17px;
+        right: 24px;
     }
 
 /* Positioning END */
