@@ -41,7 +41,7 @@ textarea {
 /*Alert message placing */
 .alert {
     position: absolute;
-    top: 115px;
+    top: 70px;
     right: 10px;
     z-index:100;
 }
