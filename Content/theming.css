@@ -293,4 +293,8 @@ h5 {
 .btn-sm {
     max-height:31px !important;
 }
+
+#btnNavDrop {
+    min-width:124px;
+}
 /**/

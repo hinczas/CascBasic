@@ -48,19 +48,4 @@ namespace CascBasic.Models
         }
         #endregion
     }
-
-    public class NavButtons
-    {
-        public string ListName { get; set; }
-        public string ListUrl { get; set; }
-
-        public List<DropItem> DropItems { get; set; }
-
-    }
-
-    public class DropItem
-    {
-        public string DropName { get; set; }
-        public string DropUrl { get; set; }
-    }
 }

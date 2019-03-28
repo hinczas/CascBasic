@@ -7,8 +7,6 @@ using System.Web.Mvc;
 
 namespace CascBasic.Models.ViewModels
 {
-    public class PermViewModels
-    {
         public class BasicListPermVM
         {
             public string Id { get; set; }
@@ -55,7 +53,6 @@ namespace CascBasic.Models.ViewModels
             public SelectList Insts { get; set; }
             public SelectList SelGroups { get; set; }
             public List<BasicListPermVM> Children { get; set; }
-            public SelectList NavGroups { get; set; }
         }
 
         public class RoleDetViewModel : StatusViewModel
@@ -139,5 +136,4 @@ namespace CascBasic.Models.ViewModels
             }
             #endregion
         }
-    }
 }

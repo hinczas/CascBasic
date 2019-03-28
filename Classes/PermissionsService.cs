@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using static CascBasic.Models.ViewModels.PermViewModels;
 
 namespace CascBasic.Classes
 {
@@ -79,15 +78,6 @@ namespace CascBasic.Classes
 
             var users = groupUsers.Union(allUsers).ToList();
 
-            // all groups for navigation
-            var groups = _db.Groups.Select(a => new BasicListPermVM()
-            {
-                Id = a.Id,
-                Name = a.Name
-            })
-            .Where(b => b.Id != id)
-            .ToList();
-
             // FINAL model
             var model = new GroupDetViewModel()
             {
@@ -108,7 +98,7 @@ namespace CascBasic.Classes
                     Id = a.Id,
                     Name = a.Name
                 }).ToList(),
-                NavGroups = new SelectList(groups, "Id", "Name")
+                ListUrl = "/Dashboard?sub=Groups"
             };
 
             return model;
@@ -415,7 +405,8 @@ namespace CascBasic.Classes
                 Name = role.Name,
                 Description = role.Description,
                 Users = users,
-                Perms = permissions
+                Perms = permissions,
+                ListUrl = "/Dashboard?sub=Roles"
             };
 
             return model;

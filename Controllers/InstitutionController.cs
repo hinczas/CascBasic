@@ -55,10 +55,12 @@ namespace CascBasic.Controllers
                 Description = a.Description,
                 UsersCount = a.Users.Count,
                 PermCount = a.Permissions.Count
+                
             }).ToList();
             model.Code = cod;
             model.Head = hed;
             model.Message = msg;
+            model.ListUrl = "/Dashboard?sub=Inst";
 
 
 

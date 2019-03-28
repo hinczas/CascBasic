@@ -1,4 +1,4 @@
-﻿@model CascBasic.Models.ViewModels.PermViewModels.RoleDetViewModel
+﻿@model CascBasic.Models.ViewModels.RoleDetViewModel
 @using Microsoft.Owin.Security
 
 <link href="~/Content/manage.css" rel="stylesheet" />
@@ -15,15 +15,9 @@
         </button>
     </div>
 }
-@*<nav class="navbar navbar-dark navbar-subpage">
-    <span class="navbar-brand mb-0 h1">Group @Model.Name</span>
-    <div class="form-inline">
-        <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-            <button type="button" class="btn btn-sm btn-outline-light" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
-            @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-sm btn-outline-light" })
-        </div>
-    </div>
-</nav>*@
+
+<a href="@Model.ListUrl" class="btn btn-outline-light btn-sm abs top-right-sp"><< List</a>
+
 <div class="container">
     <h5>
         <i class="material-icons">security</i>
@@ -32,7 +26,7 @@
     </h5>
     <hr />
     <div class="mgmt mgmt-det">
-        
+
         <dl class="row">
             <dt class="col-sm-2">Name</dt>
             <dd class="col-sm-10">@Model.Name</dd>

@@ -1,9 +1,9 @@
-﻿@model CascBasic.Models.ViewModels.PermViewModels.GroupDetViewModel
+﻿@model CascBasic.Models.ViewModels.GroupDetViewModel
 @using Microsoft.Owin.Security
 
 <link href="~/Content/manage.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-
+<script src="~/Scripts/popper.min.js"></script>
 
 @if (!string.IsNullOrEmpty(Model.Message))
 {
@@ -15,19 +15,8 @@
         </button>
     </div>
 }
-<div class="btn-group btn-group-sm abs top-right-sp" role="group" aria-label="Button group with nested dropdown">
-    @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Groups" }, new { @class = "btn btn-outline-light btn-sm" })
-    <div class="btn-group btn-group-sm" role="group">
-        @Html.DropDownList(Model.Name, Model.NavGroups, new { @class = "btn btn-outline-light dropdown-toggle btn-sm" })
-        @*<button id="btnGroupDrop1" type="button" class="btn btn-outline-light dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            @Model.Name
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="#">Dropdown link</a>
-            <a class="dropdown-item" href="#">Dropdown link</a>
-        </div>*@
-    </div>
-</div>
+
+<a href="@Model.ListUrl" class="btn btn-outline-light btn-sm abs top-right-sp"><< List</a>
 
 <div class="container">
 

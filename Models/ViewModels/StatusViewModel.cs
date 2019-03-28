@@ -11,5 +11,6 @@ namespace CascBasic.Models.ViewModels
         public string Head { get; set; }
         public string Message { get; set; }
         public string Caller { get; set; }
+        public string ListUrl { get; set; }
     }
 }

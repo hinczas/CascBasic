@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using static CascBasic.Models.ViewModels.PermViewModels;
 
 namespace CascBasic.Controllers
 {
@@ -34,7 +33,10 @@ namespace CascBasic.Controllers
                 TempData["Code"] = "danger";
                 TempData["Head"] = "Error";
                 TempData["Messages"] = new List<string>() { "Error getting group details from DB." };
-                return new RedirectResult(Request.UrlReferrer.ToString());
+                if (Request.UrlReferrer == null)
+                    return RedirectToAction("Index", "Dashboard", new { sub = "Groups" });
+                else
+                    return new RedirectResult(Request.UrlReferrer.ToString());
             }
 
             if (TempData["Messages"] != null)

@@ -14,15 +14,9 @@
         </button>
     </div>
 }
-    @*<nav class="navbar navbar-dark navbar-subpage">
-        <span class="navbar-brand mb-0 h1">Manage @Model.UserName</span>
-        <div class="form-inline">
-            <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-sm btn-outline-light" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
-                @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Users" }, new { @class = "btn btn-sm btn-outline-light" })
-            </div>
-        </div>
-    </nav>*@
+
+<a href="@Model.ListUrl" class="btn btn-outline-light btn-sm abs top-right-sp"><< List</a>
+
 <div class="container">
     <h5>
         <i class="material-icons">person</i>
@@ -99,7 +93,7 @@
         <i class="material-icons">security</i>
         <span>Permissions management</span>
         <button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('groupsForm').submit()">save</button>
-        
+
     </h5>
     <hr />
     <div class="mgmt mgmt-sec">
@@ -117,37 +111,37 @@
         <div class="row">
             <div class="col-6">
                 @*<div class="table-responsive">
-                    <table class="table table-striped table-sm table-hover" id="user-groups-tbl">
-                        <thead>
-                            <tr>
-                                <th width="1%">#</th>
-                                <th width="1%"></th>
-                                <th width="16%">Name</th>
-                                <th>Description</th>
-                                <th width="10%">Roles</th>
-                                <th width="10%">Users</th>
-                                <th width="2%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @using (Html.BeginForm("ChangeGroups", "Manage", FormMethod.Post, new { id = "groupsForm" }))
-                            {
-                                foreach (var grp in Model.AllGroups)
+                        <table class="table table-striped table-sm table-hover" id="user-groups-tbl">
+                            <thead>
+                                <tr>
+                                    <th width="1%">#</th>
+                                    <th width="1%"></th>
+                                    <th width="16%">Name</th>
+                                    <th>Description</th>
+                                    <th width="10%">Roles</th>
+                                    <th width="10%">Users</th>
+                                    <th width="2%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @using (Html.BeginForm("ChangeGroups", "Manage", FormMethod.Post, new { id = "groupsForm" }))
                                 {
-                            <tr>
-                                <td><input class="form-check-input" name="groups" type="checkbox" value="@grp.Id" @grp.Checked></td>
-                                <td><input class="form-input" name="id" type="text" value="@Model.Id" hidden></td>
-                                <td>@Html.ActionLink(grp.Name, "Details", "Permission", new { id = grp.Id }, null)</td>
-                                <td>@grp.Description</td>
-                                <td><span class="badge badge-pill badge-secondary">@grp.RolesCount</span></td>
-                                <td><span class="badge badge-pill badge-secondary">@grp.UsersCount</span></td>
-                                <td>@Html.ActionLink("details", "Details", "Permission", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
-                            </tr>
+                                    foreach (var grp in Model.AllGroups)
+                                    {
+                                <tr>
+                                    <td><input class="form-check-input" name="groups" type="checkbox" value="@grp.Id" @grp.Checked></td>
+                                    <td><input class="form-input" name="id" type="text" value="@Model.Id" hidden></td>
+                                    <td>@Html.ActionLink(grp.Name, "Details", "Permission", new { id = grp.Id }, null)</td>
+                                    <td>@grp.Description</td>
+                                    <td><span class="badge badge-pill badge-secondary">@grp.RolesCount</span></td>
+                                    <td><span class="badge badge-pill badge-secondary">@grp.UsersCount</span></td>
+                                    <td>@Html.ActionLink("details", "Details", "Permission", new { id = grp.Id }, new { @class = "badge badge-primary" })</td>
+                                </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
-                </div>*@
+                            </tbody>
+                        </table>
+                    </div>*@
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-between">
@@ -260,7 +254,7 @@
             }
         });
     }
-    
+
     $(document).ready(function () {
         $("#searchGroups").on("keyup", function () {
             var value = $(this).val().toLowerCase();

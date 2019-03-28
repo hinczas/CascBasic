@@ -119,7 +119,8 @@ namespace CascBasic.Controllers
                 AllRoles = roles,
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                ListUrl = "/Dashboard?sub=Users"
             };
 
             ViewBag.Title = "Users / "+user.UserName;
