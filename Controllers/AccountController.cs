@@ -155,7 +155,8 @@ namespace CascBasic.Controllers
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
-                UserName = username,
+                //UserName = username,
+                UserName = model.Email,
                 Email = model.Email
             };
 
@@ -253,7 +254,8 @@ namespace CascBasic.Controllers
                 MailAddress addr = new MailAddress(model.Email);
                 string username = addr.User;
 
-                var user = new ApplicationUser { UserName = username, Email = model.Email };
+                //var user = new ApplicationUser { UserName = username, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
