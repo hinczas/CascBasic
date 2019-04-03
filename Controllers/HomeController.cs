@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CascBasic.Classes;
+using CascBasic.Classes.API.Lookup;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,6 +20,17 @@ namespace CascBasic.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Lookup(string CRSid)
+        {
+            ViewBag.Message = "Your contact page.";
+
+            LookupMethods lm = new LookupMethods();
+
+            lm.GetPerson("crsid", CRSid, "email");
             return View();
         }
     }

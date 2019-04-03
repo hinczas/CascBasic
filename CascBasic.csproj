@@ -112,6 +112,7 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Caching" />
@@ -201,7 +202,9 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Classes\API\Lookup\LookupMethods.cs" />
     <Compile Include="Classes\AuthorizeRoles.cs" />
+    <Compile Include="Classes\API\Lookup\LookupService.cs" />
     <Compile Include="Classes\StatusCode.cs" />
     <Compile Include="Classes\FileService.cs" />
     <Compile Include="Classes\MenuService.cs" />
@@ -249,6 +252,7 @@
       <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\API\LookupModels.cs" />
     <Compile Include="Models\Institution.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\MenuModels.cs" />
@@ -336,6 +340,7 @@
     <Content Include="App_Data\pubkey2.crt" />
     <Content Include="App_Data\pubkey901" />
     <Content Include="App_Data\pubkey901.crt" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -454,6 +459,9 @@
       <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

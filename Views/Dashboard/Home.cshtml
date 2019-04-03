@@ -17,6 +17,13 @@
             <input type="file" name="uplFile" required>
             <button class="btn btn-sm btn-outline-warning" type="submit">Upload</button>
         }
+        <hr />
+        <h6>Lookup Api</h6>
+        @using (Html.BeginForm("Lookup", "Home", FormMethod.Post))
+        {
+            <input type="text" name="CRSid" placeholder="CRSid" />
+            <button type="submit" class="btn btn-sm btn-outline-danger">GO</button>
+        }
     </div>
     <div class="subpage-container-down"></div>
 

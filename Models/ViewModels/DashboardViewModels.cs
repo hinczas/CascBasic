@@ -53,6 +53,7 @@
         public int GroupsCount { get; set; }
         public int PermCount { get; set; }
         public string Checked { get; set; }
+        public bool CanCreate { get; set; }
 
 
         #region Helpers
