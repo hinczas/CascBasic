@@ -6,11 +6,11 @@ using System.Web;
 
 namespace CascBasic.Classes.API.Lookup
 {
-    public class LookupMethods
+    public class PersonLookup
     {
         private LookupService _ls;
 
-        public LookupMethods()
+        public PersonLookup()
         {
             _ls = new LookupService();
         }
@@ -36,7 +36,7 @@ namespace CascBasic.Classes.API.Lookup
         ///
         ///<returns>The requested person or {@code null} if they were not found.</returns> 
         ///
-        public IbisPerson GetPerson(string scheme, string identifier, string fetch)
+        public IbisPerson GetPerson(string identifier, string fetch, string scheme="crsid")
         {
             string[] pathParams = { scheme, identifier };
             object[] queryParams = { "fetch", fetch };
@@ -50,7 +50,7 @@ namespace CascBasic.Classes.API.Lookup
             return result.person;
         }
 
-        public List<IbisAttribute> GetAttributes(string scheme,string identifier,string attrs)
+        public List<IbisAttribute> GetAttributes(string identifier,string attrs, string scheme = "crsid")
         {
             string[] pathParams = { scheme, identifier };
             object[] queryParams = { "attrs", attrs };
@@ -64,7 +64,7 @@ namespace CascBasic.Classes.API.Lookup
             return result.attributes;
         }
 
-        public List<IbisGroup> GetGroups(string scheme, string identifier, string fetch)
+        public List<IbisGroup> GetGroups(string identifier, string fetch, string scheme = "crsid")
         {
             string[] pathParams = { scheme, identifier };
             object[] queryParams = { "fetch", fetch };
@@ -78,7 +78,7 @@ namespace CascBasic.Classes.API.Lookup
             return result.groups;
         }
 
-        public List<IbisInstitution> GetInsts(string scheme, string identifier, string fetch)
+        public List<IbisInstitution> GetInsts(string identifier, string fetch, string scheme = "crsid")
         {
             string[] pathParams = { scheme, identifier };
             object[] queryParams = { "fetch", fetch };
@@ -92,7 +92,7 @@ namespace CascBasic.Classes.API.Lookup
             return result.institutions;
         }
 
-        public bool isMemberOfGroup(string scheme, string identifier, string groupid)
+        public bool IsMemberOfGroup(string identifier, string groupid, string scheme = "crsid")
         {
             string[] pathParams = { scheme, identifier, groupid };
             object[] queryParams = { };
@@ -106,9 +106,7 @@ namespace CascBasic.Classes.API.Lookup
             return bool.Parse(result.value);
         }
 
-        public bool isMemberOfInst(string scheme,
-                                  string identifier,
-                                  string instid)
+        public bool IsMemberOfInst(string identifier, string instid, string scheme = "crsid")
         {
             string[] pathParams = { scheme, identifier, instid };
             object[] queryParams = { };

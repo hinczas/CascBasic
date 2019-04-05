@@ -28,9 +28,9 @@ namespace CascBasic.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
-            LookupMethods lm = new LookupMethods();
+            PersonLookup pl = new PersonLookup();
 
-            lm.GetPerson("crsid", CRSid, "email");
+            pl.GetPerson(CRSid, "email");
             return View();
         }
     }

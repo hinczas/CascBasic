@@ -84,6 +84,11 @@ namespace CascBasic.Models.API
         public string message  { get; set; }
 
         public string details  { get; set; }
+
+        public override string ToString()
+        {
+            return code + " " + message;
+        }
     }
 
     public class IbisIdentifier

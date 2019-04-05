@@ -202,7 +202,9 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Classes\API\Lookup\LookupMethods.cs" />
+    <Compile Include="Classes\API\Lookup\GroupLookup.cs" />
+    <Compile Include="Classes\API\Lookup\InstitutionLookup.cs" />
+    <Compile Include="Classes\API\Lookup\PersonLookup.cs" />
     <Compile Include="Classes\AuthorizeRoles.cs" />
     <Compile Include="Classes\API\Lookup\LookupService.cs" />
     <Compile Include="Classes\StatusCode.cs" />

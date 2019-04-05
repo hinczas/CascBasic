@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CascBasic.Classes;
+using CascBasic.Classes.API.Lookup;
 using CascBasic.Context;
 using CascBasic.Models;
 using CascBasic.Models.ViewModels;
@@ -262,6 +263,22 @@ namespace CascBasic.Controllers
         public ActionResult GetCrest(int id)
         {
             byte[] cover = _fs.GetImageFromDataBase(id);
+            if (cover != null)
+            {
+                return File(cover, "image/jpg");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public ActionResult GetCrestApi(string id)
+        {
+            InstitutionLookup _il = new InstitutionLookup();
+
+            byte[] cover = _il.GetPhotoBytes(id);
+
             if (cover != null)
             {
                 return File(cover, "image/jpg");
