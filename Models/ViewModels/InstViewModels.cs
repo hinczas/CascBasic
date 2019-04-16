@@ -44,4 +44,10 @@ namespace CascBasic.Models.ViewModels
         public string CollegeVATnumber { get; set; }
         public string CollegeCharityNumber { get; set; }
     }
+
+    public class InstApiViewModel : StatusViewModel
+    {
+        public string InstId { get; set; }
+        public string Name { get; set; }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using CascBasic.Classes;
+using System.Web;
 using System.Web.Mvc;
 
 namespace CascBasic
@@ -9,6 +10,7 @@ namespace CascBasic
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthorizeAttribute());
+            filters.Add(new SessionIsRoleAttribute());
         }
     }
 }

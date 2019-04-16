@@ -27,6 +27,7 @@ namespace CascBasic.Models
         public string   CollegeCharityNumber { get; set; }
         public string   ContactName { get; set; }
         public string   ContactEmail { get; set; }
+        public string   InstId { get; set; }
 
         public virtual ICollection<ApplicationGroup> Groups { get; set; }
 

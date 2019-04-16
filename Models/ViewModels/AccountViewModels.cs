@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CascBasic.Models.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CascBasic.Models
@@ -110,7 +111,7 @@ namespace CascBasic.Models
         public string Email { get; set; }
     }
 
-    public class CreateUserViewModel
+    public class CreateUserViewModel : StatusViewModel
     {
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -145,9 +146,9 @@ namespace CascBasic.Models
         public bool RavenLink { get; set; }
         
         [Display(Name = "Groups")]
-        public List<int> Groups { get; set; }
+        public List<string> Groups { get; set; }
 
-        [Display(Name = "Groups")]
+        [Display(Name = "Roles")]
         public List<string> Roles { get; set; }
     }
 

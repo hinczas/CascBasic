@@ -1,4 +1,5 @@
-﻿using CascBasic.Context;
+﻿using CascBasic.Classes.API.Lookup;
+using CascBasic.Context;
 using CascBasic.Models;
 using CascBasic.Models.ViewModels;
 using System;
@@ -354,7 +355,7 @@ namespace CascBasic.Classes
                 return StatusCode.ExceptionThrown;
             }
         }
-
+                
         #endregion
 
         #region Role management

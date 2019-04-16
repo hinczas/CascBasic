@@ -185,7 +185,9 @@ input[type=text]:placeholder, input[type=password]:placeholder {
   width:60%;
 }
 
-
+#roleForm {
+    margin-top: 1em;
+}
 
 
 /* Raven Button */

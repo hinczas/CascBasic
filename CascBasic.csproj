@@ -205,7 +205,7 @@
     <Compile Include="Classes\API\Lookup\GroupLookup.cs" />
     <Compile Include="Classes\API\Lookup\InstitutionLookup.cs" />
     <Compile Include="Classes\API\Lookup\PersonLookup.cs" />
-    <Compile Include="Classes\AuthorizeRoles.cs" />
+    <Compile Include="Classes\CustomAttributes.cs" />
     <Compile Include="Classes\API\Lookup\LookupService.cs" />
     <Compile Include="Classes\StatusCode.cs" />
     <Compile Include="Classes\FileService.cs" />
@@ -252,6 +252,10 @@
     <Compile Include="Migrations\201903251352353_groupInheritance.cs" />
     <Compile Include="Migrations\201903251352353_groupInheritance.Designer.cs">
       <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904081255042_institutionInstIdLookup.cs" />
+    <Compile Include="Migrations\201904081255042_institutionInstIdLookup.Designer.cs">
+      <DependentUpon>201904081255042_institutionInstIdLookup.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\API\LookupModels.cs" />
@@ -423,6 +427,8 @@
     <Content Include="Views\Institution\Create.cshtml" />
     <Content Include="Views\Dashboard\Perm.cshtml" />
     <Content Include="Views\Permission\Role.cshtml" />
+    <Content Include="Views\Institution\InterimList.cshtml" />
+    <Content Include="Views\Account\RoleSelect.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -459,6 +465,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903251352353_groupInheritance.resx">
       <DependentUpon>201903251352353_groupInheritance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904081255042_institutionInstIdLookup.resx">
+      <DependentUpon>201904081255042_institutionInstIdLookup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

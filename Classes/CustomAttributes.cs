@@ -62,4 +62,17 @@ namespace CascBasic.Classes
             return split.ToArray();
         }
     }
+
+    public class SessionIsRoleAttribute : AuthorizeAttribute
+    {
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            return httpContext.Session["Role"] != null;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            filterContext.Result = new RedirectResult("/Account/RoleSelect");
+        }
+    }
 }

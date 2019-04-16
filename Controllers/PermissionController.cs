@@ -160,6 +160,7 @@ namespace CascBasic.Controllers
             // Redirect
             return RedirectToAction("Index", "Dashboard", new { sub = "Perm" });
         }
+
         #endregion
 
         #region Assignments (Perms/Role/Users)
@@ -417,6 +418,12 @@ namespace CascBasic.Controllers
                     TempData["Code"] = "danger";
                     TempData["Head"] = "Error";
                     TempData["Messages"] = new List<string>() { "Cannot find selected parent." };
+                    break;
+
+                case StatusCode.ApiResultEmpty:
+                    TempData["Code"] = "warning";
+                    TempData["Head"] = "Warning";
+                    TempData["Messages"] = new List<string>() { "Failed to fetch data from API." };
                     break;
 
                 default:

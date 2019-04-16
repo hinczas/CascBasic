@@ -32,23 +32,24 @@
             @using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "externalForm" }))
             {
                 @Html.AntiForgeryToken()
-                <fieldset id="socialLoginList">
-                    <legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>
-                    <div class="raven-section">
-                        <p>
-                            Click below to login with Raven
-                        </p>
-                        <input type="hidden" name="provider" value="Raven" />
-                        <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
-                            <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
-                                <div class="rb-icon">
-                                    <img src="~/Content/media/images/tiny-raven.png" />
-                                </div>
-                                <div class="rb-main">Login</div>
+            <fieldset id="socialLoginList">
+                @*<legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>*@
+                <legend><small>Sign in</small></legend>
+                <div class="raven-section">
+                    <p>
+                        Click below to login with Raven
+                    </p>
+                    <input type="hidden" name="provider" value="Raven" />
+                    <div class="raven-button" role="button" onclick="javascript:document.getElementById('externalForm').submit()">
+                        <div class="rb-row" style="display: table-row" title="Log in using your Raven account">
+                            <div class="rb-icon">
+                                <img src="~/Content/media/images/tiny-raven.png" />
                             </div>
+                            <div class="rb-main">Login</div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
+            </fieldset>
             }
         </div>
         <span><legend><small>Registered user</small></legend> </span>

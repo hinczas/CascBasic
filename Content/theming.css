@@ -297,4 +297,36 @@ h5 {
 #btnNavDrop {
     min-width:124px;
 }
+
+#role-select{
+    background-color: transparent !important;
+    border-color: #17a2b8 !important;
+    color: #17a2b8 !important;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    #role-select:not(option):hover {
+        background-color: #17a2b8 !important;
+        border-color: #17a2b8 !important;
+        color: white !important;
+    }
+
+#role-select option {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
 /**/
+
+/* Bootstrap overrides */
+/*.input-group-prepend.mr-0 {
+    margin-right: 0px !important;
+}*/

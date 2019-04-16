@@ -14,28 +14,29 @@
             </div>
         </div>
         <div class="dash-sub dash-sub-text">
+
             <div class="collapse" id="groupFormCollapse">
                 <div class="card card-body">
                     @using (Html.BeginForm("CreateGroup", "Permission", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                    <div class="form-row">
-                        <div class="col col-md-2">
-                            @Html.DropDownList("ParentId", (SelectList)ViewBag.Groups, "- Parent Group -", new { @class = "form-control form-control-sm" })
+                        <div class="form-row">
+                            <div class="col col-md-2">
+                                @Html.DropDownList("ParentId", (SelectList)ViewBag.Groups, "- Parent Group -", new { @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="col col-md-2">
+                                @Html.DropDownList("InstId", (SelectList)ViewBag.Institutions, new { required = "required", @class = "form-control form-control-sm" })
+                            </div>
+                            <div class="col col-md-2">
+                                <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
+                            </div>
+                            <div class="col col-md-5">
+                                <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
+                            </div>
+                            <div class="col col-md-1">
+                                <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
+                            </div>
                         </div>
-                        <div class="col col-md-2">
-                            @Html.DropDownList("InstId", (SelectList)ViewBag.Institutions, new { required = "required", @class = "form-control form-control-sm" })
-                        </div>
-                        <div class="col col-md-2">
-                            <input type="text" class="form-control form-control-sm" name="Name" placeholder="Group name" required>
-                        </div>
-                        <div class="col col-md-5">
-                            <input type="text" class="form-control form-control-sm" name="Description" placeholder="Group description" style="max-width:100%;">
-                        </div>
-                        <div class="col col-md-1">
-                            <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
-                        </div>
-                    </div>
                     }
                 </div>
             </div>
@@ -52,12 +53,12 @@
                 <table class="table table-striped table-sm table-hover" id="dash-groups-tbl">
                     <thead>
                         <tr>
-                            <th width="16%">Name</th>
+                            <th width="12%">Name</th>
                             <th>Parent</th>
-                            <th>Institution</th>
+                            <th width="12%">Institution</th>
                             <th>Description</th>
-                            <th width="10%">Permissions</th>
-                            <th width="10%">Users</th>
+                            <th width="5%">Permissions</th>
+                            <th width="5%">Users</th>
                             <th width="1%"></th>
                         </tr>
                     </thead>

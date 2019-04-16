@@ -44,6 +44,20 @@ namespace CascBasic.Classes.API.Lookup
                 throw new Exception(result.error.ToString());
             return result.institution;
         }
+        
+        public List<IbisGroup> GetGroups(string instid)
+        {
+            string[] pathParams = { instid };
+            object[] queryParams = { "fetch", "inst_groups" };
+            object[] formParams = { };
+            IbisResult result = _ls.InvokeMethod("api/v1/inst/{0}",
+                                                  pathParams,
+                                                  queryParams,
+                                                  formParams);
+            if (result.error != null)
+                throw new Exception(result.error.ToString());
+            return result.institution.groups;
+        }
 
         public List<IbisPerson> GetMembers(string instid, string fetch)
         {
@@ -86,6 +100,11 @@ namespace CascBasic.Classes.API.Lookup
                 throw new Exception(result.error.ToString());
 
             return result.attribute.binaryData;
+        }
+
+        public List<IbisInstitution> Search(string query)
+        {
+            return Search(query, false, false, null, 0, 100, null, null);
         }
 
         public List<IbisInstitution> Search(string query, bool approxMatches, bool includeCancelled, string attributes, 

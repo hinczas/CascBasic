@@ -119,5 +119,28 @@ namespace CascBasic.Classes.API.Lookup
                 throw new Exception(result.error.message);
             return bool.Parse(result.value);
         }
-    }
+
+        public List<IbisPerson> Search(string query, bool approxMatches,  bool includeCancelled, string misStatus,
+                                             string attributes,  int offset,  int limit,  string orderBy, string fetch)
+        {
+            string[] pathParams = { };
+            object[] queryParams = { "query", query,
+                                     "approxMatches", approxMatches,
+                                     "includeCancelled", includeCancelled,
+                                     "misStatus", misStatus,
+                                     "attributes", attributes,
+                                     "offset", offset,
+                                     "limit", limit,
+                                     "orderBy", orderBy,
+                                     "fetch", fetch };
+            object[] formParams = { };
+            IbisResult result = _ls.InvokeMethod("api/v1/person/search",
+                                                  pathParams,
+                                                  queryParams,
+                                                  formParams);
+            if (result.error != null)
+                throw new Exception(result.error.ToString());
+            return result.people;
+        }
+}
 }

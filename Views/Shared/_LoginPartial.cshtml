@@ -4,17 +4,20 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
-
+        var userName = User.Identity.GetUserName();
         <ul class="nav navbar-nav navbar-right">
-            <div class="dropdown mr-sm-2">
-                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="material-icons">account_circle</i>@User.Identity.GetUserName()
-                </button>
-                <div class="dropdown-menu dropdown-menu-sm-right">
-                    @Html.ActionLink("Manage", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
-                    <div role="separator" class="divider"></div>
-                    <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons">account_circle</i>@userName
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-sm-right">
+                        @Html.ActionLink("Manage", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })
+                        <div role="separator" class="divider"></div>
+                        <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                    </div>
                 </div>
+                @Html.DropDownList("role", (SelectList)Session["userRoles"], new { @class="custom-select", required = "required" })
             </div>
         </ul>
     }

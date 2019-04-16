@@ -1,10 +1,10 @@
 ﻿@model CascBasic.Models.CreateUserViewModel
 
-@if (!string.IsNullOrEmpty((string)ViewBag.Message))
+@if (Model!=null && !string.IsNullOrEmpty(Model.Message))
 {
-    <div class="alert alert-@ViewBag.Code alert-dismissible fade show" role="alert">
-        <h4 class="alert-heading">@ViewBag.Head!</h4>
-        <p style="white-space: pre-line">@ViewBag.Message</p>
+    <div class="alert alert-@Model.Code alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">@Model.Head!</h4>
+        <p style="white-space: pre-line">@Model.Message</p>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -80,7 +80,7 @@
                         <h5 class="card-title">Groups</h5>
                         <p class="card-text">You can select multiple groups</p>
                         <div class="form-group">
-                            @Html.ListBoxFor(m => m.Groups, (MultiSelectList)ViewBag.Groups, new { @class = "form-control" })
+                            @Html.ListBoxFor(m => m.Groups, (MultiSelectList)ViewBag.Groups, new { @class = "form-control", required = "required" })
                         </div>
                     </div>
                 </div>
@@ -91,12 +91,12 @@
                         <h5 class="card-title">Roles</h5>
                         <p class="card-text">You can select multiple roles</p>
                         <div class="form-group">
-                            @Html.ListBoxFor(m => m.Roles, (MultiSelectList)ViewBag.Roles, new { @class="form-control"})
+                            @Html.ListBoxFor(m => m.Roles, (MultiSelectList)ViewBag.Roles, new { @class = "form-control", required = "required" })
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <button type="submit" class="btn btn-sm btn-outline-primary">create</button>
     </div>
 }

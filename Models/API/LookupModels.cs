@@ -249,6 +249,68 @@ namespace CascBasic.Models.API
 
         public string @ref { get; set; }
 
+        public string GetAttributeValue(string attr)
+        {
+            if (string.IsNullOrEmpty(attr))
+                return null;
+
+            var result = this.attributes
+                    .Where(a => a.scheme.Equals(attr))
+                    .ToList();
+
+            if (result == null || result.Count == 0)
+                return "";
+
+            var ret = result.Where(d => !string.IsNullOrEmpty(d.value))
+            .OrderBy(b => b.attrid)
+            .Select(c => c.value)
+            .FirstOrDefault()
+            .ToString();
+
+            return ret;
+        }
+
+        public byte[] GetAttributeBytes(string attr)
+        {
+            if (string.IsNullOrEmpty(attr))
+                return null;
+
+            var result = this.attributes
+            .Where(a => a.scheme.Equals(attr))
+            .OrderBy(b => b.attrid)
+            .Select(c => c.binaryData)
+            .FirstOrDefault();
+
+            return result;
+        }
+
+        public string GetPhoneNumber()
+        {
+            var result = this.attributes
+            .Where(a => a.scheme.Equals("universityPhone"));
+
+            if (result == null)
+                result = this.attributes.Where(a => a.scheme.Equals("universityPhone"));
+            else
+                return result.Select(a => a.value).FirstOrDefault();
+            
+            if (result == null)
+                result = this.attributes.Where(a => a.scheme.Equals("instPhone"));
+            else
+                return result.Select(a => a.value).FirstOrDefault();
+
+            if (result == null)
+                result = this.attributes.Where(a => a.scheme.Equals("landlinePhone"));
+            else
+                return result.Select(a => a.value).FirstOrDefault();
+
+            if (result == null)
+                result = this.attributes.Where(a => a.scheme.Equals("mobilePhone"));
+            else
+                return result.Select(a => a.value).FirstOrDefault();
+
+            return "-";
+        }
     }
 
     public class IbisGroup

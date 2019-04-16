@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Select Role";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/login.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="wrapper">
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Code"] alert-dismissible fade show" role="alert">
+            <h4 class="alert-heading">@TempData["Head"]!</h4>
+            <p style="white-space: pre-line">@TempData["Message"]</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div id="formContent">
+        <!-- Login Form -->
+        <div>
+            @using (Html.BeginForm("ConfirmRole", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { id = "roleForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @*<legend><span><small>Sign in</small></span><span style="float:right;"><img src="~/Content/media/images/raven-logo-small.gif" /></span></legend>*@
+                <h5>@User.Identity.Name</h5>
+                <div class="col">
+                    Select role to continue
+                    <input type="text" name="returnUrl" value="@ViewBag.ReturnUrl" hidden />
+                    <div class="input-group input-group-sm">
+                        @Html.DropDownList("role", (SelectList)@ViewBag.Roles, new { @class = "custom-select", required = "required" })
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-success" type="submit">Go</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

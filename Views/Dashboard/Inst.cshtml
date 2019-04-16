@@ -10,11 +10,28 @@
         <h4>Institutions</h4>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
-                @Html.ActionLink("Add new", "Create", "Institution", null, new { @class = "btn btn-sm btn-outline-success" })
-                <button type="button" class="btn btn-sm btn-outline-success" id="instFormBtn" data-toggle="collapse" href="#instFormCollapse" role="button" aria-expanded="false" aria-controls="instFormCollapse"><i class="material-icons md-18">add_circle_outline</i>new</button>
+                @*@Html.ActionLink("Add new", "Create", "Institution", null, new { @class = "btn btn-sm btn-outline-success" })*@
+                <button type="button" class="btn btn-sm btn-outline-success" id="instFromApi" data-toggle="collapse" href="#instFromLookup" role="button" aria-expanded="false" aria-controls="instFromLookup">From Lookup</button>
+                <button type="button" class="btn btn-sm btn-outline-success" id="instFormBtn" data-toggle="collapse" href="#instFormCollapse" role="button" aria-expanded="false" aria-controls="instFormCollapse"><i class="material-icons md-18">add_circle_outline</i>new form</button>
             </div>
         </div>
         <div class="dash-sub dash-sub-text">
+            <div class="collapse" id="instFromLookup">
+                <div class="card card-body">
+                    @using (Html.BeginForm("CreateFromApi", "Institution", FormMethod.Post, new { enctype = "multipart/form-data", id = "createInstForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col col-2">
+                                <input type="text" name="query" placeholder="search name" class="form-control form-control-sm" required />
+                            </div>
+                            <div class="col col-2">
+                                <button type="submit" class="btn btn-sm btn-outline-success">Go</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
             <div class="collapse" id="instFormCollapse">
                 <div class="card card-body">
                     @using (Html.BeginForm("Create", "Institution", FormMethod.Post, new { enctype = "multipart/form-data", id = "createInstForm" }))

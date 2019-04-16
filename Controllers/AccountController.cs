@@ -16,6 +16,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
 using System.Collections.Generic;
 using CascBasic.Classes;
+using CascBasic.Classes.API.Lookup;
 
 namespace CascBasic.Controllers
 {
@@ -94,8 +95,11 @@ namespace CascBasic.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    //Session["email"] = model.Email;
+                    //Session["loginMethod"] = "local";
                     BuildUserMenus(model.Email);
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("RoleSelect", new { returnUrl });
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -116,8 +120,59 @@ namespace CascBasic.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
+
+        // GET: /Account/RoleSelect
+        [AllowAnonymous]
+        public ActionResult RoleSelect(string returnUrl)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login");
+
+
+            string id = User.Identity.GetUserId();
+            var user = _db.Users.Find(id);
+            ViewBag.Roles = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name");
+            ViewBag.ReturnUrl = returnUrl;
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmRole(string role, string returnUrl)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login");
+
+            if (string.IsNullOrEmpty(role))
+                return RedirectToAction("RoleSelect");
+
+            // Save role in session
+            var usrRole = _db.Roles.Find(role);
+
+            if (role == null)
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Message"] = "Cannot find selected role.";
+                return RedirectToAction("RoleSelect");
+            }
+
+            // Role Id
+            Session["role"] = usrRole.Name;
+            Session["roleId"] = role;
+            string id = User.Identity.GetUserId();
+            var user = _db.Users.Find(id);
+            Session["userRoles"] = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name", role);
+
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Home");
+
+            return RedirectToLocal(returnUrl);
+        }
         #endregion
-               
+
         #region Create
         public ActionResult CreateUser()
         {
@@ -136,11 +191,10 @@ namespace CascBasic.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(a => a.Errors);
-                ViewBag.Code = "danger";
-                ViewBag.Head = "Error";
-                ViewBag.Messages = errors.Select(a => a.ErrorMessage).ToList();
-
+                var errors = ModelState.Values.SelectMany(a => a.Errors);                 
+                model.Code = "danger";
+                model.Head = "Error";
+                model.Message = string.Join("\n", errors.Select(a => a.ErrorMessage).ToArray());
                 // Something went wrong
                 ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
                 ViewBag.Roles = new MultiSelectList(_db.Roles, "Id", "Name", model.Roles);
@@ -166,9 +220,9 @@ namespace CascBasic.Controllers
                 result = await UserManager.CreateAsync(user, model.Password);
             } catch (Exception e)
             {
-                ViewBag.Code = "danger";
-                ViewBag.Head = "Error";
-                ViewBag.Messages = new List<string>() { e.Message } ;
+                model.Code = "danger";
+                model.Head = "Error";
+                model.Message = e.Message;
 
                 // Something went wrong
                 ViewBag.Groups = new MultiSelectList(_db.Groups, "Id", "Name", model.Groups);
@@ -185,7 +239,7 @@ namespace CascBasic.Controllers
                 // Add User to Groups
                 if (model.Groups!=null && model.Groups.Count > 0)
                 {
-                    foreach(int id in model.Groups)
+                    foreach(string id in model.Groups)
                     {
                         var group = _db.Groups.Find(id);
                         if (group != null)
@@ -256,6 +310,22 @@ namespace CascBasic.Controllers
 
                 //var user = new ApplicationUser { UserName = username, Email = model.Email };
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+                //PersonLookup _pl = new PersonLookup();
+                //var person = _pl.GetPerson(username, "email,forenames,surname,universityPhone");
+                //var groups = _pl.GetGroups(username, null);
+                //if (person != null)
+                //{
+                //    user.Email = person.attributes.Where(a => a.scheme.Equals("email")).FirstOrDefault() == null ? "" :
+                //        person.attributes.Where(a => a.scheme.Equals("email")).FirstOrDefault().value;
+                //    user.FirstName = person.attributes.Where(a => a.scheme.Equals("forenames")).FirstOrDefault() == null ? "" :
+                //        person.attributes.Where(a => a.scheme.Equals("forenames")).FirstOrDefault().value;
+                //    user.LastName = person.attributes.Where(a => a.scheme.Equals("surname")).FirstOrDefault() == null ? "" :
+                //        person.attributes.Where(a => a.scheme.Equals("surname")).FirstOrDefault().value;
+                //    user.PhoneNumber = person.attributes.Where(a => a.scheme.Equals("universityPhone")).FirstOrDefault() == null ? "" :
+                //        person.attributes.Where(a => a.scheme.Equals("universityPhone")).FirstOrDefault().value;
+                //}
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -490,6 +560,14 @@ namespace CascBasic.Controllers
                     //var username = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                     //var login = UserManager.Lo
                     //var user = _db.Users.Where(a => a.Logins.Where(b => b.ProviderKey.Equals(loginInfo.DefaultUserName)).Select(c => c.UserId))
+                    //Session["email"] = model.Email;
+                    //PersonLookup _pl = new PersonLookup();
+                    //var person = _pl.GetPerson(loginInfo.Login.ProviderKey, "email");
+                    //if(person!=null)
+                    //{
+                    //    Session["email"] = person.attributes.Where(a => a.scheme.Equals("email")).FirstOrDefault();
+                    //}
+                    //Session["loginMethod"] = loginInfo.Login.LoginProvider;
                     BuildUserMenus(loginInfo.Email);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

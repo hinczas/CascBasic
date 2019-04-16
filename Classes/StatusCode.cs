@@ -14,6 +14,7 @@ namespace CascBasic.Classes
         CannotRemPerms,
         ParentNotFound,
         CreateSuccess,
-        UpdateSuccess
+        UpdateSuccess,
+        ApiResultEmpty
     }
 }

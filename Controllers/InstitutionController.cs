@@ -121,6 +121,128 @@ namespace CascBasic.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateFromApi(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "String cannot be empty" };
+
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+            try
+            {
+                InstitutionLookup _il = new InstitutionLookup();
+
+                var search = _il.Search(query);
+
+                if (search == null || search.Count < 1)
+                {
+                    TempData["Code"] = "info";
+                    TempData["Head"] = "Info";
+                    TempData["Messages"] = new List<string>() { "Lookup returned no results." };
+                    return Redirect(Request.UrlReferrer.ToString());
+                }
+
+                if (search.Count > 0)
+                {
+                    var model = search.Select(a => new InstApiViewModel()
+                    {
+                        InstId = a.instid,
+                        Name = a.name
+                    }).ToList();
+                    return View("InterimList", model);
+                }
+
+
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { "Institution has been added." };
+                return Redirect(Request.UrlReferrer.ToString());
+
+            }
+            catch (Exception e)
+            {
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FromApiValidateAsync(string insid)
+        {
+            if (string.IsNullOrEmpty(insid))
+            {
+                TempData["Code"] = "danger";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "String cannot be empty" };
+
+                return RedirectToAction("Index", "Dashboard", new { sub = "Inst" });
+            }
+
+            string fetch = "address,jpegPhoto,universityPhone,instPhone,landlinePhone,mobilePhone,faxNumber,email,labeledURI";
+            InstitutionLookup _il = new InstitutionLookup();
+            var search = _il.GetInst(insid, fetch);
+
+            if (string.IsNullOrEmpty(search.name))
+            {
+                TempData["Code"] = "warning";
+                TempData["Head"] = "Error";
+                TempData["Messages"] = new List<string>() { "Failed to retrieve institution details from Lookup." };
+
+                return RedirectToAction("Index", "Dashboard", new { sub = "Inst" });
+            }
+
+            bool exists = _db.Institutions.Where(a => a.CollegeName.Equals(search.name)).Count() > 0;
+
+            if (exists)
+            {
+                TempData["Code"] = "warning";
+                TempData["Head"] = "Warning";
+                TempData["Messages"] = new List<string>() { search.name + " already exists" };
+
+                return RedirectToAction("Index", "Dashboard", new { sub = "Inst" });
+            }
+
+            // Extract information from lookup object
+            var jpegPhoto = search.GetAttributeBytes("jpegPhoto");
+            var email = search.GetAttributeValue("email");
+            var universityPhone = search.GetPhoneNumber();
+            var faxNumber = search.GetAttributeValue("faxNumber");
+            var website = search.GetAttributeValue("labeledURI");
+
+            // Create institution
+            var inst = new Institution()
+            {
+                Name = search.name,
+                CollegeName = search.name,
+                ZEmail = email,
+                WelcomeMsg = website,
+                Campus = insid,
+                CollegePhone = universityPhone,
+                CollegeFax = faxNumber,
+                CollegeCrest = jpegPhoto,
+                InstId = insid
+            };
+
+            _db.Institutions.Add(inst);
+            await _db.SaveChangesAsync();
+
+            if (inst.Id>0)
+            {
+                TempData["Code"] = "success";
+                TempData["Head"] = "Done";
+                TempData["Messages"] = new List<string>() { search.name + " has been created." };
+
+                return RedirectToAction("Manage", "Institution", new { id = inst.Id });
+            }
+
+
+            return RedirectToAction("Index", "Dashboard", new { sub = "Inst" });
+        }
 
         [HttpPost]
         public async Task<ActionResult> AddCrest(long instId, HttpPostedFileBase uplFile)
@@ -288,5 +410,6 @@ namespace CascBasic.Controllers
                 return null;
             }
         }
+        
     }
 }
