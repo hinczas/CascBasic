@@ -17,7 +17,7 @@ namespace CascBasic.Models
             this.Id = Guid.NewGuid().ToString();
             this.Roles = new List<ApplicationRole>();
             this.Users = new List<ApplicationUser>();
-            this.MenuItems = new List<MenuItem>();
+            //this.MenuItems = new List<MenuItem>();
         }
 
         public ApplicationGroup(string name)
@@ -52,7 +52,7 @@ namespace CascBasic.Models
         public virtual ICollection<ApplicationRole> Roles { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
-        public virtual ICollection<MenuItem> MenuItems { get; set; }
+        //public virtual ICollection<MenuItem> MenuItems { get; set; }
         public virtual ICollection<ApplicationGroup> Children { get; set; }
 
         #region Helpers

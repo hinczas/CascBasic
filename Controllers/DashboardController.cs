@@ -26,7 +26,6 @@ namespace CascBasic.Controllers
 
         public ActionResult Index(string sub)
         {
-
             string cod = "";
             string hed = "";
             string msg = "";
@@ -60,6 +59,16 @@ namespace CascBasic.Controllers
             ViewBag.Institutions = new SelectList(_db.Institutions, "Id", "Name");
 
             return PartialView();
+        }
+
+        [HttpGet]
+        public JsonResult GetTree()
+        {
+            MenuService _ms = new MenuService(_db);
+
+            var smh = _ms.GetMenu((string)Session["roleId"]);
+
+            return Json(smh, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

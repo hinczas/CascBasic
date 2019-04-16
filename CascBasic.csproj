@@ -257,6 +257,10 @@
     <Compile Include="Migrations\201904081255042_institutionInstIdLookup.Designer.cs">
       <DependentUpon>201904081255042_institutionInstIdLookup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904161236491_roleMenus.cs" />
+    <Compile Include="Migrations\201904161236491_roleMenus.Designer.cs">
+      <DependentUpon>201904161236491_roleMenus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\API\LookupModels.cs" />
     <Compile Include="Models\Institution.cs" />
@@ -322,6 +326,7 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\cusFunctions.js" />
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
@@ -363,6 +368,7 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\renderMenu.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -468,6 +474,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904081255042_institutionInstIdLookup.resx">
       <DependentUpon>201904081255042_institutionInstIdLookup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904161236491_roleMenus.resx">
+      <DependentUpon>201904161236491_roleMenus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

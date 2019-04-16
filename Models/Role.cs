@@ -13,17 +13,20 @@ namespace CascBasic.Models
     {
         public ApplicationRole() : base() {
             this.Id = Guid.NewGuid().ToString();
+            this.MenuItems = new List<MenuItem>();
         }
 
         public ApplicationRole(string name) : this()
         {
             this.Id = Guid.NewGuid().ToString();
             this.Name = name;
+            this.MenuItems = new List<MenuItem>();
         }
 
         public string Description { get; set; }
         public virtual ICollection<ApplicationGroup> Groups { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<MenuItem> MenuItems { get; set; }
 
     }
 

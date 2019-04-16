@@ -52,17 +52,17 @@ namespace CascBasic.Context
 
             modelBuilder.Entity<MenuItem>()
                 .HasOptional(c => c.Parent)
-                .WithMany()
+                .WithMany(r => r.Children)
                 .HasForeignKey(c => c.ParentId);
 
-            modelBuilder.Entity<ApplicationGroup>()
+            modelBuilder.Entity<ApplicationRole>()
                 .HasMany(p => p.MenuItems)
-                .WithMany(r => r.Groups)
+                .WithMany(r => r.Roles)
                 .Map(mc =>
                 {
-                    mc.MapLeftKey("GroupId");
+                    mc.MapLeftKey("RoleId");
                     mc.MapRightKey("MenuId");
-                    mc.ToTable("GroupMenus");
+                    mc.ToTable("RoleMenus");
                 });
 
             modelBuilder.Entity<ApplicationGroup>()

@@ -22,7 +22,8 @@ namespace CascBasic.Models
         public Int64? ParentId { get; set; }
         public virtual MenuItem Parent { get; set; }
 
-        public virtual ICollection<ApplicationGroup> Groups { get; set; }
+        public virtual ICollection<MenuItem> Children { get; set; }
+        public virtual ICollection<ApplicationRole> Roles { get; set; }
 
         #region Helpers
         public override bool Equals(object obj)

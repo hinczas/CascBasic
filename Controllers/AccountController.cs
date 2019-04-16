@@ -139,7 +139,7 @@ namespace CascBasic.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public ActionResult ConfirmRole(string role, string returnUrl)
         {
             if (!User.Identity.IsAuthenticated)

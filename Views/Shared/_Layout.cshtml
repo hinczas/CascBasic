@@ -18,20 +18,20 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link nav-link-a" })
-                        <span class="nav-link nav-link-span dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </span>
-                        <div class="dropdown-menu">
-                            @Html.ActionLink("Home", "Index", "Dashboard", new { sub = "Home", area = "" }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Institutions", "Index", "Dashboard", new { sub = "Inst", area = "" }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Users", "Index", "Dashboard", new { sub = "Users", area = "" }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Roles", "Index", "Dashboard", new { sub = "Roles", area = "" }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Groups", "Index", "Dashboard", new { sub = "Groups", area = "" }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Permissions", "Index", "Dashboard", new { sub = "Perm", area = "" }, new { @class = "dropdown-item" })
-                        </div>
-                    </li>
-                @Html.Partial("_UserMenus")
+                <li class="nav-item dropdown">
+                    @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link nav-link-a" })
+                    <span class="nav-link nav-link-span dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </span>
+                    <div class="dropdown-menu">
+                        @Html.ActionLink("Home", "Index", "Dashboard", new { sub = "Home", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Institutions", "Index", "Dashboard", new { sub = "Inst", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Users", "Index", "Dashboard", new { sub = "Users", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Roles", "Index", "Dashboard", new { sub = "Roles", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Groups", "Index", "Dashboard", new { sub = "Groups", area = "" }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Permissions", "Index", "Dashboard", new { sub = "Perm", area = "" }, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+                @*@Html.Partial("_UserMenus")*@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 @Html.Partial("_LoginPartial")
@@ -55,5 +55,6 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script src="~/Scripts/cusFunctions.js"></script>
 </body>
 </html>

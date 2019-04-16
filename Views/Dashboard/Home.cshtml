@@ -16,7 +16,10 @@
             @Html.DropDownList("instId", (SelectList)ViewBag.Institutions)
             <input type="file" name="uplFile" required>
             <button class="btn btn-sm btn-outline-warning" type="submit">Upload</button>
-        }       
+        }
+        <hr />
+        <h6>Show menu structure</h6>
+        @Html.ActionLink("Show me", "GetTree", "Dashboard")
     </div>
     <div class="subpage-container-down"></div>
 

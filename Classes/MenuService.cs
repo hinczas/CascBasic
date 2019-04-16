@@ -11,58 +11,117 @@ namespace CascBasic.Classes
     public class MenuService
     {
         private ApplicationDbContext _db;
+        private List<MenuEntryVM> _masterList;
+        private List<MenuEntryVM> _parentItems;
+        private List<MenuEntryVM> _childItems;
 
         public MenuService(ApplicationDbContext context)
         {
             _db = context;
+            _masterList = new List<MenuEntryVM>();
+            _parentItems = new List<MenuEntryVM>();
+            _childItems = new List<MenuEntryVM>();
         }
 
 
-        public List<MenuViewModel> GetMenu(string userId)
+        public List<MenuVM> GetMenu(string roleId)
         {
-            var user = _db.Users.Find(userId);
-            if (user == null)
+            var role = _db.Roles.Find(roleId);
+            if (role == null)
                 return null;
 
-            var userMenus = user.Groups.SelectMany(a => a.MenuItems).Distinct().ToList();
-
-            if (userMenus == null || userMenus.Count < 1)
-                return null;
-
-            var menuParents = userMenus.Select(a => a.Parent).Where(b => b!=null).Distinct().ToList();
-
-            var allMenus = userMenus.Union(menuParents).Distinct().ToList();
-
-            List<MenuViewModel> menu = new List<MenuViewModel>();
-
-            foreach (var item in menuParents)
+            var menuItems = role.MenuItems.Select(a => new MenuEntryVM()
             {
-                var parentMenu = new MenuEntryVM()
-                {
-                    Label = item.Label,
-                    Url = item.Url
-                };
-                var submenus = allMenus.Where(a => a.ParentId == item.Id).Select(b => new MenuEntryVM()
-                {
-                    Label = b.Label,
-                    Url = b.Url
-                }).ToList();
+                Id = a.Id,
+                Label = a.Label,
+                Href = a.Url,
+                ParentId = a.ParentId
+            }).ToList();
 
-                menu.Add(new MenuViewModel(parentMenu, submenus));
+            // Get all parents (may include children duplicates)
+            List<MenuEntryVM> parentItems = GetParents(menuItems.Select(a => a.Id).ToArray());
+
+            // Clean up duplicates
+            List<MenuEntryVM> parentsClean = parentItems.Except(menuItems).ToList();
+
+            // Join all into single list
+            _masterList = menuItems.Union(parentsClean).ToList();
+            _parentItems = _masterList.Where(a => a.ParentId == null).ToList();
+            _childItems = _masterList.Where(a => a.ParentId != null).ToList();
+
+
+
+            return GetMenu(); ;            
+        }
+
+        private List<MenuEntryVM> GetParents(long[] ids)
+        {
+            List<MenuEntryVM> result = new List<MenuEntryVM>();
+
+            foreach(long id in ids)
+            {
+                result.AddRange(GetParents(id));
             }
 
-            return menu;            
+            return result.Distinct().ToList();
         }
 
-        public List<MenuViewModel> GetMenu()
+        private List<MenuEntryVM> GetParents(long id)
         {
+            List<MenuEntryVM> list = new List<MenuEntryVM>();
 
-            return null;
+            var item = _db.MenuItems.Find(id);
+            if (item.Parent == null)
+                return list;
+
+            list.AddRange(GetParents((long)item.ParentId));
+            var mi = new MenuEntryVM()
+            {
+                Id = item.Parent.Id,
+                Label = item.Parent.Label,
+                Href = "#", // Parents are not clickable
+                ParentId = item.Parent.ParentId
+            };
+
+            list.Add(mi);
+
+            return list;
         }
 
-        private void BottomUpMenus()
+        private List<MenuVM> GetMenu()
         {
+            var result = new List<MenuVM>();
+            
+            foreach (var item in _parentItems)
+            {
+                var ch = GetChildrenFromSet(item.Id);
+                var i = new MenuVM(item, ch);
 
+                result.Add(i);
+            }
+
+            return result;
         }
+
+        private List<MenuVM> GetChildrenFromSet(long id)
+        {
+            List<MenuVM> tmp = new List<MenuVM>();
+
+            if (_childItems == null || _childItems.Count == 0)
+                return tmp;
+
+            var _sub = _childItems.Where(a => a.ParentId == id).ToList();
+
+            foreach (var child in _sub)
+            {
+                var ch = GetChildrenFromSet(child.Id);
+                var i = new MenuVM(child, ch);
+
+                tmp.Add(i);
+            }
+
+            return tmp;
+        }
+
     }
 }
