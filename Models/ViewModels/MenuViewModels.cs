@@ -7,17 +7,21 @@ namespace CascBasic.Models.ViewModels
 {
     public class MenuVM
     {
-        public MenuEntryVM MenuItem { get; set; }
-        public List<MenuVM> Children { get; set; }
+        //public MenuEntryVM MenuItem { get; set; }
+        public string href { get; set; }
+        public string text { get; set; }
+        public List<MenuVM> children { get; set; }
 
         public MenuVM(MenuEntryVM parent, List<MenuVM> subs)
         {
-            MenuItem = parent;
-            Children = subs;
+            href = parent.Href;
+            text = parent.Label;
+            children = subs;
         }
         public MenuVM(MenuEntryVM parent)
         {
-            MenuItem = parent;
+            href = parent.Href;
+            text = parent.Label;
         }
     }
 

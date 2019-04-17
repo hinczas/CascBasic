@@ -1,0 +1,79 @@
+﻿ul#userMenus {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    float: left;
+    height: 32px;
+    white-space: nowrap;
+}
+
+/* Main navigation (1 row) */
+    ul#userMenus > li {
+        float: left;
+        display: inline;
+        margin: 0 5px;
+        padding: 0;
+        list-style: none;
+        background-color: transparent;
+        height: 32px;
+        color: rgba(255, 255, 255, 0.75);
+    }
+        ul#userMenus > li > a {
+            color: #cfcfcf;
+        }
+    ul#userMenus > li:hover {
+        background-color: #f8f9fa;
+    }
+    ul#userMenus > li:hover a {
+        color: #16181b;
+    }
+
+
+.um-hidden {
+    visibility:hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+    list-style: none;
+}
+    .um-hidden > li {
+        background-color: white;
+        height: 32px;
+    }        
+
+.um-visible:hover > .um-hidden {
+    visibility: visible;
+    opacity: 1;
+    list-style: none;
+}
+
+#userMenus li {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#userMenus ul {
+    padding: 0px !important;
+    margin: 0px !important;
+    /*min-width: 100px;*/
+    position: relative;
+    top: -100%;
+    left: 100%;
+}
+#userMenus > li > ul {
+    position: relative;
+    top: 0px !important;
+    left: 0px !important;
+}
+
+/*.um-caret{
+    padding-left: 10px;
+    vertical-align: top !important;
+}*/
+
+.dropdown-item:hover {
+    background-color: #0ebe24;
+}
+
+#userMenus .dropdown-item {
+    padding: 0.25rem 11px;
+}

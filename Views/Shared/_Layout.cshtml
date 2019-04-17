@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="~/Content/theming.css" rel="stylesheet" />
+    <link href="~/Content/userMenus.css" rel="stylesheet" />
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark navbar-master">
@@ -16,8 +17,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">   
+            <ul id="userMenus" class="navbar-nav mr-auto"></ul>
+            @*<ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
                     @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link nav-link-a" })
                     <span class="nav-link nav-link-span dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -31,8 +33,7 @@
                         @Html.ActionLink("Permissions", "Index", "Dashboard", new { sub = "Perm", area = "" }, new { @class = "dropdown-item" })
                     </div>
                 </li>
-                @*@Html.Partial("_UserMenus")*@
-            </ul>
+            </ul>*@
             <div class="form-inline my-2 my-lg-0">
                 @Html.Partial("_LoginPartial")
             </div>
@@ -56,5 +57,17 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/cusFunctions.js"></script>
+    <script src="~/Scripts/renderMenu.js"></script>
+    <script>
+        $(document).ready(function () {
+            var items = @Html.Raw(Json.Encode(Session["userMenus"]));
+            var $menu = $('#userMenus').menuList(
+                {
+                    data: items,
+                    dropdownIcon: '&#9662;'
+                });
+            //$menu.smartmenus();
+        });
+    </script>
 </body>
 </html>

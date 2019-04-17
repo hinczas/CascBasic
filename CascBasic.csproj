@@ -316,6 +316,7 @@
     <Content Include="Content\media\images\raven-logo-small.gif" />
     <Content Include="Content\media\images\tiny-raven.png" />
     <Content Include="Content\theming.css" />
+    <Content Include="Content\userMenus.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

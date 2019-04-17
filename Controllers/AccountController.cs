@@ -17,6 +17,7 @@ using System.Net.Mail;
 using System.Collections.Generic;
 using CascBasic.Classes;
 using CascBasic.Classes.API.Lookup;
+using System.Web.Script.Serialization;
 
 namespace CascBasic.Controllers
 {
@@ -165,6 +166,9 @@ namespace CascBasic.Controllers
             string id = User.Identity.GetUserId();
             var user = _db.Users.Find(id);
             Session["userRoles"] = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name", role);
+
+            // Build user Menus
+            BuildMenu(role);
 
             if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home");
@@ -665,6 +669,16 @@ namespace CascBasic.Controllers
             }
         }
 
+        private void BuildMenu(string roleId)
+        {
+            MenuService _ms = new MenuService(_db);
+
+            var smh = _ms.GetMenu(roleId);
+
+            //Session["userMenus"] = new JavaScriptSerializer().Serialize(Json(smh, JsonRequestBehavior.AllowGet));
+            var son = Json(smh, JsonRequestBehavior.AllowGet);
+            Session["userMenus"] = son.Data;
+        }
         #region Helpers
 
         // Used for XSRF protection when adding external logins
