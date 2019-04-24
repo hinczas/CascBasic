@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace CascBasic.Classes
@@ -15,6 +16,7 @@ namespace CascBasic.Classes
         private List<MenuEntryVM> _parentItems;
         private List<MenuEntryVM> _childItems;
 
+
         public MenuService(ApplicationDbContext context)
         {
             _db = context;
@@ -22,20 +24,22 @@ namespace CascBasic.Classes
             _parentItems = new List<MenuEntryVM>();
             _childItems = new List<MenuEntryVM>();
         }
-
-
+        
         public List<MenuVM> GetMenu(string roleId)
         {
             var role = _db.Roles.Find(roleId);
             if (role == null)
                 return null;
 
-            var menuItems = role.MenuItems.Select(a => new MenuEntryVM()
+            var menuItems = role.MenuItems
+                .Select(a => new MenuEntryVM()
             {
                 Id = a.Id,
                 Label = a.Label,
                 Href = a.Url,
-                ParentId = a.ParentId
+                ParentId = a.ParentId,
+                SortOrder = a.SortOrder,
+                Icon = a.FlatIconName
             }).ToList();
 
             // Get all parents (may include children duplicates)
@@ -46,14 +50,62 @@ namespace CascBasic.Classes
 
             // Join all into single list
             _masterList = menuItems.Union(parentsClean).ToList();
-            _parentItems = _masterList.Where(a => a.ParentId == null).ToList();
-            _childItems = _masterList.Where(a => a.ParentId != null).ToList();
+            _parentItems = _masterList.Where(a => a.ParentId == null)
+                .OrderBy(o => o.SortOrder)
+                .ThenBy(t => t.Label).ToList();
+            _childItems = _masterList.Where(a => a.ParentId != null)
+                .OrderBy(o => o.SortOrder)
+                .ThenBy(t => t.Label).ToList();
 
 
 
             return GetMenu(); ;            
         }
 
+        public async Task<StatusCode> ProcessRoleMenusAsync(string roleId, long[] menus)
+        {
+            try
+            {
+                var store = new ApplicationRoleStore(_db);
+                var role = await store.FindByIdAsync(roleId);
+
+                var currMenus = role.MenuItems.Select(a => a.Id).ToArray();
+
+                var addMenus = menus.Except(currMenus).ToArray();
+                var remMenus = currMenus.Except(menus).ToArray();
+
+                if (remMenus.Count() > 0)
+                {
+                    foreach (var id in remMenus)
+                    {
+                        var mi = _db.MenuItems.Find(id);
+                        role.MenuItems.Remove(mi);
+                    }
+                    await store.UpdateAsync(role);
+                }
+
+                if (addMenus.Count() > 0)
+                {
+                    foreach (var id in addMenus)
+                    {
+                        var mi = _db.MenuItems.Find(id);
+                        role.MenuItems.Add(mi);
+                    }
+                    await store.UpdateAsync(role);
+                }
+
+                return StatusCode.UpdateSuccess;
+
+            } catch
+            {
+                return StatusCode.ExceptionThrown;
+            }            
+        }
+
+        private void RemoveMenus(string roleId, long[] menus)
+        {
+
+        }
         private List<MenuEntryVM> GetParents(long[] ids)
         {
             List<MenuEntryVM> result = new List<MenuEntryVM>();
@@ -80,6 +132,7 @@ namespace CascBasic.Classes
                 Id = item.Parent.Id,
                 Label = item.Parent.Label,
                 Href = "#", // Parents are not clickable
+                Icon = item.Parent.FlatIconName,
                 ParentId = item.Parent.ParentId
             };
 

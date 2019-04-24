@@ -98,7 +98,7 @@ namespace CascBasic.Controllers
                 case SignInStatus.Success:
                     //Session["email"] = model.Email;
                     //Session["loginMethod"] = "local";
-                    BuildUserMenus(model.Email);
+                    //BuildUserMenus(model.Email);
                     //return RedirectToLocal(returnUrl);
                     return RedirectToAction("RoleSelect", new { returnUrl });
                 case SignInStatus.LockedOut:
@@ -116,6 +116,7 @@ namespace CascBasic.Controllers
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
@@ -132,6 +133,12 @@ namespace CascBasic.Controllers
 
             string id = User.Identity.GetUserId();
             var user = _db.Users.Find(id);
+
+            if (user.Roles.Count()  == 1)
+            {
+                string role = user.Roles.Select(a => a.RoleId).FirstOrDefault();
+                return ConfirmRole( role, returnUrl);
+            }
             ViewBag.Roles = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name");
             ViewBag.ReturnUrl = returnUrl;
 
@@ -572,8 +579,7 @@ namespace CascBasic.Controllers
                     //    Session["email"] = person.attributes.Where(a => a.scheme.Equals("email")).FirstOrDefault();
                     //}
                     //Session["loginMethod"] = loginInfo.Login.LoginProvider;
-                    BuildUserMenus(loginInfo.Email);
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("RoleSelect", new { returnUrl });
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

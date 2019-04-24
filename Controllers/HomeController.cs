@@ -33,5 +33,11 @@ namespace CascBasic.Controllers
             pl.GetPerson(CRSid, "email");
             return View();
         }
+
+        [AllowAnonymous]
+        public ActionResult Forbidden()
+        {
+            return View();
+        }
     }
 }

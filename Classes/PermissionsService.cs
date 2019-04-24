@@ -360,9 +360,10 @@ namespace CascBasic.Classes
 
         #region Role management
 
-        public RoleDetViewModel GetRoleDetails(string id)
+        public async Task<RoleDetViewModel> GetRoleDetailsAsync(string id)
         {
-            var role = _db.Roles.Find(id);
+            var store = new ApplicationRoleStore(_db);
+            var role = await store.FindByIdAsync(id);
             if(role == null)
                 return null;
 

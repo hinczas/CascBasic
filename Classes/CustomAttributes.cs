@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -73,6 +74,47 @@ namespace CascBasic.Classes
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             filterContext.Result = new RedirectResult("/Account/RoleSelect");
+        }
+    }
+
+    public class RoleMenuAccess : AuthorizeAttribute
+    {
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            if (httpContext.Session["Role"] == null)
+                return false;
+
+            string actionName = ((MvcHandler)httpContext.Handler).RequestContext.RouteData.Values["action"].ToString();
+            string controllerName = ((MvcHandler)httpContext.Handler).RequestContext.RouteData.Values["controller"].ToString();
+
+            if (actionName.Equals("LogOff"))
+                return true;
+
+            ApplicationDbContext _db = new ApplicationDbContext();
+
+            var role = _db.Roles.Find(httpContext.Session["roleId"]);
+
+            if (role == null)
+                return false;
+
+            if (role.MenuItems!=null)
+            {
+                var menuItems = role.MenuItems
+                    .Where(a => a.Controller.Equals(controllerName) && a.Action.Equals(actionName))
+                    .Count();
+
+                return menuItems > 0;
+            } else
+            {
+                return false;
+            }
+
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            //filterContext.Result = new RedirectResult("/Account/RoleSelect?returnUrl=" + filterContext.HttpContext.Request.UrlReferrer.PathAndQuery.ToString());
+            filterContext.Result = new RedirectResult("/");
         }
     }
 }

@@ -261,6 +261,14 @@
     <Compile Include="Migrations\201904161236491_roleMenus.Designer.cs">
       <DependentUpon>201904161236491_roleMenus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904230903312_menuMore.cs" />
+    <Compile Include="Migrations\201904230903312_menuMore.Designer.cs">
+      <DependentUpon>201904230903312_menuMore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904241439036_menuTrail.cs" />
+    <Compile Include="Migrations\201904241439036_menuTrail.Designer.cs">
+      <DependentUpon>201904241439036_menuTrail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\API\LookupModels.cs" />
     <Compile Include="Models\Institution.cs" />
@@ -312,6 +320,7 @@
     <Content Include="Content\manage.css" />
     <Content Include="Content\media\images\bckg_cam.jpg" />
     <Content Include="Content\media\images\logo.jpg" />
+    <Content Include="Content\media\images\no-acc.png" />
     <Content Include="Content\media\images\no_photo.png" />
     <Content Include="Content\media\images\raven-logo-small.gif" />
     <Content Include="Content\media\images\tiny-raven.png" />
@@ -436,6 +445,8 @@
     <Content Include="Views\Permission\Role.cshtml" />
     <Content Include="Views\Institution\InterimList.cshtml" />
     <Content Include="Views\Account\RoleSelect.cshtml" />
+    <Content Include="Views\Home\Forbidden.cshtml" />
+    <Content Include="Views\Dashboard\Menus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -478,6 +489,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904161236491_roleMenus.resx">
       <DependentUpon>201904161236491_roleMenus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904230903312_menuMore.resx">
+      <DependentUpon>201904230903312_menuMore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904241439036_menuTrail.resx">
+      <DependentUpon>201904241439036_menuTrail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RavenAuth\Resources.resx" />
   </ItemGroup>

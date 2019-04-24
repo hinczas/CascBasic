@@ -19,21 +19,6 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">   
             <ul id="userMenus" class="navbar-nav mr-auto"></ul>
-            @*<ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "nav-link nav-link-a" })
-                    <span class="nav-link nav-link-span dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </span>
-                    <div class="dropdown-menu">
-                        @Html.ActionLink("Home", "Index", "Dashboard", new { sub = "Home", area = "" }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Institutions", "Index", "Dashboard", new { sub = "Inst", area = "" }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Users", "Index", "Dashboard", new { sub = "Users", area = "" }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Roles", "Index", "Dashboard", new { sub = "Roles", area = "" }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Groups", "Index", "Dashboard", new { sub = "Groups", area = "" }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Permissions", "Index", "Dashboard", new { sub = "Perm", area = "" }, new { @class = "dropdown-item" })
-                    </div>
-                </li>
-            </ul>*@
             <div class="form-inline my-2 my-lg-0">
                 @Html.Partial("_LoginPartial")
             </div>
@@ -45,8 +30,6 @@
             <span class="navbar-brand mb-0 h1">@ViewBag.Title</span>
             <div class="form-inline">
                 <div class="form-inline btn-group mr-2" role="group" aria-label="First group">
-                    @*<button type="button" class="btn btn-sm btn-outline-light" href="javascript:void(0);" onclick="history.go(-1);">< Back</button>
-                        @Html.ActionLink("<< List", "Index", "Dashboard", new { sub = "Users" }, new { @class = "btn btn-sm btn-outline-light" })*@
                 </div>
             </div>
         </nav>
@@ -64,9 +47,9 @@
             var $menu = $('#userMenus').menuList(
                 {
                     data: items,
-                    dropdownIcon: '&#9662;'
+                    dropdownIcon: '&#9662;',
+                    showIcons: true
                 });
-            //$menu.smartmenus();
         });
     </script>
 </body>

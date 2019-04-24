@@ -10,18 +10,21 @@ namespace CascBasic.Models.ViewModels
         //public MenuEntryVM MenuItem { get; set; }
         public string href { get; set; }
         public string text { get; set; }
+        public string icon { get; set; }
         public List<MenuVM> children { get; set; }
 
         public MenuVM(MenuEntryVM parent, List<MenuVM> subs)
         {
             href = parent.Href;
             text = parent.Label;
+            icon = parent.Icon;
             children = subs;
         }
         public MenuVM(MenuEntryVM parent)
         {
             href = parent.Href;
             text = parent.Label;
+            icon = parent.Icon;
         }
     }
 
@@ -31,6 +34,8 @@ namespace CascBasic.Models.ViewModels
         public long? ParentId { get; set; }
         public string Href { get; set; }
         public string Label { get; set; }
+        public string Icon { get; set; }
+        public long SortOrder { get; set; }
 
         #region Helpers
         public override bool Equals(object obj)

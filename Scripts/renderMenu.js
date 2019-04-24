@@ -28,7 +28,8 @@
             active: window.location.href,
             title: '',
             group: false,
-            bullet: '- '
+            bullet: '- ',
+            showIcons: false
         }, options);
         var arrJson = settings.data;
         if (typeof settings.data === 'string') {
@@ -90,7 +91,8 @@
             active: window.location.href,
             ulParentClass: '',
             aParentClass: '',
-            dropdownIcon: null
+            dropdownIcon: null,
+            showIcons: false
         }, options);
         var arrJson = settings.data;
         if (typeof settings.data === 'string') {
@@ -126,13 +128,18 @@
                 //if (v.href != '#') {
                 //    $li.attr('onclick', 'location.href="/' + v.href+'"');
                 //}
-                var $a = $('<a class="dropdown-item">').attr('href', v.href);
+                var $a = $('<a class="dropdown-item disp-flex">').attr('href', v.href);
                 if (active === v.href) {
                     $li.addClass('active');
                 }
-                let $i = $('<i>').addClass(v.icon);
+                //let $i = $('<i class="material-icons">').addClass(v.icon);
+                var $i = $('<i class="material-icons mr-2 ml-n2">');
+                if (settings.showIcons) {
+                    $i.append(v.icon);
+                    $a.append($i);
+                }
                 //$a.append($i).append("&nbsp;").append(v.text);
-                $a.append($i).append(v.text);
+                $a.append(v.text);
                 if ((isParent) && (settings.dropdownIcon !== null)) {
                     $a.append('&nbsp;').append(settings.dropdownIcon);
                 }

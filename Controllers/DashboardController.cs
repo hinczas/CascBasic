@@ -38,13 +38,42 @@ namespace CascBasic.Controllers
 
             sub = string.IsNullOrEmpty(sub) ? "Home" : sub;
 
+            string act = this.ControllerContext.RouteData.Values["action"].ToString();
+            string con = this.ControllerContext.RouteData.Values["controller"].ToString();
+
+            var dashMenu = _db.MenuItems
+                            .Where(a => a.Action.Equals(act) 
+                                    && a.Controller.Equals(con))
+                            .FirstOrDefault();
+
+            List<DashLink> links = new List<DashLink>();
+
+            if (dashMenu!=null)
+            {
+                var role = _db.Roles.Find(Session["roleId"]);
+                if (role != null)
+                {
+                    links = role.MenuItems
+                        .Where(a => a.ParentId == dashMenu.Id)
+                        .OrderBy(o => o.SortOrder)
+                        .ThenBy(t => t.Label)
+                        .Select(b => new DashLink()
+                        {
+                            Action = b.Action,
+                            Label = b.Label,
+                            Icon = b.FlatIconName
+                        })
+                        .ToList();
+                }
+            }
             var model = new DashboardViewModel()
             {
                 Code = cod,
                 Head = hed,
                 Message = msg,
 
-                PartialView = sub
+                PartialView = sub,
+                DashLinks = links
             };
 
             ViewBag.Title = "Admin";
@@ -171,6 +200,25 @@ namespace CascBasic.Controllers
             return PartialView(perms);
         }
 
+        [HttpGet]
+        public ActionResult Menus()
+        {
+            var roles = _db.Roles.Select(a => new MenusRoleVM()
+            {
+                RoleId = a.Id,
+                RoleName = a.Name
+            })
+            .ToList();
+
+            var available = _db.MenuItems.Select(a => new MenusMenuItemVM() {
+                MenuItemId = a.Id,
+                MenuItemName = a.MenuTrail
+            }).ToList();
+
+            var model = new MenusViewModel() { Roles = roles, Available = available };
+            return PartialView(model);
+        }
+
         [HttpPost]
         public async Task<ActionResult> SeedUsers(int from, int count)
         {
@@ -213,7 +261,44 @@ namespace CascBasic.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        [HttpGet]
+        public async Task<JsonResult> GetRoleMenusAsync(string roleId)
+        {
+            var store = new ApplicationRoleStore(_db);
+            var role = await store.FindByIdAsync(roleId);
 
+            if (role == null)
+                return null;
+
+            var smh = role.MenuItems.Select(b => new MenusMenuItemVM()
+            {
+                MenuItemId = b.Id,
+                MenuItemName = b.MenuTrail
+            })
+            .ToList();
+
+            //Session["userMenus"] = new JavaScriptSerializer().Serialize(Json(smh, JsonRequestBehavior.AllowGet));
+            var son = Json(smh, JsonRequestBehavior.AllowGet);
+            return son;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ProcessMenus(string roleId, long[] menus)
+        {
+            if (string.IsNullOrEmpty(roleId))
+                return null;
+
+            if (menus == null)
+                menus = new long[0];
+
+            var _ms = new MenuService(_db);
+
+            StatusCode sc = await _ms.ProcessRoleMenusAsync(roleId, menus);
+            bool rel = roleId == (string)Session["roleId"];
+            if (sc == StatusCode.UpdateSuccess)
+                return Json(new { success = true, responseText = "Menus updated succesfully.", reload = rel }, JsonRequestBehavior.AllowGet);
+            else
+                return Json(new { success = false, responseText = "Failed to update role menus. Internal exception thrown.", reload = false }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -1,8 +1,18 @@
-﻿namespace CascBasic.Models.ViewModels
+﻿using System.Collections.Generic;
+
+namespace CascBasic.Models.ViewModels
 {
     public class DashboardViewModel : StatusViewModel
     {
         public string PartialView { get; set; }
+        public List<DashLink> DashLinks { get; set; }
+    }
+
+    public class DashLink
+    {
+        public string Action { get; set; }
+        public string Label { get; set; }
+        public string Icon { get; set; }
     }
 
     public class GroupViewModel
@@ -137,6 +147,24 @@
         public string Name { get; set; }
         public string Campus { get; set; }
         public bool Crest { get; set; }
+    }
+
+
+    public class MenusViewModel
+    {
+        public List<MenusRoleVM> Roles { get; set; }
+        public List<MenusMenuItemVM> Available { get; set; }
+    }
+
+    public class MenusRoleVM
+    {
+        public string RoleId { get; set; }
+        public string RoleName { get; set; }
+    }
+    public class MenusMenuItemVM
+    {
+        public long MenuItemId { get; set; }
+        public string MenuItemName { get; set; }
     }
 
 }

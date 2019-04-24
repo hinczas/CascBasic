@@ -14,10 +14,20 @@ namespace CascBasic.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64 Id { get; set; }
         public string Label { get; set; }
+        [Required]
         public string Action { get; set; }
+        [Required]
         public string Controller { get; set; }
+        public string ActionUrl {
+            get {
+                return VirtualPathUtility.Combine(Controller, Action);
+            }
+        }
+        [Required]
+        public string MenuTrail { get; set; }
         public string Url { get; set; }
         public string FlatIconName { get; set; }
+        public long SortOrder { get; set; }
 
         public Int64? ParentId { get; set; }
         public virtual MenuItem Parent { get; set; }

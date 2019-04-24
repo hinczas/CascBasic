@@ -11,6 +11,7 @@ namespace CascBasic
             filters.Add(new HandleErrorAttribute());
             filters.Add(new AuthorizeAttribute());
             filters.Add(new SessionIsRoleAttribute());
+            //filters.Add(new RoleMenuAccess());
         }
     }
 }

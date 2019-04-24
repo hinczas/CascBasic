@@ -202,6 +202,9 @@ dt, dd {
 /* custom colours END*/
 
 /* Positioning */
+.disp-flex {
+    display:flex !important;
+}
 h5 {
     margin-bottom: 0px;
     width: 100%;
@@ -228,6 +231,10 @@ h5 {
     text-overflow: ellipsis;
 }
 
+.ver-middle {
+    margin-top: auto;
+    margin-bottom:auto;
+}
 .abs {
     position:absolute;
     z-index:99;
@@ -326,7 +333,53 @@ h5 {
 }
 /**/
 
-/* Bootstrap overrides */
-/*.input-group-prepend.mr-0 {
-    margin-right: 0px !important;
-}*/
+/* Custom elements */
+
+
+/* Custom elements END */
+
+/* Menus page styling */
+.brd {
+    border: 1px solid lightgray;
+}
+
+.role-link:hover {
+    background-color: #0ebe24;
+    cursor:pointer;
+}
+.role-link.selected {
+    background-color: #218cff;
+}
+
+.height-500 {
+    height: 450px !important;
+    white-space: nowrap;
+    overflow-y: scroll;
+    width: 100% !important;
+}
+.h-500 {
+    height: 450px !important;
+}
+
+.inp-280{
+    width:280px !important;
+}
+
+button .material-icons {
+    margin: -5px 0px 0px 0px;
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.result-messages {
+    margin-top: 30px;
+    max-height: 450px;
+    overflow-y: auto;
+}
+.result-success {
+    color:forestgreen;
+}
+.result-error {
+    color: red;
+}
+/* Menus page styling END */

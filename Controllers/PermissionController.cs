@@ -57,7 +57,7 @@ namespace CascBasic.Controllers
         [HttpGet]
         public async Task<ActionResult> Role(string id)
         {
-            var model = _ps.GetRoleDetails(id);
+            var model = await _ps.GetRoleDetailsAsync(id);
 
             if (model == null)
             {
