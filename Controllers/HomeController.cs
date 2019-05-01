@@ -13,6 +13,13 @@ namespace CascBasic.Controllers
 
         public ActionResult Index()
         {
+            if (TempData["Messages"] != null)
+            {
+                ViewBag.Code = (string)TempData["Code"];
+                ViewBag.Head = (string)TempData["Head"];
+                ViewBag.Message = String.Join("\n", ((List<string>)TempData["Messages"]).ToArray());
+            }
+
             return View();
         }
         
@@ -35,9 +42,34 @@ namespace CascBasic.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Forbidden()
+        public ActionResult Forbidden(StatusCode code)
         {
-            return View();
+            ParseResults(code);
+            return RedirectToAction("Index");
+        }
+
+        private void ParseResults(StatusCode status)
+        {
+            switch (status)
+            {
+                case StatusCode.PermissionUnauthorized:
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Unauthorized";
+                    TempData["Messages"] = new List<string>() { "You do not have permissions to access this page" };
+                    break;
+
+                case StatusCode.RoleUnauthorized:
+                    TempData["Code"] = "danger";
+                    TempData["Head"] = "Unauthorized";
+                    TempData["Messages"] = new List<string>() { "Your Role is not authorized to acces this page" };
+                    break;
+
+                default:
+                    TempData["Code"] = "warning";
+                    TempData["Head"] = "Info";
+                    TempData["Messages"] = new List<string>() { "Unknown error eccured." };
+                    break;
+            }
         }
     }
 }

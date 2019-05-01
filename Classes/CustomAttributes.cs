@@ -76,9 +76,18 @@ namespace CascBasic.Classes
             filterContext.Result = new RedirectResult("/Account/RoleSelect");
         }
     }
+        
 
-    public class RoleMenuAccess : AuthorizeAttribute
+    [System.AttributeUsage(System.AttributeTargets.All, AllowMultiple = true)]
+    public class AuthorizePermission : AuthorizeAttribute
     {
+        private string Name;
+
+        public AuthorizePermission(string name)
+        {
+            Name = name;
+        }
+
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             if (httpContext.Session["Role"] == null)
@@ -97,14 +106,15 @@ namespace CascBasic.Classes
             if (role == null)
                 return false;
 
-            if (role.MenuItems!=null)
+            if (role.Permissions != null)
             {
-                var menuItems = role.MenuItems
-                    .Where(a => a.Controller.Equals(controllerName) && a.Action.Equals(actionName))
+                var perms = role.Permissions
+                    .Where(a => a.Name.Equals(this.Name))
                     .Count();
 
-                return menuItems > 0;
-            } else
+                return perms > 0;
+            }
+            else
             {
                 return false;
             }
@@ -113,8 +123,7 @@ namespace CascBasic.Classes
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            //filterContext.Result = new RedirectResult("/Account/RoleSelect?returnUrl=" + filterContext.HttpContext.Request.UrlReferrer.PathAndQuery.ToString());
-            filterContext.Result = new RedirectResult("/");
+            filterContext.Result = new RedirectResult(string.Format("/Home/Forbidden?code={0}", StatusCode.PermissionUnauthorized));
         }
     }
 }

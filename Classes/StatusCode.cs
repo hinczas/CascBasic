@@ -15,6 +15,8 @@ namespace CascBasic.Classes
         ParentNotFound,
         CreateSuccess,
         UpdateSuccess,
-        ApiResultEmpty
+        ApiResultEmpty,
+        PermissionUnauthorized,
+        RoleUnauthorized
     }
 }

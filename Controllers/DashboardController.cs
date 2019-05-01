@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace CascBasic.Controllers
 {
-    
+    [AuthorizePermission("AccessDashboard")]
     public class DashboardController : Controller
     {
         ApplicationDbContext _db;
@@ -101,6 +101,7 @@ namespace CascBasic.Controllers
         }
 
         [HttpGet]
+        [AuthorizePermission("AccessUsers")]
         public ActionResult Users()
         {
 
