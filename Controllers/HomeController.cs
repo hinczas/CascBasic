@@ -42,7 +42,7 @@ namespace CascBasic.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Forbidden(StatusCode code)
+        public ActionResult Forbidden(StatusCode code, string returnUrl)
         {
             ParseResults(code);
             return RedirectToAction("Index");

@@ -15,7 +15,7 @@ namespace CascBasic
             
             routes.MapRoute(
                 name: "Forbidden",
-                url: "Forbidden/{code}",
+                url: "Forbidden/{code}/{returnUrl}",
                 defaults: new { controller = "Home", action = "Forbidden" }
             );
 
