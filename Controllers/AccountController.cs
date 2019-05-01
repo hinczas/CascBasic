@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -10,14 +8,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CascBasic.Models;
 using Owin.Security.Providers.Raven.RavenMore;
-using CascBasic.Models.ViewModels;
 using CascBasic.Context;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
 using System.Collections.Generic;
 using CascBasic.Classes;
-using CascBasic.Classes.API.Lookup;
-using System.Web.Script.Serialization;
 
 namespace CascBasic.Controllers
 {
@@ -172,7 +166,8 @@ namespace CascBasic.Controllers
             Session["roleId"] = role;
             string id = User.Identity.GetUserId();
             var user = _db.Users.Find(id);
-            Session["userRoles"] = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name", role);
+            //Session["userRoles"] = new SelectList(user.Roles.Select(a => a.Role), "Id", "Name", role);
+            Session["userRoles"] = user.Roles.Select(a => new SessionRoleViewModel() { Id = a.RoleId, Name = a.Role.Name }).OrderBy(o => o.Name).ToList();
 
             // Build user Menus
             BuildMenu(role);
@@ -662,18 +657,18 @@ namespace CascBasic.Controllers
             base.Dispose(disposing);
         }
 
-        private void BuildUserMenus(string email)
-        {
-            Session["UserMenus"] = null;
-            // Prepare User Menus
-            var user = UserManager.FindByEmail(email);
-            if (user!=null)
-            {
-                var userId = user.Id;
-                var _menu = new MenuService(_db).GetMenu(userId);
-                Session["UserMenus"] = _menu;
-            }
-        }
+        //private void BuildUserMenus(string email)
+        //{
+        //    Session["UserMenus"] = null;
+        //    // Prepare User Menus
+        //    var user = UserManager.FindByEmail(email);
+        //    if (user!=null)
+        //    {
+        //        var userId = user.Id;
+        //        var _menu = new MenuService(_db).GetMenu(userId);
+        //        Session["UserMenus"] = _menu;
+        //    }
+        //}
 
         private void BuildMenu(string roleId)
         {

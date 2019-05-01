@@ -158,13 +158,17 @@ dt, dd {
 
 /* page navbar */
 .navbar-subpage {
-    margin-bottom: 10px;
-    z-index: 98;
-    padding: 10px 15px 8px 16px;
-    height: 58px;
+    /*margin-bottom: 10px;*/
+    z-index: 35;
+    padding: 2px 2px 2px 15px;
+    /* padding: 10px 15px 8px 16px; */
+    height: 44px;
     box-shadow: 0px 0px 2px 0px #212529;
 }
 
+.navbar-subpage > .navbar-brand {
+    font-weight: 400;
+}
 
 /* page navbar END*/
 
@@ -256,10 +260,13 @@ h5 {
         right: 0px;
     }
     .abs.top-right-sp {
-        top: 17px;
-        right: 24px;
+        top: 7px;
+        right: 15px;
     }
 
+    .container {
+        padding-top: 15px;
+    }
 /* Positioning END */
 
 /* Material icons */
@@ -330,6 +337,9 @@ h5 {
     white-space: nowrap;
     background-color: transparent;
     border: 0;
+}
+#role-dropdown {
+    margin-left: 0px !important;
 }
 /**/
 

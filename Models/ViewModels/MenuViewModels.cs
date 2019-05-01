@@ -5,6 +5,7 @@ using System.Web;
 
 namespace CascBasic.Models.ViewModels
 {
+    [Serializable()]
     public class MenuVM
     {
         //public MenuEntryVM MenuItem { get; set; }

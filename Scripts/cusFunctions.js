@@ -1,5 +1,5 @@
 ﻿function ChangeRole(e) {
-    var role = e.options[e.selectedIndex].value;
+    var role = $(e).data("role-id");
     var fullUrl = window.location.href;             // http://domain.com/path1/path2?arg=val
     var protUrl = window.location.protocol + "//"; // http://
     var hostUrl = window.location.hostname;         // domain.com

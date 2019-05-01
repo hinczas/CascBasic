@@ -17,8 +17,17 @@
                         <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
                     }
                 </div>
-            </div>               
-                @Html.DropDownList("role", (SelectList)Session["userRoles"], new { @class = "custom-select", required = "required", onchange="ChangeRole(this)" })
+            </div>
+            <div class="input-group-append" id="role-dropdown">
+                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Session["role"]</button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    @foreach (var itm in (List<CascBasic.Models.SessionRoleViewModel>)Session["userRoles"])
+                    {
+                        var dis = itm.Id == (string)Session["roleId"] ? "disabled" : "";
+                        <button class="dropdown-item" data-role-id="@itm.Id" onclick="ChangeRole(this)" @dis>@itm.Name</button>
+                    }
+                </div>
+            </div>
         </div>
     </ul>
 }

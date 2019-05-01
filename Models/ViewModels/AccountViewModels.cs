@@ -1,4 +1,5 @@
 ﻿using CascBasic.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -45,6 +46,13 @@ namespace CascBasic.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    [Serializable()]
+    public class SessionRoleViewModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class LoginViewModel
