@@ -12,11 +12,23 @@ namespace CascBasic
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            
+            routes.MapRoute(
+                name: "Forbidden",
+                url: "Forbidden/{code}",
+                defaults: new { controller = "Home", action = "Forbidden" }
+            );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "CatchAll",
+                url: "{*any}",
+                defaults: new { controller = "Home", action = "Index" }
             );
         }
     }

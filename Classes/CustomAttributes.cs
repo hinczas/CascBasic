@@ -123,7 +123,7 @@ namespace CascBasic.Classes
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectResult(string.Format("/Home/Forbidden?code={0}", StatusCode.PermissionUnauthorized));
+            filterContext.Result = new RedirectResult(string.Format("/Forbidden/{0}", StatusCode.PermissionUnauthorized));
         }
     }
 }
