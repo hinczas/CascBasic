@@ -447,6 +447,7 @@
     <Content Include="Views\Account\RoleSelect.cshtml" />
     <Content Include="Views\Home\Forbidden.cshtml" />
     <Content Include="Views\Dashboard\Menus.cshtml" />
+    <Content Include="Views\Shared\_ErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

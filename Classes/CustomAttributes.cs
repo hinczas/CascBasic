@@ -78,10 +78,11 @@ namespace CascBasic.Classes
     }
         
 
-    [System.AttributeUsage(System.AttributeTargets.All, AllowMultiple = true)]
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Method, AllowMultiple = true)]
     public class AuthorizePermission : AuthorizeAttribute
     {
         private string Name;
+        private string _ReturnUrl;
 
         public AuthorizePermission(string name)
         {
@@ -90,6 +91,13 @@ namespace CascBasic.Classes
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
+            if (httpContext.Request.UrlReferrer==null || httpContext.Request.Url.Equals(httpContext.Request.UrlReferrer))
+            {
+                _ReturnUrl = httpContext.Server.UrlEncode("/");
+            } else
+            {
+                _ReturnUrl = httpContext.Server.UrlEncode(httpContext.Request.UrlReferrer.PathAndQuery);
+            }
             if (httpContext.Session["Role"] == null)
                 return false;
 
@@ -123,7 +131,7 @@ namespace CascBasic.Classes
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectResult(string.Format("/Forbidden/{0}/{1}", StatusCode.PermissionUnauthorized, filterContext.HttpContext.Request.UrlReferrer.ToString()));
+            filterContext.Result = new RedirectResult(string.Format("/Forbidden?code={0}&url={1}", StatusCode.PermissionUnauthorized, _ReturnUrl));
         }
     }
 }

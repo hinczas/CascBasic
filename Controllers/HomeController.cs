@@ -42,10 +42,10 @@ namespace CascBasic.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Forbidden(StatusCode code, string returnUrl)
+        public ActionResult Forbidden(StatusCode code, string url)
         {
             ParseResults(code);
-            return RedirectToAction("Index");
+            return PartialView("_ErrorPage");
         }
 
         private void ParseResults(StatusCode status)
@@ -53,21 +53,21 @@ namespace CascBasic.Controllers
             switch (status)
             {
                 case StatusCode.PermissionUnauthorized:
-                    TempData["Code"] = "danger";
+                    TempData["Code"] = "error";
                     TempData["Head"] = "Unauthorized";
-                    TempData["Messages"] = new List<string>() { "You do not have permissions to access this page" };
+                    TempData["Messages"] = "You do not have permissions to access this page" ;
                     break;
 
                 case StatusCode.RoleUnauthorized:
-                    TempData["Code"] = "danger";
+                    TempData["Code"] = "error";
                     TempData["Head"] = "Unauthorized";
-                    TempData["Messages"] = new List<string>() { "Your Role is not authorized to acces this page" };
+                    TempData["Messages"] = "Your Role is not authorized to acces this page" ;
                     break;
 
                 default:
                     TempData["Code"] = "warning";
                     TempData["Head"] = "Info";
-                    TempData["Messages"] = new List<string>() { "Unknown error eccured." };
+                    TempData["Messages"] = "Unknown error eccured" ;
                     break;
             }
         }

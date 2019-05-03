@@ -1,0 +1,30 @@
+﻿<style>
+    .error-container {
+        text-align: center;
+        height: 200px;
+        padding: 100px 15px;
+    }
+    .code-error {
+        color: #ac1515;
+    }
+    .code-warning {
+        color: #ff6a00;
+    }
+    .code-done {
+        color: #109d05;
+    }
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/Content/theming.css" rel="stylesheet" />
+
+<div class="error-container">
+    <h1>Something went wrong</h1>
+    @if (TempData["Messages"] != null)
+    {
+        <i class="material-icons md-72 code-@TempData["Code"]">@TempData["Code"]</i>
+        <h4>@TempData["Head"]</h4>
+        <p>@TempData["Messages"]</p>
+    }
+</div>
+
+
